@@ -2413,10 +2413,10 @@
   {
    "name": "Sáng Tác Việt",
    "author": "luonggato",
-   "version": 2,
+   "version": 3,
    "source": "http://14.225.254.182",
    "regexp": "https?://(14\\.225\\.254\\.182|103\\.82\\.20\\.93|(www\\.)?sangtacviet\\.[a-z]+)/truyen/[^/]+/\\d+/[^/]+/?$",
-   "description": "Sáng Tác Việt (STV, bản IP 14.225.254.182): tìm truyện, xem thông tin và mục lục truyện Trung dịch máy (qidian, fanqie, jjwxc...). STV chặn đọc chương trong app, nên nội dung chương phải đọc bằng Chrome.",
+   "description": "Sáng Tác Việt (STV, bản IP 14.225.254.182): tìm truyện, xem thông tin và mục lục truyện Trung (qidian, fanqie, jjwxc...). STV chặn đọc chương trong app, nên chương qidian được lấy thẳng từ Qidian (chỉ chương miễn phí) và dịch bằng VietPhrase của Thư Các; nguồn khác phải mở bằng Chrome.",
    "type": "novel",
    "locale": "vi_VN",
    "path": "plugins/sang-tac-viet-thu-cac.zip",
