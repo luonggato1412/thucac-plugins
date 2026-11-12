@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (524 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (520 plugin)"
  },
  "data": [
   {
@@ -129,15 +129,6 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/17k-vbook.zip"
-  },
-  {
-   "name": "17k",
-   "author": "hajljnopera",
-   "version": 3,
-   "source": "https://www.17k.com",
-   "description": "Đọc truyện trên trang https://www.17k.com",
-   "path": "plugins/17k-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/17k/icon.png"
   },
   {
    "name": "18biquge",
@@ -3686,15 +3677,6 @@
    "path": "plugins/qidian-vbook.zip"
   },
   {
-   "name": "qidian",
-   "author": "hajljnopera",
-   "version": 12,
-   "source": "https://www.qidian.com",
-   "description": "Đọc truyện trên trang https://www.qidian.com",
-   "path": "plugins/qidian-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/qidian/icon.png"
-  },
-  {
    "name": "Qimao",
    "author": "Nhocconsr",
    "version": 2,
@@ -4187,15 +4169,6 @@
    "locale": "zh_CN",
    "path": "plugins/soi-xam-fanqie-will-sun.zip",
    "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/api.langge.cf.png"
-  },
-  {
-   "name": "Tadu (塔读)",
-   "author": "Nhocconsr",
-   "version": 2,
-   "source": "https://www.tadu.com",
-   "description": "Đọc truyện trên trang www.tadu.com",
-   "path": "plugins/tadu-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/tadu/icon.png"
   },
   {
    "name": "Tadu (塔读文学)",
@@ -5749,17 +5722,6 @@
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/abcbiquge/icon.png"
   },
   {
-   "name": "飘天文学",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://www.piaotia.com",
-   "description": "Đọc truyện chữ Trung trên 飘天文学 (piaotia.com), hỗ trợ khám phá, phân loại, xếp hạng, tìm kiếm, thông tin truyện, mục lục và nội dung chương.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/piaotia/icon.png"
-  },
-  {
    "name": "黃金屋中文",
    "author": "QuocBao",
    "version": 1,
@@ -5767,7 +5729,7 @@
    "description": "Đọc truyện trên 黃金屋中文. ",
    "type": "chinese_novel",
    "locale": "zh_TW",
-   "path": "plugins/quocbao-2.zip",
+   "path": "plugins/quocbao.zip",
    "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/hjwzw/icon.png"
   }
  ]
