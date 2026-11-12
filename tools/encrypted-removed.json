@@ -1,0 +1,2332 @@
+[
+ {
+  "name": "AI Chat",
+  "author": "QuocBao",
+  "version": 19,
+  "source": "https://aistudio.google.com/",
+  "type": "ai",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "[TEST] AI Chat cho VBook. \nHỗ trợ Gemini, bộ nhớ dài hạn, tool native, Sửa tên/QT/VP, tìm/đọc web và ảnh theo URL, xử lý dữ liệu theo ref, tra cứu kho cộng đồng, file text tạm Filebin, bảng Name WikiCV, lệnh nhanh /help, kiểm sức khỏe /health và hướng dẫn VBook.\nModel chat lấy từ API key tại Cài đặt → API và hội thoại, /models refresh để quét lại."
+ },
+ {
+  "name": "5sing Kugou",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://5sing.kugou.com",
+  "type": "audio",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Nghe nhạc từ 5sing"
+ },
+ {
+  "name": "ASMR+18",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://asmr18.fans",
+  "type": "audio",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "Nghe ASMR / drama CD tiếng Nhật (DLsite) từ asmr18.fans"
+ },
+ {
+  "name": "ASMRchive",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://asmrchive.moe",
+  "type": "audio",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Kho lưu trữ ASMR của VTuber (YouTube, Twitch, rplay) từ asmrchive.moe"
+ },
+ {
+  "name": "Hentai ASMR",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://hentaiasmr.moe",
+  "type": "audio",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "Nghe ASMR / drama CD 18+ tiếng Nhật (kèm EN, 中文) từ hentaiasmr.moe"
+ },
+ {
+  "name": "Japanese ASMR",
+  "author": "mizhm",
+  "version": 2,
+  "source": "https://japaneseasmr.com",
+  "type": "audio",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "Nghe ASMR / drama CD tiếng Nhật từ japaneseasmr.com"
+ },
+ {
+  "name": "Machu Team",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://machuteam.vn",
+  "type": "audio",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Nghe audio từ machuteam"
+ },
+ {
+  "name": "NetEase Music",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://music.163.com",
+  "type": "audio",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Nghe nhạc từ netease"
+ },
+ {
+  "name": "Kugou Music",
+  "author": "Đường đen",
+  "version": 3,
+  "source": "https://songsearch.kugou.com",
+  "type": "audio",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Nghe nhạc từ Kuguo"
+ },
+ {
+  "name": "Frostedsakura Stash",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://stash.frostedsakura.my.id",
+  "type": "audio",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Kho ASMR / stream VTuber trên stash.frostedsakura.my.id (OpenList)"
+ },
+ {
+  "name": "ASMR基佬中心",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://www.asmrgay.com",
+  "type": "audio",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Kho audio ASMR / 中文音声 / 同人音声 trên asmrgay.com (OpenList)"
+ },
+ {
+  "name": "QQ Music",
+  "author": "Đường đen",
+  "version": 3,
+  "source": "ttps://y.qq.com",
+  "type": "audio",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Nghe nhạc từ qqmusic"
+ },
+ {
+  "name": "Zing Audio",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://zingaudio.org",
+  "type": "audio",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Nghe truyện audio chọn lọc từ Zing Audio"
+ },
+ {
+  "name": "101kks",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://101kks.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 101kks - phồn thể"
+ },
+ {
+  "name": "Sáng Tác Việt Pro",
+  "author": "Klein",
+  "version": 51,
+  "source": "http://103.82.20.93",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Sáng Tác Việt — Free 30c/day, VIP liên hệ Admin"
+ },
+ {
+  "name": "69shu - repo Đường đen",
+  "author": "Đường đen",
+  "version": 55,
+  "source": "https://69shuba.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 69shuba.com"
+ },
+ {
+  "name": "69书吧.TW",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://69shuba.tw",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện chữ Trung trên 69shubatw. Nếu gặp xác minh, nhấn Trang nguồn, vượt xác minh rồi quay lại."
+ },
+ {
+  "name": "Sói Xám (Fanqie)",
+  "author": "Will Sun",
+  "version": 24,
+  "source": "https://api.langge.cf",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện Fanqie trên Sói Xám"
+ },
+ {
+  "name": "[APP] QQ阅读",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "book.qq.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc QQ阅读. Chap miễn phí dùng cấu hình tự tạo; liên hệ để nhận bản VIP. "
+ },
+ {
+  "name": "[QQ] Cánh Cụt",
+  "author": "kychi",
+  "version": 1,
+  "source": "https://book.qq.com/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "QQ阅读 - Thư viện truyện chữ Trung Quốc khổng lồ từ Tencent"
+ },
+ {
+  "name": "html5.qq.com",
+  "author": "Moleys",
+  "version": 23,
+  "source": "https://bookshelf.html5.qq.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang https://bookshelf.html5.qq.com"
+ },
+ {
+  "name": "czbooks - repo Đường đen",
+  "author": "Đường đen",
+  "version": 5,
+  "source": "https://czbooks.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên trang czbooks"
+ },
+ {
+  "name": "Faloo",
+  "author": "QuocBao",
+  "version": 5,
+  "source": "faloo.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc Faloo. Chap VIP gọi Faloo app local API; chap free thử web trước rồi fallback local API."
+ },
+ {
+  "name": "[NEW] Cà Chua",
+  "author": "kychi",
+  "version": 2,
+  "source": "https://fanqienovel.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Tomato viết ngược lại vẫn là Tomato. Có đảo ngược thế nào thì cà chua cũng vẫn là cà chua"
+ },
+ {
+  "name": "Feiku",
+  "author": "Đường đen",
+  "version": 5,
+  "source": "https://feiku6.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang feiku"
+ },
+ {
+  "name": "ixdzs8",
+  "author": "Nahona",
+  "version": 5,
+  "source": "https://ixdzs8.com/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang ixdzs8"
+ },
+ {
+  "name": "笔趣阁-abcbiquge",
+  "author": "Đường đen",
+  "version": 10,
+  "source": "http://m.abcbiquge.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang abcbiquge"
+ },
+ {
+  "name": "qmbook",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://m.bqg998.cc/#/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang qmbook"
+ },
+ {
+  "name": "ijjjxsxzw",
+  "author": "Đường đen",
+  "version": 9,
+  "source": "https://m.ijjjxsxzw.com/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang ijjjxsxzw"
+ },
+ {
+  "name": "75zwcom",
+  "author": "Đường đen",
+  "version": 3,
+  "source": "https://m.qiwubiquge.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 75zwcom"
+ },
+ {
+  "name": "Snapd",
+  "author": "kychi",
+  "version": 3,
+  "source": "https://m.snapd.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện chữ từ m.snapd.net (笔趣阁). Hỗ trợ cấu hình động tên miền trang chi tiết SPA."
+ },
+ {
+  "name": "Weibo",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://m.weibo.cn",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc bài đăng Weibo. Ưu tiên bản beta. Mở trang nguồn trước rồi quay lại app."
+ },
+ {
+  "name": "xsw",
+  "author": "Will Sun",
+  "version": 3,
+  "source": "https://m.xsw.tw",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang m.xsw.tw"
+ },
+ {
+  "name": "xsw - 台灣小說網",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://m.xsw.tw/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "台灣小說網 - Đọc truyện online"
+ },
+ {
+  "name": "Midureader",
+  "author": "Đường đen",
+  "version": 7,
+  "source": "https://midureader.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên Midu"
+ },
+ {
+  "name": "Moyue · Mặc Duyệt",
+  "author": "Đường đen",
+  "version": 12,
+  "source": "https://moyue.app",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Tiểu thuyết Moyue. Nguồn VIP cần token Moyue."
+ },
+ {
+  "name": "quanben - repo Đường đen",
+  "author": "hajljnopera",
+  "version": 5,
+  "source": "https://quanben.io",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang quanben"
+ },
+ {
+  "name": "douban",
+  "author": "Đường đen",
+  "version": 5,
+  "source": "https://read.douban.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc Douban Reading. Không có tài khoản để test Vip"
+ },
+ {
+  "name": "[APP] Shubl",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "shubl.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên app Shubl. Chap free xem bằng acc tự tạo, chap vip cần state acc đã mua vip - chưa test. "
+ },
+ {
+  "name": "思兔阅读[sto9]",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://sto9.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc tiểu thuyết trên sto9.com."
+ },
+ {
+  "name": "Hameln (Syosetu.org)",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://syosetu.org",
+  "type": "chinese_novel",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "ハーメルン - SS・小説投稿サイト (syosetu.org). Cần CONFIG_COOKIE cf_clearance + CONFIG_UA do Cloudflare."
+ },
+ {
+  "name": "黃金屋中文",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://tw.hjwzw.com",
+  "type": "chinese_novel",
+  "locale": "zh_TW",
+  "tag": null,
+  "description": "Đọc truyện trên 黃金屋中文. "
+ },
+ {
+  "name": "TaoNovel",
+  "author": "Đường đen",
+  "version": 4,
+  "source": "https://tybook.taoyuewenhua.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Tao novel."
+ },
+ {
+  "name": "Langgee",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://v5.langge.uk",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Sói xám Langee. Cần có tài khoản Sói xám; nhập token để đọc nội dung theo quyền tài khoản."
+ },
+ {
+  "name": "101Minc",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.101Minc.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 101Minc"
+ },
+ {
+  "name": "52shuku by QuocBao",
+  "author": "Moleys",
+  "version": 12,
+  "source": "https://www.52shuku.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang https://www.52shuku.net"
+ },
+ {
+  "name": "69书吧",
+  "author": "Đường đen",
+  "version": 1,
+  "source": "https://www.69shu.xyz",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 69shu.xyz"
+ },
+ {
+  "name": "69书吧",
+  "author": "QuocBao",
+  "version": 4,
+  "source": "https://www.69shuba.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện chữ Trung trên 69书吧. Nếu bị Cloudflare/verify chặn, mở trang 69书吧 trong trình duyệt VBook để xác minh."
+ },
+ {
+  "name": "8book",
+  "author": "Đường đen",
+  "version": 7,
+  "source": "https://www.8book.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc novel trên trang 8book"
+ },
+ {
+  "name": "alicesw",
+  "author": "3690",
+  "version": 46,
+  "source": "https://www.alicesw.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên alicesw.com"
+ },
+ {
+  "name": "Bili Light Novel",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.bilinovel.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Trang này ban rất gắt. Tải chậm để không bị ban. Bị ban thì ko fix nữa =))."
+ },
+ {
+  "name": "sweetastes",
+  "author": "Đường đen",
+  "version": 4,
+  "source": "https://www.bjtriz.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang bjtriz, chỉ đọc chương free"
+ },
+ {
+  "name": "07br",
+  "author": "Đường đen",
+  "version": 9,
+  "source": "https://www.bqg128.xyz/#/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang 07br"
+ },
+ {
+  "name": "[APP] Ciweimao",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://www.ciweimao.com/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "App Ciweimao cho novel và comic. Bản này chỉ hỗ trợ đọc chương miễn phí bằng state tự tạo. "
+ },
+ {
+  "name": "ciyuanji",
+  "author": "Đường đen",
+  "version": 4,
+  "source": "https://www.ciyuanji.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang ciyuanji"
+ },
+ {
+  "name": "deqixsorg",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.deqixs.org",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang deqixs.org"
+ },
+ {
+  "name": "deqixs",
+  "author": "Đường đen",
+  "version": 10,
+  "source": "https://www.deqixss.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang deqixs"
+ },
+ {
+  "name": "[dmxs]耽美小说",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://www.dmxs.org/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên dmxs.org."
+ },
+ {
+  "name": "gongzicp",
+  "author": "vBook",
+  "version": 2,
+  "source": "https://www.gongzicp.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang www.gongzicp.com"
+ },
+ {
+  "name": "idejian",
+  "author": "Nhocconsr",
+  "version": 11,
+  "source": "https://www.idejian.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang idejian"
+ },
+ {
+  "name": "JJWXC · Tấn Giang",
+  "author": "QuocBao",
+  "version": 13,
+  "source": "http://www.jjwxc.net/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên app JJWXC. "
+ },
+ {
+  "name": "Jjwxc-repo duongden💰✅",
+  "author": "Đường đen",
+  "version": 73,
+  "source": "https://www.jjwxc.net",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên Tấn Giang"
+ },
+ {
+  "name": "piaotian-app",
+  "author": "Đường đen",
+  "version": 5,
+  "source": "https://www.piaotianapp.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc sách trên trang piaotianapp.com"
+ },
+ {
+  "name": "po18",
+  "author": "QuocBao",
+  "version": 10,
+  "source": "https://www.po18.tw",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên trang www.po18.tw"
+ },
+ {
+  "name": "po18sm",
+  "author": "Will Sun",
+  "version": 4,
+  "source": "https://www.po18sm.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang po18sm.com"
+ },
+ {
+  "name": "qimao - repo Đường đen",
+  "author": "Đường đen",
+  "version": 39,
+  "source": "https://www.qimao.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang qimao"
+ },
+ {
+  "name": "quanwenyuedu",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.quanwenyuedu.io",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang quanwenyuedu"
+ },
+ {
+  "name": "书本书 Shubenshu",
+  "author": "hieu05",
+  "version": 3,
+  "source": "https://www.shubenshu.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện chữ Trung Quốc trên 书本书 (shubenshu.com)"
+ },
+ {
+  "name": "搜笔趣阁",
+  "author": "Đường đen",
+  "version": 9,
+  "source": "https://www.sobqg.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "搜笔趣阁 - sobqg.com"
+ },
+ {
+  "name": "sohu",
+  "author": "Đường đen",
+  "version": 1,
+  "source": "https://www.sohu.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc sohu trên vBook"
+ },
+ {
+  "name": "LOFTER",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://www.sudugu.org",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc bài chữ và tuyển tập LOFTER. Tìm #tên tuyển tập, @tác giả; nội dung giới hạn cần phiên có quyền đọc."
+ },
+ {
+  "name": "sudugu",
+  "author": "Đường đen",
+  "version": 10,
+  "source": "https://www.sudugu.org",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang sudugu"
+ },
+ {
+  "name": "[wfxs]微風小說",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://www.wfxs.tw",
+  "type": "chinese_novel",
+  "locale": "zh_TW",
+  "tag": null,
+  "description": "Đọc truyện chữ trên 微風小說 (wfxs). Nếu gặp Cloudflare, nhấn Trang nguồn, vượt xác minh trong trình duyệt VBook rồi tải lại."
+ },
+ {
+  "name": "wodeshucheng5",
+  "author": "Đường đen",
+  "version": 1,
+  "source": "https://www.wodeshucheng5.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang wodeshucheng5"
+ },
+ {
+  "name": "Xbanxia - repo Đường đen",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://www.xbanxia.cc",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Xbanxia"
+ },
+ {
+  "name": "Xianqihaotiami APP",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "http://www.xianqihaotianmi.org/",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc truyện ở App xianqihaotiami"
+ },
+ {
+  "name": "YPShuo - Bình luận sách",
+  "author": "Đường đen",
+  "version": 3,
+  "source": "https://www.ypshuo.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc bình luận truyện trên trang ypshuo"
+ },
+ {
+  "name": "Dưa Hấu",
+  "author": "Đường đen",
+  "version": 3,
+  "source": "https://xgmf.zuanqianyi.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Tiểu thuyết dưa hấu"
+ },
+ {
+  "name": "[APP] Zhihu Hỏi đáp",
+  "author": "QuocBao",
+  "version": 6,
+  "source": "zhihu.com",
+  "type": "chinese_novel",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Đọc Zhihu bằng API Android/web đã ký, có thêm cấu hình zhihuCookie để dùng cookie đăng nhập khi cần. Hỗ trợ câu hỏi, câu trả lời, pin/想法, bài viết, trang chủ Đề xuất/热榜, bình luận và gợi ý."
+ },
+ {
+  "name": "210CB",
+  "author": "Gold2k2k2k",
+  "version": 2,
+  "source": "https://2tencb.pro",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "210CB - Truyá»n Hentai Online 18+"
+ },
+ {
+  "name": "TVKH",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://bananacoo.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện tranh trên TVKH/Bananacoo."
+ },
+ {
+  "name": "cosplaytele",
+  "author": "3690",
+  "version": 1,
+  "source": "https://cosplaytele.com/",
+  "type": "comic",
+  "locale": "zh_CN",
+  "tag": "nsfw",
+  "description": "noDes"
+ },
+ {
+  "name": "CBunu Comic",
+  "author": "QuocBao",
+  "version": 5,
+  "source": "https://cucbongunu.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện tranh trên CBunu"
+ },
+ {
+  "name": "Destin Team",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://destinteam.xyz/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện tranh trên Destin Team."
+ },
+ {
+  "name": "Dưa Leo truyện",
+  "author": "QuocBao",
+  "version": 29,
+  "source": "https://dualeotruyenjv.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên dualeotruyen"
+ },
+ {
+  "name": "E Hentai",
+  "author": "vBook",
+  "version": 3,
+  "source": "https://e-hentai.org",
+  "type": "comic",
+  "locale": null,
+  "tag": "nsfw",
+  "description": "Đọc truyện 18+ trên trang e-hentai.org"
+ },
+ {
+  "name": "Góc Truyện Tranh",
+  "author": "Will Sun",
+  "version": 1,
+  "source": "https://goctruyentranhvui41.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang goctruyentranhvui41.com"
+ },
+ {
+  "name": "Hắc Ám Chi Các",
+  "author": "QuocBao",
+  "version": 12,
+  "source": "https://haccbl.xyz/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên web Hắc Ám Chi Các"
+ },
+ {
+  "name": "HentaiCube",
+  "author": "Gold2k2k2k",
+  "version": 3,
+  "source": "https://hentaicube.xyz",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "HentaiCube - Truyá»n Hentai Online 18+"
+ },
+ {
+  "name": "HentaiVN",
+  "author": "Will Sun",
+  "version": 3,
+  "source": "https://hentaivnreal.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên trang hentaivnreal.com"
+ },
+ {
+  "name": "Jelly Comics",
+  "author": "QuocBao",
+  "version": 4,
+  "source": "https://jellycomics.online/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Jelly Comics"
+ },
+ {
+  "name": "JulyComic",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://julycomics.site",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên JulyComic. Ext tự lấy token đăng nhập nếu có, gửi flag 18+ và tự gọi xác nhận 18+ khi có tài khoản. Search `token:<Bearer token>` để nhập nhanh token, `token:clear` xóa token đang lưu. "
+ },
+ {
+  "name": "LuotTruyen",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://luottruyen.net",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "LuotTruyen - Đọc truyện tranh online"
+ },
+ {
+  "name": "MangaDex",
+  "author": "vBook",
+  "version": 3,
+  "source": "https://mangadex.org",
+  "type": "comic",
+  "locale": "global",
+  "tag": null,
+  "description": "Đọc truyện trên trang mangadex.org"
+ },
+ {
+  "name": "ManhwaBuddy",
+  "author": "Will Sun",
+  "version": 3,
+  "source": "https://manhwabuddy.com",
+  "type": "comic",
+  "locale": "en_US",
+  "tag": "nsfw",
+  "description": "Read comics on manhwabuddy.com"
+ },
+ {
+  "name": "Mimimoe",
+  "author": "Gold2k2k2k",
+  "version": 4,
+  "source": "https://mimimoe.moe",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Mimimoe - Truyá»n tranh 18+"
+ },
+ {
+  "name": "Misskon",
+  "author": "3690",
+  "version": 1,
+  "source": "https://misskon.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Xem gái trên misskon"
+ },
+ {
+  "name": "My Reading Manga",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://myreadingmanga.info/",
+  "type": "comic",
+  "locale": "global",
+  "tag": "nsfw",
+  "description": "Đọc truyện và xem video trên MyReadingManga."
+ },
+ {
+  "name": "Navy Team Comic",
+  "author": "QuocBao",
+  "version": 6,
+  "source": "https://navyteams.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện tranh trên Navy Team"
+ },
+ {
+  "name": "NetTruyen18",
+  "author": "ivanzzz",
+  "version": 3,
+  "source": "https://nettruyen18.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "NetTruyen18 - truyện tranh online"
+ },
+ {
+  "name": "NetTruyenViet",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://nettruyenviet10.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang nettruyenviet10.com"
+ },
+ {
+  "name": "NetTruyenZ",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://nettruyenz.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "NetTruyen - Đọc truyện tranh Manga, Manhua, Manhwa online miễn phí"
+ },
+ {
+  "name": "Roads Team",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://roadsteami.net/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên trang Roads Team"
+ },
+ {
+  "name": "Thế Giới Truyện",
+  "author": "ivanzzz",
+  "version": 3,
+  "source": "https://thegioitruyen.vn",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện tranh online từ thegioitruyen.vn"
+ },
+ {
+  "name": "MoeTruyen",
+  "author": "Gold2k2k2k",
+  "version": 1,
+  "source": "https://truyen.moe",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "MÃ²e Truyá»n - Cá»ng Äá»ng truyá»n tranh"
+ },
+ {
+  "name": "TruyenGG",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyenggvn.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "TruyenGGVN - Đọc truyện tranh Manhwa, Manhua, Manga Online"
+ },
+ {
+  "name": "TruyenQQ",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://truyenqq.com.vn",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang truyenqq.com.vn"
+ },
+ {
+  "name": "TruyenQQ",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyenqqko.com",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "TruyenQQ - Đọc truyện tranh online"
+ },
+ {
+  "name": "Đọc Truyện Tranh BL",
+  "author": "QuocBao",
+  "version": 4,
+  "source": "https://truyentranhbl.com/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện tranh BL tại doctruyentranhbl"
+ },
+ {
+  "name": "Truyentranhdammyy",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://truyentranhdammyy.site/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Truyentranhdammyy"
+ },
+ {
+  "name": "Ưng Tỷ Comics",
+  "author": "QuocBao",
+  "version": 4,
+  "source": "https://ungtycomics.net/",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Ưng Tỷ Comics"
+ },
+ {
+  "name": "VinaHentai",
+  "author": "Will Sun",
+  "version": 7,
+  "source": "https://vinahentai.bond",
+  "type": "comic",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Đọc truyện trên trang vinahentai.bond"
+ },
+ {
+  "name": "WebtoonScan",
+  "author": "Will Sun",
+  "version": 4,
+  "source": "https://webtoonscan.com",
+  "type": "comic",
+  "locale": "en_US",
+  "tag": "nsfw",
+  "description": "Read comics on webtoonscan.com"
+ },
+ {
+  "name": "Weeb Central",
+  "author": "vBook",
+  "version": 3,
+  "source": "https://weebcentral.com",
+  "type": "comic",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Read manga, manhwa and manhua on Weeb Central"
+ },
+ {
+  "name": "Matt Reading Translations",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://mattreadingtranslations.com/",
+  "type": "eng_novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Doc truyen tu MattReadingTranslations"
+ },
+ {
+  "name": "NovelFull.Net",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://novelfull.net",
+  "type": "eng_novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Read novels on NovelFull.Net (uses Browser engine to bypass Cloudflare)"
+ },
+ {
+  "name": "NovelNext",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://novelnext.me",
+  "type": "eng_novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Read novels on NovelNext"
+ },
+ {
+  "name": "[APP] MTC",
+  "author": "vBook",
+  "version": 5,
+  "source": "https://android.lonoapp.net",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên App MTC (Novel Fever)"
+ },
+ {
+  "name": "App Truyện Chữ",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://apptruyenchu.pro/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "App Truyện Chữ - Truyện Dịch & Truyện Convert. Next.js App Router + Firebase backend."
+ },
+ {
+  "name": "BL Bất Tử",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://blbattu.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang BL Bất Tử"
+ },
+ {
+  "name": "【VIP】Bạch Ngọc Sách",
+  "author": "Nhocconsr",
+  "version": 1,
+  "source": "http://bnsvip.net",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang BNS"
+ },
+ {
+  "name": "Boylove Bất Tử",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://boylovebattu.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang boylovebattu"
+ },
+ {
+  "name": "DocLN (Hako)",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://docln.sbs",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Plugin đọc truyện Light Novel từ docln.sbs (Hako)"
+ },
+ {
+  "name": "Hako Novel",
+  "author": "vBook",
+  "version": 13,
+  "source": "https://docln.sbs",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Hako"
+ },
+ {
+  "name": "Gấu Mèo Team",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://gaumeoteam.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên Gấu Mèo Team"
+ },
+ {
+  "name": "Giới Truyện",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://gioitruyen.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên Giới Truyện (gioitruyen.com)"
+ },
+ {
+  "name": "Novelpia Global",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://global.novelpia.com",
+  "type": "novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Novelpia Global English novels"
+ },
+ {
+  "name": "Hang Truyện Chữ",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://hangtruyenchu.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện tại Hang Truyện Chữ"
+ },
+ {
+  "name": "Kakuyomu",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://kakuyomu.jp",
+  "type": "novel",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "カクヨム - Web tiểu thuyết Nhật Bản (ruby hiển thị dạng 漢字《かんじ》)"
+ },
+ {
+  "name": "Kho Truyện Chữ",
+  "author": "ivanzzz",
+  "version": 3,
+  "source": "https://khotruyenchu.fun/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên Kho Truyện Chữ"
+ },
+ {
+  "name": "La Cà Truyện",
+  "author": "ivanzzz",
+  "version": 9,
+  "source": "https://lacatruyen.homes",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện tại La Cà Truyện"
+ },
+ {
+  "name": "La cà truyện",
+  "author": "QuocBao",
+  "version": 24,
+  "source": "https://lacatruyen.live/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên La cà truyện"
+ },
+ {
+  "name": "LoHi",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://lohi2.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "LoHi - đọc truyện dịch tiếng Việt (catalogue công khai LoHi Trends + chương từ lohi2.com)."
+ },
+ {
+  "name": "LoppyToon",
+  "author": "Gold2k2k2k",
+  "version": 2,
+  "source": "https://loppytoon.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "LoppyToon - Truyá»n tranh & tiá»u thuyáº¿t"
+ },
+ {
+  "name": "LunarX",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://lunarx.to/novel",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "LunarX - đọc truyện novel online (NovelFire + LunarX)"
+ },
+ {
+  "name": "Luvevaland",
+  "author": "vBook",
+  "version": 7,
+  "source": "https://luvevalandn2.co",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Luvevaland"
+ },
+ {
+  "name": "MangaDM",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://mangadm.me/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang MangaDM"
+ },
+ {
+  "name": "Mê Đọc Truyện",
+  "author": "ivanzzz",
+  "version": 5,
+  "source": "https://medoctruyen.vn/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên Mê Đọc Truyện"
+ },
+ {
+  "name": "Mê Truyện Chữ .co",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://metruyenchu.co",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Mê Truyện Chữ"
+ },
+ {
+  "name": "Mê Truyện Chữ",
+  "author": "QuocBao",
+  "version": 8,
+  "source": "https://metruyenchu.com.vn",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện chữ trên Mê Truyện Chữ"
+ },
+ {
+  "name": "Mê Truyện Chữ VN",
+  "author": "Nahona",
+  "version": 5,
+  "source": "https://metruyenchu.com.vn/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang MTC"
+ },
+ {
+  "name": "Mê Truyện Chữ .com",
+  "author": "ivanzzz",
+  "version": 6,
+  "source": "https://metruyenchuvn.org/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên Mê Truyện Chữ"
+ },
+ {
+  "name": "MTC",
+  "author": "vBook",
+  "version": 51,
+  "source": "https://metruyencv.biz",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Mê Truyện Chữ"
+ },
+ {
+  "name": "TruyệnCV",
+  "author": "vBook",
+  "version": 1,
+  "source": "https://metruyencv.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang TruyệnCV"
+ },
+ {
+  "name": "Mê Truyện CV",
+  "author": "ivanzzz",
+  "version": 5,
+  "source": "https://metruyencv.com.vn/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Doc truyen tren MeTruyenCV"
+ },
+ {
+  "name": "Mino Truyện",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://minotruyenv6.xyz/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Chỉ dùng được trên vBook beta. Đọc manga, truyện tranh và tiểu thuyết trên Mino Truyện.\nSearch mặc định ở kho Tiểu thuyết; có thể đổi sang Manga, Truyện tranh hoặc 18+ trong cấu hình.\nNội dung 18+ chỉ xuất hiện ở trang chủ, thể loại và search khi bật cấu hình; link trực tiếp vẫn đọc được."
+ },
+ {
+  "name": "Minttea Novel",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://mintteanovel.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện chữ trên Minttea Novel"
+ },
+ {
+  "name": "MonkeyD",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://monkeydd.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên MonkeyD"
+ },
+ {
+  "name": "Mọt Truyện",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://mottruyen.app",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên app Mọt Truyện"
+ },
+ {
+  "name": "Navy Team Novel",
+  "author": "QuocBao",
+  "version": 7,
+  "source": "https://navyteams.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc tiểu thuyết và truyện chữ trên Navy Team"
+ },
+ {
+  "name": "Syosetu",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://ncode.syosetu.com",
+  "type": "novel",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "小説家になろう - Web tiểu thuyết Nhật Bản (ruby hiển thị dạng 漢字《かんじ》)"
+ },
+ {
+  "name": "NetTruyen",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://nettruyen.com.vn",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang nettruyen.com.vn"
+ },
+ {
+  "name": "Syosetu R18",
+  "author": "mizhm",
+  "version": 1,
+  "source": "https://novel18.syosetu.com",
+  "type": "novel",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "ノクターン / ムーンライト / ミッドナイトノベルズ - Web tiểu thuyết R18 của Narou (ruby hiển thị dạng 漢字《かんじ》)"
+ },
+ {
+  "name": "NovelPhoenix",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://novelphoenix.net",
+  "type": "novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Read novels on NovelPhoenix.net"
+ },
+ {
+  "name": "QuyKiep",
+  "author": "ivanzzz",
+  "version": 5,
+  "source": "https://quykiep.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên QuyKiep.com"
+ },
+ {
+  "name": "STV App Vi",
+  "author": "QuocBao",
+  "version": 9,
+  "source": "https://sangtacviet.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên STV App (Vi) ~"
+ },
+ {
+  "name": "[APP] Sáng Tác Việt",
+  "author": "kychi",
+  "version": 2,
+  "source": "https://sangtacviet.pro",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "STV - App - Kychi - Freemium"
+ },
+ {
+  "name": "STV",
+  "author": "bqy",
+  "version": 2,
+  "source": "http://sangtacviet.vip",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "STV"
+ },
+ {
+  "name": "Shinigami LN Team",
+  "author": "Gold2k2k2k",
+  "version": 1,
+  "source": "https://shinigamilnteam.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Shinigami - Light Novel & Truyá»n tranh"
+ },
+ {
+  "name": "Si Truyện CV",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://sitruyencv.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên SiTruyenCV"
+ },
+ {
+  "name": "Syosetu",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://syosetu.com",
+  "type": "novel",
+  "locale": "ja_JP",
+  "tag": null,
+  "description": "小説家になろう - Đọc truyện tiếng Nhật (raw) trên Syosetu"
+ },
+ {
+  "name": "Tiệm Truyện Chữ",
+  "author": "Will Sun",
+  "version": 12,
+  "source": "https://tiemtruyenchu.cloud",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang tiemtruyenchu.com"
+ },
+ {
+  "name": "Tinh Linh",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://tinhlinh.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang https://tinhlinh.com"
+ },
+ {
+  "name": "TruyenC",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://truyenc.net",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện chữ online trên TruyenC"
+ },
+ {
+  "name": "Truyện Chữ",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyenchu.net/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện chữ trên Truyện Chữ."
+ },
+ {
+  "name": "[APP] Truyện CV",
+  "author": "kychi",
+  "version": 2,
+  "source": "https://truyencv.io",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện từ App TruyenCV.\n\n HƯỚNG DẪN SỬ DỤNG :\n Nhập tài khoản mật khẩu để login\n\n Trong trường hợp TruyenCv không muốn ext này tồn tại, vui lòng liên hệ, mình cam kết tiếp nhận và gỡ bỏ trong 24h làm việc. \n\n Hoan hỷ nhé :)))))"
+ },
+ {
+  "name": "TruyenCV.io",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://truyencv.io",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang truyencv.io"
+ },
+ {
+  "name": "Truyện CV (.io)",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyencv.io/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên truyencv.io"
+ },
+ {
+  "name": "TruyenDich.AI",
+  "author": "ivanzzz",
+  "version": 3,
+  "source": "https://truyendich.space",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Doc truyen tai TruyenDich.AI"
+ },
+ {
+  "name": "Truyện Dịch AI",
+  "author": "Will Sun",
+  "version": 3,
+  "source": "https://truyendichai.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang truyendichai.com"
+ },
+ {
+  "name": "Truyện Dịch AI",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://truyendichai.top",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên truyendichai.top"
+ },
+ {
+  "name": "truyenfull",
+  "author": "vBook",
+  "version": 21,
+  "source": "https://truyenfull.live",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Truyện full"
+ },
+ {
+  "name": "Truyện Full",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://truyenfull.today",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Truyện Full"
+ },
+ {
+  "name": "Truyen H",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyenh.top/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện H trên truyenh.top (WordPress, lich-slg-style)"
+ },
+ {
+  "name": "Truyện Mới",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://truyenmoi.app",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện online tại TruyenMoi.app: tiên hiệp, kiếm hiệp, ngôn tình, đô thị, huyền huyễn, xuyên không..."
+ },
+ {
+  "name": "Truyện Mới KK",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://truyenmoikk.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Cào dữ liệu từ truyenmoikk.com"
+ },
+ {
+  "name": "Truyện Net",
+  "author": "Will Sun",
+  "version": 3,
+  "source": "https://truyennet.vn",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang truyennet.vn"
+ },
+ {
+  "name": "[APP] Wikidich",
+  "author": "vBook",
+  "version": 11,
+  "source": "https://truyenwikidich.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang app Wiki Dịch"
+ },
+ {
+  "name": "Tu Tiên (.pro)",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://tutien.pro/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên tutien.pro"
+ },
+ {
+  "name": "[APP] TYT",
+  "author": "QuocBao",
+  "version": 13,
+  "source": "https://tytnovel.info/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện từ app TYT."
+ },
+ {
+  "name": "Viblo",
+  "author": "Đường đen",
+  "version": 4,
+  "source": "https://viblo.asia",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc viblo trên vBook"
+ },
+ {
+  "name": "vivutruyencom",
+  "author": "Đường đen",
+  "version": 1,
+  "source": "https://vivutruyen.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang vivutruyen.com"
+ },
+ {
+  "name": "Việt Nam Thư Quán",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://vnthuquan.org/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện từ Việt Nam Thư Quán"
+ },
+ {
+  "name": "Web Truyện Chữ",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://webtruyenchu.com/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện chữ online: tiên hiệp, kiếm hiệp, ngôn tình, đô thị, huyền huyễn, xuyên không…"
+ },
+ {
+  "name": "Wiki Dịch",
+  "author": "ivanzzz",
+  "version": 5,
+  "source": "https://wikicv.net",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Wiki Dịch"
+ },
+ {
+  "name": "Wiki Dịch",
+  "author": "vBook",
+  "version": 29,
+  "source": "https://wikicv.org",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc truyện trên trang Wiki Dịch"
+ },
+ {
+  "name": "Fan MTL",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.fanmtl.com",
+  "type": "novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Đọc truyện trên trang Fan MTL"
+ },
+ {
+  "name": "FanMTL",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://www.fanmtl.com",
+  "type": "novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Read Fan-Fiction & Web Novels on FanMTL"
+ },
+ {
+  "name": "Novel Next",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://www.novelnext.me",
+  "type": "novel",
+  "locale": "en_US",
+  "tag": null,
+  "description": "Đọc truyện trên trang Novel Next"
+ },
+ {
+  "name": "Novels TW",
+  "author": "mizhm",
+  "version": 3,
+  "source": "https://www.novels.com.tw",
+  "type": "novel",
+  "locale": "zh_TW",
+  "tag": null,
+  "description": "繁體小說 - novels.com.tw. Cần mở trang bằng trình duyệt trong app một lần để qua Cloudflare."
+ },
+ {
+  "name": "Truyện Zhihu Tổng Hợp",
+  "author": "Đường đen",
+  "version": 10,
+  "source": "https://www.truyendexuat.com",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Tổng hợp nguồn truyện Zhihu"
+ },
+ {
+  "name": "Wattpad",
+  "author": "vBook",
+  "version": 6,
+  "source": "https://www.wattpad.com",
+  "type": "novel",
+  "locale": "global",
+  "tag": null,
+  "description": "Đọc truyện trên trang Wattpad"
+ },
+ {
+  "name": "XTruyen",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://www.xtruyen.net/",
+  "type": "novel",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "XTruyen - Doc truyen online"
+ },
+ {
+  "name": "Gemini Baidu Translate change Model V2.0",
+  "author": "3690",
+  "version": 96,
+  "source": "https://aistudio.google.com/apikey",
+  "type": "translate",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Dịch văn bản bằng Google Gemini API với nhiều key, prompt, tùy chỉnh theo thể loại và xử lý lỗi an toàn thông minh. DONATE CHO ADMIN VBOOK NHIỀU LÊN ĐỂ VỪA CÓ TÊN ĐẸP, ADMIN LẠI CÓ THÊM ĐỘNG LỰC HOÀN THIỆN APP"
+ },
+ {
+  "name": "Immersive Translate",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://immersivetranslate.com/",
+  "type": "translate",
+  "locale": null,
+  "tag": null,
+  "description": "Dịch bằng Free Auto của Immersive Translate. Khi user_token hợp lệ, ext tự hiện các model Pro/Max mà tài khoản được dùng."
+ },
+ {
+  "name": "Google Translate",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://translate.google.com/",
+  "type": "translate",
+  "locale": null,
+  "tag": null,
+  "description": "Dịch văn bản bằng Google Translate."
+ },
+ {
+  "name": "Multi TTS VN",
+  "author": "Meo",
+  "version": 23,
+  "source": "https://ai.zalo.solutions/docs/api/getting-started",
+  "type": "tts",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Đọc văn bản bằng Zalo AI, ElevenLabs, FPT.AI và Viettel AI; hỗ trợ nhiều API key (dán hàng loạt, phân tách bằng dấu phẩy/xuống dòng), cân bằng tải vòng tròn (Round-Robin) chống rate-limit 429, tự động chuyển key khi hết quota, tải phân trang giọng ElevenLabs và đồng bộ danh sách giọng Viettel AI từ API.\n\nHƯỚNG DẪN CÀI ĐẶT\n1. Chọn Dịch vụ TTS (Zalo AI, ElevenLabs, FPT.AI hoặc Viettel AI).\n2. Trong mục \"API key / token\", nhấn \"Thêm\" hoặc dán hàng loạt nhiều key (ngăn cách bởi dấu phẩy \",\" hoặc xuống dòng):\n   - Zalo AI: ZAI:key_cua_ban (hoặc nhập thẳng key)\n   - ElevenLabs: EL:sk_key_cua_ban (hoặc nhập thẳng key)\n   - FPT.AI: FPT:key_cua_ban (hoặc nhập thẳng key)\n   - Viettel AI: VTAI:token_cua_ban (hoặc nhập thẳng token, tự lọc Bearer)\n3. Chọn Chế độ dùng nhiều key: Vòng tròn (Round-Robin) để chống lỗi 429 hoặc Tuần tự (Failover).\n4. Chọn giọng đọc phù hợp với dịch vụ đã chọn.\n5. Chọn model (nếu dùng ElevenLabs); các tùy chọn giới hạn ký tự và tải trước ở bên dưới.\n\nLẤY API KEY / TOKEN\n- Zalo AI: https://ai.zalo.solutions/docs/api/getting-started\n- ElevenLabs: https://elevenlabs.io/docs/api-reference/authentication\n- FPT.AI: https://docs.fpt.ai/docs/en/console/documentation/console/\n- Viettel AI: https://viettelai.vn/en/tai-lieu\n\nKhóa được lưu bảo mật trong cài đặt vBook. Không chia sẻ cấu hình có chứa khóa."
+ },
+ {
+  "name": "Anime Vietsub",
+  "author": "QuocBao",
+  "version": 6,
+  "source": "https://animevietsub.news/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video trên AnimeVietsub. "
+ },
+ {
+  "name": "AnimeVietsub",
+  "author": "ivanzzz",
+  "version": 3,
+  "source": "https://animevietsub.sale",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem anime Vietsub online trên animevietsub.sale"
+ },
+ {
+  "name": "Qimao Phim ngắn (七猫短剧)",
+  "author": "Đường đen",
+  "version": 7,
+  "source": "https://api-gw.wtzw.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Coi phim trên trang qimao"
+ },
+ {
+  "name": "FQ Video",
+  "author": "Đường đen",
+  "version": 1,
+  "source": "https://fanqienovel.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Phim ngắn và hoạt hình Fanqie, API trực tiếp và phát native; không cần root."
+ },
+ {
+  "name": "FreeReels",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://free-reels.com",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video ngắn từ FreeReels."
+ },
+ {
+  "name": "GuPhim",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://guphimz.com",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim tren guphimz.com"
+ },
+ {
+  "name": "HentaiVietsub.com",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://hentaivietsub.com",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": "nsfw",
+  "description": "Xem phim trên hentaivietsub.com"
+ },
+ {
+  "name": "HHPanda",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://hhpanda.st",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem hoạt hình 3D Trung Quốc Vietsub/Thuyết minh 4K trên hhpanda.st"
+ },
+ {
+  "name": "HHTQHAY.VIP",
+  "author": "Will Sun",
+  "version": 2,
+  "source": "https://hhtqhay.vip",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim trên hhtqhay.vip"
+ },
+ {
+  "name": "Hồng quả",
+  "author": "Đường đen",
+  "version": 14,
+  "source": "https://hongguoduanju.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Phim ngắn và hoạt hình Hongguo"
+ },
+ {
+  "name": "LuPhim",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://luphim.com",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim online HD Vietsub, thuyết minh trên luphim.com"
+ },
+ {
+  "name": "MotChill",
+  "author": "ivanzzz",
+  "version": 6,
+  "source": "https://motchille.cx/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim online Vietsub, Thuyết minh trên MotChill"
+ },
+ {
+  "name": "MotPhim",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://motphimc.mx",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Plugin xem phim MotPhim (motphimc.mx) - phim bộ/lẻ/hoạt hình Vietsub + Thuyết Minh"
+ },
+ {
+  "name": "Phim4K",
+  "author": "QuocBao",
+  "version": 5,
+  "source": "https://phim4k.xyz/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim trên Phim4K."
+ },
+ {
+  "name": "Phimmoir",
+  "author": "ivanzzz",
+  "version": 5,
+  "source": "https://phimmoic.ws",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim online Vietsub, Thuyet minh tren Phimmoir"
+ },
+ {
+  "name": "Phim Nhựa",
+  "author": "ivanzzz",
+  "version": 4,
+  "source": "https://phimnhua.online",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim tren Phim Nhua - HD Vietsub mien phi."
+ },
+ {
+  "name": "Phimtv",
+  "author": "ivanzzz",
+  "version": 2,
+  "source": "https://phimtv.my",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim trên phimtv.my"
+ },
+ {
+  "name": "PhimTV2",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://phimtv2.com",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim online HD Vietsub trên phimtv2.com"
+ },
+ {
+  "name": "Showbox",
+  "author": "QuocBao",
+  "version": 5,
+  "source": "https://pixnet.cc/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim trên Showbox."
+ },
+ {
+  "name": "RoPhim",
+  "author": "QuocBao",
+  "version": 5,
+  "source": "https://rophim9.online",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video trên Rophim. Domain web đổi thường xuyên nên có thể sửa CONFIG_URL trong cấu hình nguồn."
+ },
+ {
+  "name": "MGTV",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://w.mgtv.com/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video trên MGTV/HITV quốc tế. "
+ },
+ {
+  "name": "WatchHentai.net",
+  "author": "Will Sun",
+  "version": 4,
+  "source": "https://watchhentai.net",
+  "type": "video",
+  "locale": "en_US",
+  "tag": "nsfw",
+  "description": "Watch videos on watchhentai.net"
+ },
+ {
+  "name": "WeTV",
+  "author": "QuocBao",
+  "version": 2,
+  "source": "https://wetv.vip/",
+  "type": "video",
+  "locale": "global",
+  "tag": null,
+  "description": "WeTV bản quốc tế. Có phụ đề (ưu tiên vi). "
+ },
+ {
+  "name": "Trạm B",
+  "author": "Đường đen",
+  "version": 2,
+  "source": "https://www.bilibili.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Bili Trung. Cần cookie để sử dụng. Quyền xem phụ thuộc quyền truy cập của tài khoản người dùng (VIP hoặc nội dung đã mua) và giới hạn khu vực của Bilibili."
+ },
+ {
+  "name": "Bilibili",
+  "author": "QuocBao",
+  "version": 6,
+  "source": "https://www.bilibili.tv/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Bilibili bản quốc tế. Xem được video kèm âm thanh có độ phân giải cao. Có PĐ (ưu tiên vi)."
+ },
+ {
+  "name": "Bilibili TV",
+  "author": "Meo",
+  "version": 3,
+  "source": "https://www.bilibili.tv",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Anime Bilibili TV (Việt Nam) — phụ đề đa ngôn ngữ, tìm kiếm, thể loại. Nội dung cần đăng nhập: đăng nhập 1 lần trong trình duyệt của app (WebView) để xem ngay, hoặc dán cookie SESSDATA vào mục Cookie của extension để phát native 720P (chỉ cần 1 lần, tự lưu và tự dùng lại sau)."
+ },
+ {
+  "name": "BLVietsub",
+  "author": "QuocBao",
+  "version": 9,
+  "source": "https://www.blvietsub.vip/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim BL Vietsub từ BLVietsub. Nguồn phát ưu tiên Dailymotion native HLS."
+ },
+ {
+  "name": "Dailymotion",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://www.dailymotion.com/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video trên Dailymotion. Đăng nhập trong trình duyệt tích hợp nếu không xem được. "
+ },
+ {
+  "name": "Douyin",
+  "author": "Đường đen",
+  "version": 5,
+  "source": "https://www.douyin.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Xem douyin. Đăng nhập trang nguồn trong trình duyệt vBook để dùng phiên Douyin."
+ },
+ {
+  "name": "HuaziDM (花子动漫)",
+  "author": "Đường đen",
+  "version": 6,
+  "source": "https://www.huazidm.com",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "Coi phim trên trang huazidm"
+ },
+ {
+  "name": "iQIYI",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://www.iq.com/",
+  "type": "video",
+  "locale": "zh_CN",
+  "tag": null,
+  "description": "iQIYI bản quốc tế. Đã hỗ trợ tự cắt ghép phụ đề cho khớp video. Tự điều chỉnh độ phân giải bằng true/false bên dưới cài đặt ext. Đăng nhập trong trình duyệt tích hợp của VBook beta nếu video cần VIP."
+ },
+ {
+  "name": "RoPhim",
+  "author": "ivanzzz",
+  "version": 1,
+  "source": "https://www.rophim.soy",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem phim online HD Vietsub, thuyết minh trên rophim.soy"
+ },
+ {
+  "name": "TikTok",
+  "author": "QuocBao",
+  "version": 3,
+  "source": "https://www.tiktok.com/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem TikTok bằng state app/web. Hỗ trợ xem link từ app."
+ },
+ {
+  "name": "Twitch",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://www.twitch.tv/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem live stream và VOD Twitch."
+ },
+ {
+  "name": "YOUKU",
+  "author": "QuocBao",
+  "version": 1,
+  "source": "https://www.youku.tv/",
+  "type": "video",
+  "locale": "vi_VN",
+  "tag": null,
+  "description": "Xem video YOUKU quốc tế. Ưu tiên audio/phụ đề tiếng Việt và tự lấy cna/MTOP token khi cần."
+ },
+ {
+  "name": "YouTube",
+  "author": "QuocBao",
+  "version": 10,
+  "source": "https://www.youtube.com/",
+  "type": "video",
+  "locale": "global",
+  "tag": null,
+  "description": "Xem video, live và playlist trên Du Tu Be. Hỗ trợ video trẻ em, nhiều audio và phụ đề.\nCó thể chọn trình phát Video hoặc Audio trong cấu hình ext."
+ }
+]
