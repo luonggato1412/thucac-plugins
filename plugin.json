@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (535 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (534 plugin)"
  },
  "data": [
   {
@@ -264,17 +264,6 @@
    "locale": "zh_CN",
    "path": "plugins/52shuku-by-quocbao-moleys.zip",
    "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/52shuku/icon.png"
-  },
-  {
-   "name": "5in1",
-   "author": "B",
-   "version": 70,
-   "source": "http://14.225.254.182",
-   "description": "(5 trong 1) hỗ trợ đọc các web qidian(chương free), 69shu, ptwxz, qimao, fanqie (lên sangtacviet chỉ để lấy thông tin truyện với đọc bình luận cho tiện thôi)",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/5in1-b.zip",
-   "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/5in1/icon.png"
   },
   {
    "name": "5sing Kugou",
@@ -762,17 +751,6 @@
    "tag": "nsfw",
    "path": "plugins/alicesw-3690.zip",
    "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/alicesw/icon.png"
-  },
-  {
-   "name": "allin1",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "http://14.225.254.182/",
-   "description": "Đọc truyện trên Sáng Tác Việt - nền tảng văn học mạng mở",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/allin1-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/allin1_ok/icon.png"
   },
   {
    "name": "AllNovel",
@@ -4377,6 +4355,18 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/tadu-vbook.zip"
+  },
+  {
+   "name": "Sáng Tác Việt",
+   "author": "luonggato",
+   "version": 1,
+   "source": "http://14.225.254.182",
+   "regexp": "https?://(14\\.225\\.254\\.182|103\\.82\\.20\\.93|(www\\.)?sangtacviet\\.[a-z]+)/truyen/[^/]+/\\d+/[^/]+/?$",
+   "description": "Sáng Tác Việt (STV, bản IP 14.225.254.182): truyện Trung dịch máy sang tiếng Việt từ qidian, fanqie, jjwxc, ciweimao... cùng truyện sáng tác và truyện dịch. Chương được tải bằng trình duyệt ẩn trong app nên mỗi chương mất vài giây; chương VIP cần đăng nhập STV trong trình duyệt của app.",
+   "type": "novel",
+   "locale": "vi_VN",
+   "path": "plugins/sang-tac-viet-thu-cac.zip",
+   "icon": "icons/sang-tac-viet-thu-cac.png"
   },
   {
    "name": "TaoNovel",
