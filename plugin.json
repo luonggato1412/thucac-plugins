@@ -6,7 +6,7 @@
  "data": [
   {
    "name": "Haitang htlvbooks",
-   "author": "Thư Các",
+   "author": "luonggato",
    "version": 2,
    "source": "https://www.htlvbooks.com",
    "regexp": "htlvbooks\\.com/.*act=showinfo.*bookid=\\d+",
@@ -19,7 +19,7 @@
   },
   {
    "name": "Kuaikan Manhua",
-   "author": "Thư Các",
+   "author": "luonggato",
    "version": 1,
    "source": "https://m.kuaikanmanhua.com",
    "regexp": "(m|www)\\.kuaikanmanhua\\.com/(mobile/\\d+/list|web/topic/\\d+)/?$",
@@ -31,7 +31,7 @@
   },
   {
    "name": "Manhwa18",
-   "author": "Thư Các",
+   "author": "luonggato",
    "version": 1,
    "source": "https://manhwa18.com",
    "regexp": "(www\\.)?manhwa18\\.com/manga/[^/?#]+/?$",
@@ -121,7 +121,7 @@
   },
   {
    "name": "17k",
-   "author": "vBook",
+   "author": "luonggato",
    "version": 1,
    "source": "https://www.17k.com",
    "regexp": "(www|h5)\\.17k\\.com/(book|list|chapter)/\\d+",
@@ -912,7 +912,7 @@
   },
   {
    "name": "bachashuku",
-   "author": "vBook",
+   "author": "luonggato",
    "version": 4,
    "source": "https://bachashuku.org",
    "regexp": "(www\\.)?(bachashuku|8xsk)\\.org/(book|read)/\\d+",
@@ -1882,7 +1882,7 @@
   },
   {
    "name": "Hentai2Read",
-   "author": "Nhocconsr",
+   "author": "luonggato",
    "version": 3,
    "source": "https://hentai2read.com",
    "regexp": "(www\\.)?hentai2read\\.com/(doujinshi|original)/\\d+[^/]*/?$",
@@ -3679,7 +3679,7 @@
   },
   {
    "name": "piaotia",
-   "author": "vBook",
+   "author": "luonggato",
    "version": 1,
    "source": "https://www.piaotia.com",
    "regexp": "(www\\.)?(piaotia|ptwxz|ptwwxz)\\.(com|net)/(bookinfo|html)/\\d+/\\d+",
@@ -3813,7 +3813,7 @@
   },
   {
    "name": "qidian",
-   "author": "vBook",
+   "author": "luonggato",
    "version": 1,
    "source": "https://m.qidian.com",
    "regexp": "(m|www|book)\\.qidian\\.com/(book|info|chapter)/\\d+",
@@ -4369,7 +4369,7 @@
   },
   {
    "name": "Tadu (塔读文学)",
-   "author": "vBook",
+   "author": "luonggato",
    "version": 2,
    "source": "https://m.tadu.com",
    "regexp": "(www|m)\\.tadu\\.com/book/(catalogue/|catalog/)?\\d+",

@@ -37,7 +37,7 @@ def put(e,b,iconfile=None):
     if iconfile: shutil.copy(iconfile,f"{OUT}/icons/{s}.png"); ent['icon']=f"icons/{s}.png"
     elif e.get('icon'): ent['icon']=e['icon']
     data.append(ent)
-for o in own: put(dict(o['m']),o['b'],o['icon'])
+for o in own: put(dict(o['m'],author='luonggato'),o['b'],o['icon'])  # Lương: our plugins use author luonggato
 for k,(v,e,b) in best.items():
     if k[1] in ownhosts: replaced.append(f"{e['name']} ({e.get('author')}) v{v}"); continue
     e=dict(e); e.setdefault('author',e['_repo']); put(e,b)
