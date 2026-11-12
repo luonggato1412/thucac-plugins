@@ -23,6 +23,7 @@ for e in sorted(items,key=lambda e:order.index(e['_repo'])):
     b=open(f,'rb').read()
     try: zipfile.ZipFile(io.BytesIO(b)).getinfo('plugin.json')
     except Exception as ex: bad.append((e['_repo'],e['name'],'zip hỏng/không có plugin.json')); continue
+    if re.search(r'"encrypt"\s*:\s*"?true',zipfile.ZipFile(io.BytesIO(b)).read('plugin.json').decode('utf-8-sig','ignore')): bad.append((e['_repo'],e['name'],'mã hoá, Thư Các không chạy được')); continue  # Lương 2026-11-12: bỏ plugin mã hoá
     k=(e['name'].strip().lower(),host(e.get('source','')))
     v=int(e.get('version') or 1)
     if k not in best or v>best[k][0]: best[k]=(v,e,b)

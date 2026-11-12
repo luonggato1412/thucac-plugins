@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (534 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (301 plugin)"
  },
  "data": [
   {
@@ -41,39 +41,6 @@
    "tag": "nsfw",
    "path": "plugins/manhwa18-thu-cac.zip",
    "icon": "icons/manhwa18-thu-cac.png"
-  },
-  {
-   "name": "07br",
-   "author": "Đường đen",
-   "version": 9,
-   "source": "https://www.bqg128.xyz/#/",
-   "description": "Đọc truyện trên trang 07br",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/07br-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/07br/icon.png"
-  },
-  {
-   "name": "101kks",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://101kks.com",
-   "description": "Đọc truyện trên trang 101kks - phồn thể",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/101kks-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/101kks/icon.png"
-  },
-  {
-   "name": "101Minc",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.101Minc.com",
-   "description": "Đọc truyện trên trang 101Minc",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/101minc-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/101Minc/icon.png"
   },
   {
    "name": "123 Truyện",
@@ -176,19 +143,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/20xs/icon.png"
   },
   {
-   "name": "210CB",
-   "author": "Gold2k2k2k",
-   "version": 2,
-   "source": "https://2tencb.pro",
-   "regexp": "2tencb\\.pro\\/read\\/[^\\/]+\\/?$",
-   "description": "210CB - Truyá»n Hentai Online 18+",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/210cb-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/210cb/icon.png"
-  },
-  {
    "name": "22mt",
    "author": "Nahona",
    "version": 1,
@@ -255,28 +209,6 @@
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/52shuku/icon.png"
   },
   {
-   "name": "52shuku by QuocBao",
-   "author": "Moleys",
-   "version": 12,
-   "source": "https://www.52shuku.net",
-   "description": "Đọc truyện trên trang https://www.52shuku.net",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/52shuku-by-quocbao-moleys.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/52shuku/icon.png"
-  },
-  {
-   "name": "5sing Kugou",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://5sing.kugou.com",
-   "description": "Nghe nhạc từ 5sing",
-   "type": "audio",
-   "locale": "zh_CN",
-   "path": "plugins/5sing-kugou-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/5singkugou/icon.png"
-  },
-  {
    "name": "60ks",
    "author": "B",
    "version": 2,
@@ -309,17 +241,6 @@
    "path": "plugins/69shu-th03.zip"
   },
   {
-   "name": "69shu - repo Đường đen",
-   "author": "Đường đen",
-   "version": 55,
-   "source": "https://69shuba.com",
-   "description": "Đọc truyện trên trang 69shuba.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/69shu-repo-uong-en-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/69shu/icon.png"
-  },
-  {
    "name": "69shuba",
    "author": "ivanzzz",
    "version": 1,
@@ -329,50 +250,6 @@
    "locale": "zh_CN",
    "path": "plugins/69shuba-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/chinese_novel/69shuba_ok/icon.png"
-  },
-  {
-   "name": "69书吧",
-   "author": "Đường đen",
-   "version": 1,
-   "source": "https://www.69shu.xyz",
-   "description": "Đọc truyện trên trang 69shu.xyz",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/69-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/69shuxyz/icon.png"
-  },
-  {
-   "name": "69书吧",
-   "author": "QuocBao",
-   "version": 4,
-   "source": "https://www.69shuba.com",
-   "description": "Đọc truyện chữ Trung trên 69书吧. Nếu bị Cloudflare/verify chặn, mở trang 69书吧 trong trình duyệt VBook để xác minh.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/69-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/69shuba/icon.png"
-  },
-  {
-   "name": "69书吧.TW",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://69shuba.tw",
-   "description": "Đọc truyện chữ Trung trên 69shubatw. Nếu gặp xác minh, nhấn Trang nguồn, vượt xác minh rồi quay lại.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/69-tw-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/69shubatw/icon.png"
-  },
-  {
-   "name": "75zwcom",
-   "author": "Đường đen",
-   "version": 3,
-   "source": "https://m.qiwubiquge.com",
-   "description": "Đọc truyện trên trang 75zwcom",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/75zwcom-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/75zwcom/icon.png"
   },
   {
    "name": "81cnw",
@@ -417,17 +294,6 @@
    "locale": "zh_CN",
    "path": "plugins/85-novel-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/85novel/icon.png"
-  },
-  {
-   "name": "8book",
-   "author": "Đường đen",
-   "version": 7,
-   "source": "https://www.8book.com",
-   "description": "Đọc novel trên trang 8book",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/8book-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/8book/icon.png"
   },
   {
    "name": "8muses",
@@ -509,116 +375,6 @@
    "tag": "nsfw"
   },
   {
-   "name": "[APP] Ciweimao",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://www.ciweimao.com/",
-   "description": "App Ciweimao cho novel và comic. Bản này chỉ hỗ trợ đọc chương miễn phí bằng state tự tạo. ",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/app-ciweimao-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/ciweimao/icon.png"
-  },
-  {
-   "name": "[APP] MTC",
-   "author": "vBook",
-   "version": 5,
-   "source": "https://android.lonoapp.net",
-   "description": "Đọc truyện trên App MTC (Novel Fever)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-mtc-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/metruyenchu-app/icon.png"
-  },
-  {
-   "name": "[APP] QQ阅读",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "book.qq.com",
-   "description": "Đọc QQ阅读. Chap miễn phí dùng cấu hình tự tạo; liên hệ để nhận bản VIP. ",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/app-qq-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/book.qq/icon.png"
-  },
-  {
-   "name": "[APP] Shubl",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "shubl.com",
-   "description": "Đọc truyện trên app Shubl. Chap free xem bằng acc tự tạo, chap vip cần state acc đã mua vip - chưa test. ",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/app-shubl-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/shubl/icon.png"
-  },
-  {
-   "name": "[APP] Sáng Tác Việt",
-   "author": "kychi",
-   "version": 2,
-   "source": "https://sangtacviet.pro",
-   "description": "STV - App - Kychi - Freemium",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-sang-tac-viet-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/sangtacviet-app/icon.png"
-  },
-  {
-   "name": "[APP] Truyện CV",
-   "author": "kychi",
-   "version": 2,
-   "source": "https://truyencv.io",
-   "description": "Đọc truyện từ App TruyenCV.\n\n HƯỚNG DẪN SỬ DỤNG :\n Nhập tài khoản mật khẩu để login\n\n Trong trường hợp TruyenCv không muốn ext này tồn tại, vui lòng liên hệ, mình cam kết tiếp nhận và gỡ bỏ trong 24h làm việc. \n\n Hoan hỷ nhé :)))))",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-truyen-cv-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_truyencv/icon.png"
-  },
-  {
-   "name": "[APP] TYT",
-   "author": "QuocBao",
-   "version": 13,
-   "source": "https://tytnovel.info/",
-   "description": "Đọc truyện từ app TYT.",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-tyt-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/tyt/icon.png"
-  },
-  {
-   "name": "[APP] Wikidich",
-   "author": "vBook",
-   "version": 11,
-   "source": "https://truyenwikidich.com",
-   "description": "Đọc truyện trên trang app Wiki Dịch",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-wikidich-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/wikidich-app/icon.png"
-  },
-  {
-   "name": "[APP] Zhihu Hỏi đáp",
-   "author": "QuocBao",
-   "version": 6,
-   "source": "zhihu.com",
-   "description": "Đọc Zhihu bằng API Android/web đã ký, có thêm cấu hình zhihuCookie để dùng cookie đăng nhập khi cần. Hỗ trợ câu hỏi, câu trả lời, pin/想法, bài viết, trang chủ Đề xuất/热榜, bình luận và gợi ý.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/app-zhihu-hoi-ap-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/zhihu/icon.png"
-  },
-  {
-   "name": "[dmxs]耽美小说",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://www.dmxs.org/",
-   "description": "Đọc truyện trên dmxs.org.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/dmxs-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/dmxs/icon.png"
-  },
-  {
    "name": "[Fanqie] Cà Chua C2",
    "author": "kychi",
    "version": 5,
@@ -641,28 +397,6 @@
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/tamlinh.png"
   },
   {
-   "name": "[NEW] Cà Chua",
-   "author": "kychi",
-   "version": 2,
-   "source": "https://fanqienovel.com",
-   "description": "Tomato viết ngược lại vẫn là Tomato. Có đảo ngược thế nào thì cà chua cũng vẫn là cà chua",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/new-ca-chua-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/new_cachua/icon.png"
-  },
-  {
-   "name": "[QQ] Cánh Cụt",
-   "author": "kychi",
-   "version": 1,
-   "source": "https://book.qq.com/",
-   "description": "QQ阅读 - Thư viện truyện chữ Trung Quốc khổng lồ từ Tencent",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/qq-canh-cut-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/canhcut/icon.png"
-  },
-  {
    "name": "[QQ] html5",
    "author": "kychi",
    "version": 1,
@@ -683,17 +417,6 @@
    "locale": "zh_CN",
    "path": "plugins/review-tuishujun-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/%5BReview%5D%20tuishujun%20%F0%9F%92%AC/icon.png"
-  },
-  {
-   "name": "[wfxs]微風小說",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://www.wfxs.tw",
-   "description": "Đọc truyện chữ trên 微風小說 (wfxs). Nếu gặp Cloudflare, nhấn Trang nguồn, vượt xác minh trong trình duyệt VBook rồi tải lại.",
-   "type": "chinese_novel",
-   "locale": "zh_TW",
-   "path": "plugins/wfxs-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/wfxs/icon.png"
   },
   {
    "name": "AAHHSS",
@@ -719,17 +442,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/acqq/icon.png"
   },
   {
-   "name": "AI Chat",
-   "author": "QuocBao",
-   "version": 19,
-   "source": "https://aistudio.google.com/",
-   "description": "[TEST] AI Chat cho VBook. \nHỗ trợ Gemini, bộ nhớ dài hạn, tool native, Sửa tên/QT/VP, tìm/đọc web và ảnh theo URL, xử lý dữ liệu theo ref, tra cứu kho cộng đồng, file text tạm Filebin, bảng Name WikiCV, lệnh nhanh /help, kiểm sức khỏe /health và hướng dẫn VBook.\nModel chat lấy từ API key tại Cài đặt → API và hội thoại, /models refresh để quét lại.",
-   "type": "ai",
-   "locale": "vi_VN",
-   "path": "plugins/ai-chat-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/aichat/icon.png"
-  },
-  {
    "name": "AkayTruyen",
    "author": "ivanzzz",
    "version": 3,
@@ -739,18 +451,6 @@
    "locale": "vi_VN",
    "path": "plugins/akaytruyen-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/akaytruyen.com_ok/icon.png"
-  },
-  {
-   "name": "alicesw",
-   "author": "3690",
-   "version": 46,
-   "source": "https://www.alicesw.com",
-   "description": "Đọc truyện trên alicesw.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "tag": "nsfw",
-   "path": "plugins/alicesw-3690.zip",
-   "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/alicesw/icon.png"
   },
   {
    "name": "AllNovel",
@@ -786,28 +486,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_animehay/icon.png"
   },
   {
-   "name": "Anime Vietsub",
-   "author": "QuocBao",
-   "version": 6,
-   "source": "https://animevietsub.news/",
-   "description": "Xem video trên AnimeVietsub. ",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/anime-vietsub-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/animevietsub/icon.png"
-  },
-  {
-   "name": "AnimeVietsub",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://animevietsub.sale",
-   "description": "Xem anime Vietsub online trên animevietsub.sale",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/animevietsub-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/animevietsub.nl_ok/icon.png"
-  },
-  {
    "name": "AnimeVsub",
    "author": "kychi",
    "version": 1,
@@ -817,17 +495,6 @@
    "locale": "vi_VN",
    "path": "plugins/animevsub-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_animevsub/icon.png"
-  },
-  {
-   "name": "App Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://apptruyenchu.pro/",
-   "description": "App Truyện Chữ - Truyện Dịch & Truyện Convert. Next.js App Router + Firebase backend.",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/app-truyen-chu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/apptruyenchu_ok/icon.png"
   },
   {
    "name": "ASMR One",
@@ -840,42 +507,6 @@
    "locale": "ja_JP",
    "path": "plugins/asmr-one-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrone/icon.png"
-  },
-  {
-   "name": "ASMR+18",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://asmr18.fans",
-   "regexp": "(https?://)?(www\\.)?asmr18\\.fans/(boys|girls|allages)/rj\\d+/?",
-   "description": "Nghe ASMR / drama CD tiếng Nhật (DLsite) từ asmr18.fans",
-   "type": "audio",
-   "locale": "ja_JP",
-   "path": "plugins/asmr-18-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmr18/icon.png"
-  },
-  {
-   "name": "ASMRchive",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://asmrchive.moe",
-   "regexp": "(https?://)?(www\\.)?asmrchive\\.moe/share/[A-Za-z0-9_-]+/?",
-   "description": "Kho lưu trữ ASMR của VTuber (YouTube, Twitch, rplay) từ asmrchive.moe",
-   "type": "audio",
-   "locale": "en_US",
-   "path": "plugins/asmrchive-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrchive/icon.png"
-  },
-  {
-   "name": "ASMR基佬中心",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://www.asmrgay.com",
-   "regexp": "(https?://)?(www\\.)?asmrgay\\.com/[^@/][^/]*/.+",
-   "description": "Kho audio ASMR / 中文音声 / 同人音声 trên asmrgay.com (OpenList)",
-   "type": "audio",
-   "locale": "zh_CN",
-   "path": "plugins/asmr-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrgay/icon.png"
   },
   {
    "name": "Audio Truyện Full",
@@ -933,39 +564,6 @@
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/chinese_novel/bfaloo_ok/icon.png"
   },
   {
-   "name": "Bili Light Novel",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.bilinovel.net",
-   "description": "Trang này ban rất gắt. Tải chậm để không bị ban. Bị ban thì ko fix nữa =)).",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/bili-light-novel-uong-en.zip",
-   "icon": "https://vbook.trasua.workers.dev/s/SMVfAou7fZmyjrMHiGNy_A/bibilinovel/icon.png"
-  },
-  {
-   "name": "Bilibili",
-   "author": "QuocBao",
-   "version": 6,
-   "source": "https://www.bilibili.tv/",
-   "description": "Bilibili bản quốc tế. Xem được video kèm âm thanh có độ phân giải cao. Có PĐ (ưu tiên vi).",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/bilibili-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/bilibili.tv/icon.png"
-  },
-  {
-   "name": "Bilibili TV",
-   "author": "Meo",
-   "version": 3,
-   "source": "https://www.bilibili.tv",
-   "description": "Anime Bilibili TV (Việt Nam) — phụ đề đa ngôn ngữ, tìm kiếm, thể loại. Nội dung cần đăng nhập: đăng nhập 1 lần trong trình duyệt của app (WebView) để xem ngay, hoặc dán cookie SESSDATA vào mục Cookie của extension để phát native 720P (chỉ cần 1 lần, tự lưu và tự dùng lại sau).",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/bilibili-tv-meo.zip",
-   "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/video/bilibili/icon.png"
-  },
-  {
    "name": "Biquge",
    "author": "Meo",
    "version": 13,
@@ -1011,28 +609,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/chinese_novel/bixiange/icon.png"
   },
   {
-   "name": "BL Bất Tử",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://blbattu.com/",
-   "description": "Đọc truyện trên trang BL Bất Tử",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/bl-bat-tu-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/blbattu/icon.png"
-  },
-  {
-   "name": "BLVietsub",
-   "author": "QuocBao",
-   "version": 9,
-   "source": "https://www.blvietsub.vip/",
-   "description": "Xem phim BL Vietsub từ BLVietsub. Nguồn phát ưu tiên Dailymotion native HLS.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/blvietsub-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/blvietsub/icon.png"
-  },
-  {
    "name": "Book QQ",
    "author": "Nhocconsr",
    "version": 1,
@@ -1054,17 +630,6 @@
    "path": "plugins/book18-nahona.zip",
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/book18.png",
    "tag": "nsfw"
-  },
-  {
-   "name": "Boylove Bất Tử",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://boylovebattu.com/",
-   "description": "Đọc truyện trên trang boylovebattu",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/boylove-bat-tu-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/boylovebattu/icon.png"
   },
   {
    "name": "bqg9527",
@@ -1123,18 +688,6 @@
    "tag": "nsfw"
   },
   {
-   "name": "CBunu Comic",
-   "author": "QuocBao",
-   "version": 5,
-   "source": "https://cucbongunu.com/",
-   "description": "Đọc truyện tranh trên CBunu",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/cbunu-comic-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/cbunu/icon.png"
-  },
-  {
    "name": "ChillAudio TTS",
    "author": "B",
    "version": 1,
@@ -1168,29 +721,6 @@
    "locale": "zh_CN"
   },
   {
-   "name": "ciyuanji",
-   "author": "Đường đen",
-   "version": 4,
-   "source": "https://www.ciyuanji.com",
-   "description": "Đọc truyện trên trang ciyuanji",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/ciyuanji-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/ciyuanji/icon.png"
-  },
-  {
-   "name": "cosplaytele",
-   "author": "3690",
-   "version": 1,
-   "source": "https://cosplaytele.com/",
-   "description": "noDes",
-   "type": "comic",
-   "locale": "zh_CN",
-   "tag": "nsfw",
-   "path": "plugins/cosplaytele-3690.zip",
-   "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/cosplaytele/icon.png"
-  },
-  {
    "name": "czbooks",
    "author": "hajljnopera",
    "version": 2,
@@ -1200,18 +730,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/czbooks/icon.png",
    "type": "chinese_novel",
    "locale": "zh_CN"
-  },
-  {
-   "name": "czbooks - repo Đường đen",
-   "author": "Đường đen",
-   "version": 5,
-   "source": "https://czbooks.net",
-   "description": "Đọc truyện trên trang czbooks",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/czbooks-repo-uong-en-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/czbooks/icon.png",
-   "tag": "nsfw"
   },
   {
    "name": "Cà Chua",
@@ -1270,17 +788,6 @@
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/webtruyen/icon.png"
   },
   {
-   "name": "Dailymotion",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://www.dailymotion.com/",
-   "description": "Xem video trên Dailymotion. Đăng nhập trong trình duyệt tích hợp nếu không xem được. ",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/dailymotion-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/dailymotion/icon.png"
-  },
-  {
    "name": "damixs",
    "author": "Nahona",
    "version": 1,
@@ -1337,39 +844,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/translate/dich_deepseek/icon.png"
   },
   {
-   "name": "deqixs",
-   "author": "Đường đen",
-   "version": 10,
-   "source": "https://www.deqixss.com",
-   "description": "Đọc truyện trên trang deqixs",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/deqixs-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/deqixs/icon.png"
-  },
-  {
-   "name": "deqixsorg",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.deqixs.org",
-   "description": "Đọc truyện trên trang deqixs.org",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/deqixsorg-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/deqixsorg/icon.png"
-  },
-  {
-   "name": "Destin Team",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://destinteam.xyz/",
-   "description": "Đọc truyện tranh trên Destin Team.",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/destin-team-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/destinteam/icon.png"
-  },
-  {
    "name": "Dingdian 【顶点】",
    "author": "Nhocconsr",
    "version": 1,
@@ -1392,17 +866,6 @@
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/diyi69.png"
   },
   {
-   "name": "DocLN (Hako)",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://docln.sbs",
-   "description": "Plugin đọc truyện Light Novel từ docln.sbs (Hako)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/docln-hako-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/docln_ok/icon.png"
-  },
-  {
    "name": "docsach24",
    "author": "fusornat",
    "version": 1,
@@ -1412,17 +875,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/docsach24/icon.png",
    "type": "novel",
    "locale": "vi_VN"
-  },
-  {
-   "name": "douban",
-   "author": "Đường đen",
-   "version": 5,
-   "source": "https://read.douban.com",
-   "description": "Đọc Douban Reading. Không có tài khoản để test Vip",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/douban-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/douban/icon.png"
   },
   {
    "name": "DouJins",
@@ -1435,17 +887,6 @@
    "tag": "nsfw",
    "path": "plugins/doujins-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/doujins/icon.png"
-  },
-  {
-   "name": "Douyin",
-   "author": "Đường đen",
-   "version": 5,
-   "source": "https://www.douyin.com",
-   "description": "Xem douyin. Đăng nhập trang nguồn trong trình duyệt vBook để dùng phiên Douyin.",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/douyin-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/douyin/icon.png"
   },
   {
    "name": "douyinxs",
@@ -1470,29 +911,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/dualeo/icon.png"
   },
   {
-   "name": "Dưa Hấu",
-   "author": "Đường đen",
-   "version": 3,
-   "source": "https://xgmf.zuanqianyi.com",
-   "description": "Tiểu thuyết dưa hấu",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/dua-hau-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/duahau/icon.png"
-  },
-  {
-   "name": "Dưa Leo truyện",
-   "author": "QuocBao",
-   "version": 29,
-   "source": "https://dualeotruyenjv.com/",
-   "description": "Đọc truyện trên dualeotruyen",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/dua-leo-truyen-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/dualeotruyen/icon.png"
-  },
-  {
    "name": "Dịch Tiếng Hoa",
    "author": "ivanzzz",
    "version": 3,
@@ -1502,17 +920,6 @@
    "locale": "vi_VN",
    "path": "plugins/dich-tieng-hoa-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/dichtienghoa_ok/icon.png"
-  },
-  {
-   "name": "E Hentai",
-   "author": "vBook",
-   "version": 3,
-   "source": "https://e-hentai.org",
-   "description": "Đọc truyện 18+ trên trang e-hentai.org",
-   "type": "comic",
-   "tag": "nsfw",
-   "path": "plugins/e-hentai-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/e-hentai/icon.png"
   },
   {
    "name": "ebookbao",
@@ -1537,39 +944,6 @@
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/elysia/icon.png"
   },
   {
-   "name": "Faloo",
-   "author": "QuocBao",
-   "version": 5,
-   "source": "faloo.com",
-   "description": "Đọc Faloo. Chap VIP gọi Faloo app local API; chap free thử web trước rồi fallback local API.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/faloo-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/faloo/icon.png"
-  },
-  {
-   "name": "Fan MTL",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.fanmtl.com",
-   "description": "Đọc truyện trên trang Fan MTL",
-   "type": "novel",
-   "locale": "en_US",
-   "path": "plugins/fan-mtl-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_EN/fanmtl/icon.png"
-  },
-  {
-   "name": "FanMTL",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://www.fanmtl.com",
-   "description": "Read Fan-Fiction & Web Novels on FanMTL",
-   "type": "novel",
-   "locale": "en_US",
-   "path": "plugins/fanmtl-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/fanmtl.com_ok/icon.png"
-  },
-  {
    "name": "Fanqienovel - LV",
    "author": "Nahona",
    "version": 4,
@@ -1579,17 +953,6 @@
    "locale": "zh_CN",
    "path": "plugins/fanqienovel-lv-nahona.zip",
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAbFBMVEVHcEz////////////xlYDvURbrUi3////yWBb////tSxPrQwr6yLr+6eD1rp+yxsn8jVv6aRr7YAH3YRn0XBj+fjf+chznbVToNwDkOA7gKwb2vqLZGAPaIQXSEAP6czL7iVHvhFOXoqTFqJdaQzLXAAAAJHRSTlMAPK7/////xv9V//////8L///////8//////8Z////3GOMViZIqNtXAAABaElEQVR4AWIgCgBqnwvkhmEoCKBKBU0FZpAUQ+D+d+x+yw66w91w9s1aPnzx5wiplJL8+7D1VO8Azr/3ewJHAqs4cL6/QPmhgR2gjSSQJvgnMNYpk77vAktvWfqeE9jPfwGH/AWcLcoqpcjcB7AFirpulkddVa19Aa6tSrTNcUkDUladfQBRlehRS2m0lBKmLsuq2EBLPdVaG9EbDQMB0rkFdF2HHjV6z52H0CTKrqscQLH2xnsTAGKgb6voToyhL2v0jvc+DM6OIQpuk0ggDXjL3RBjr2IMnFuv5TPAAYx3XI3jgGfGbTTpGATWE5owKABk6OMQDMQzwECMVE7ThJUYvcfEA0gjbKZSPw2AIuvNBloCniORAEVxxC+AMTYT0Fr0w7iCp4UW4ExgOUNMABDf0xkujCbokDqEEDExpD4EQ2BGTSLdZsAEJfUGl0g9XWUGIEEEPYFe9Jfr9Zpv5vSeW56zU35ivzemLVyWHDaNAAAAAElFTkSuQmCC"
-  },
-  {
-   "name": "Feiku",
-   "author": "Đường đen",
-   "version": 5,
-   "source": "https://feiku6.com",
-   "description": "Đọc truyện trên trang feiku",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/feiku-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/feiku/icon.png"
   },
   {
    "name": "ffxs8",
@@ -1614,40 +977,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/tts/fpt_ai_tts/icon.png"
   },
   {
-   "name": "FQ Video",
-   "author": "Đường đen",
-   "version": 1,
-   "source": "https://fanqienovel.com",
-   "description": "Phim ngắn và hoạt hình Fanqie, API trực tiếp và phát native; không cần root.",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/fq-video-uong-en.zip",
-   "icon": "https://vbook.trasua.workers.dev/s/SMVfAou7fZmyjrMHiGNy_A/FQ-video/icon.png"
-  },
-  {
-   "name": "FreeReels",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://free-reels.com",
-   "description": "Xem video ngắn từ FreeReels.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/freereels-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/freereels/icon.png"
-  },
-  {
-   "name": "Frostedsakura Stash",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://stash.frostedsakura.my.id",
-   "regexp": "(https?://)?stash\\.frostedsakura\\.my\\.id/[^@/][^/]*/.+",
-   "description": "Kho ASMR / stream VTuber trên stash.frostedsakura.my.id (OpenList)",
-   "type": "audio",
-   "locale": "en_US",
-   "path": "plugins/frostedsakura-stash-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/frostedsakura/icon.png"
-  },
-  {
    "name": "fuxsb 👨‍❤️‍👨👩‍❤️‍👩",
    "author": "Moleys",
    "version": 7,
@@ -1657,17 +986,6 @@
    "locale": "zh_CN",
    "path": "plugins/fuxsb-moleys.zip",
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/fuxsb/icon.png"
-  },
-  {
-   "name": "Gemini Baidu Translate change Model V2.0",
-   "author": "3690",
-   "version": 96,
-   "source": "https://aistudio.google.com/apikey",
-   "description": "Dịch văn bản bằng Google Gemini API với nhiều key, prompt, tùy chỉnh theo thể loại và xử lý lỗi an toàn thông minh. DONATE CHO ADMIN VBOOK NHIỀU LÊN ĐỂ VỪA CÓ TÊN ĐẸP, ADMIN LẠI CÓ THÊM ĐỘNG LỰC HOÀN THIỆN APP",
-   "type": "translate",
-   "locale": "vi_VN",
-   "path": "plugins/gemini-baidu-translate-change-model-v2-0-3690.zip",
-   "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/Gemini-Baidu-translate-change-model-V2/icon.png"
   },
   {
    "name": "Gemini TTS",
@@ -1692,38 +1010,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/giangthe/icon.png"
   },
   {
-   "name": "Giới Truyện",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://gioitruyen.com/",
-   "description": "Đọc truyện trên Giới Truyện (gioitruyen.com)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/gioi-truyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/gioitruyen.com_ok/icon.png"
-  },
-  {
-   "name": "gongzicp",
-   "author": "vBook",
-   "version": 2,
-   "source": "https://www.gongzicp.com",
-   "description": "Đọc truyện trên trang www.gongzicp.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/gongzicp-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/gongzicp/icon.png"
-  },
-  {
-   "name": "Google Translate",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://translate.google.com/",
-   "description": "Dịch văn bản bằng Google Translate.",
-   "type": "translate",
-   "path": "plugins/google-translate-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/googletranslate/icon.png"
-  },
-  {
    "name": "Google TTS",
    "author": "vBook",
    "version": 3,
@@ -1733,39 +1019,6 @@
    "locale": "vi_VN",
    "path": "plugins/google-tts-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/google-tts/icon.png"
-  },
-  {
-   "name": "GuPhim",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://guphimz.com",
-   "description": "Xem phim tren guphimz.com",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/guphim-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/guphim.com_ok/icon.png"
-  },
-  {
-   "name": "Góc Truyện Tranh",
-   "author": "Will Sun",
-   "version": 1,
-   "source": "https://goctruyentranhvui41.com",
-   "description": "Đọc truyện trên trang goctruyentranhvui41.com",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/goc-truyen-tranh-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/goctruyentranhvui41.com.png"
-  },
-  {
-   "name": "Gấu Mèo Team",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://gaumeoteam.com/",
-   "description": "Đọc truyện trên Gấu Mèo Team",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/gau-meo-team-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/gaumeoteam/icon.png"
   },
   {
    "name": "h528",
@@ -1803,51 +1056,6 @@
    "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/hako/icon.png"
   },
   {
-   "name": "Hako Novel",
-   "author": "vBook",
-   "version": 13,
-   "source": "https://docln.sbs",
-   "description": "Đọc truyện trên trang Hako",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/hako-novel-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/hako/icon.png"
-  },
-  {
-   "name": "Hameln (Syosetu.org)",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://syosetu.org",
-   "description": "ハーメルン - SS・小説投稿サイト (syosetu.org). Cần CONFIG_COOKIE cf_clearance + CONFIG_UA do Cloudflare.",
-   "type": "chinese_novel",
-   "locale": "ja_JP",
-   "path": "plugins/hameln-syosetu-org-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/jp_novel/syosetu.org_ok/icon.png"
-  },
-  {
-   "name": "Hang Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://hangtruyenchu.com",
-   "description": "Đọc truyện tại Hang Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/hang-truyen-chu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/hangtruyenchu_ok/icon.png"
-  },
-  {
-   "name": "Hentai ASMR",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://hentaiasmr.moe",
-   "regexp": "(https?://)?(www\\.)?hentaiasmr\\.moe/[^/?#]+\\.html",
-   "description": "Nghe ASMR / drama CD 18+ tiếng Nhật (kèm EN, 中文) từ hentaiasmr.moe",
-   "type": "audio",
-   "locale": "ja_JP",
-   "path": "plugins/hentai-asmr-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/hentaiasmr/icon.png"
-  },
-  {
    "name": "Hentai Image",
    "author": "vBook",
    "version": 1,
@@ -1881,19 +1089,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentaic/icon.png",
    "type": "comic",
    "tag": "nsfw"
-  },
-  {
-   "name": "HentaiCube",
-   "author": "Gold2k2k2k",
-   "version": 3,
-   "source": "https://hentaicube.xyz",
-   "regexp": "hentaicube\\.xyz\\/read\\/[^\\/]+\\/?$",
-   "description": "HentaiCube - Truyá»n Hentai Online 18+",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/hentaicube-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/hentaicube/icon.png"
   },
   {
    "name": "HentaiCube -18+",
@@ -1939,30 +1134,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentairules/icon.png",
    "type": "comic",
    "tag": "nsfw"
-  },
-  {
-   "name": "HentaiVietsub.com",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://hentaivietsub.com",
-   "description": "Xem phim trên hentaivietsub.com",
-   "type": "video",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/hentaivietsub-com-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/hentaivietsub.com.png"
-  },
-  {
-   "name": "HentaiVN",
-   "author": "Will Sun",
-   "version": 3,
-   "source": "https://hentaivnreal.com",
-   "description": "Đọc truyện trên trang hentaivnreal.com",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/hentaivn-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/hentaivnreal.com.png"
   },
   {
    "name": "HentaiZBot",
@@ -2022,28 +1193,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_hhkungfu/icon.png"
   },
   {
-   "name": "HHPanda",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://hhpanda.st",
-   "description": "Xem hoạt hình 3D Trung Quốc Vietsub/Thuyết minh 4K trên hhpanda.st",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/hhpanda-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/hhpanda.st_ok/icon.png"
-  },
-  {
-   "name": "HHTQHAY.VIP",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://hhtqhay.vip",
-   "description": "Xem phim trên hhtqhay.vip",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/hhtqhay-vip-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/hhtqhay.vip.png"
-  },
-  {
    "name": "hiperdex",
    "author": "hajljnopera",
    "version": 4,
@@ -2065,28 +1214,6 @@
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/168txt/icon.png"
   },
   {
-   "name": "html5.qq.com",
-   "author": "Moleys",
-   "version": 23,
-   "source": "https://bookshelf.html5.qq.com",
-   "description": "Đọc truyện trên trang https://bookshelf.html5.qq.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/html5-qq-com-moleys.zip",
-   "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/html5qq/icon.png"
-  },
-  {
-   "name": "HuaziDM (花子动漫)",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://www.huazidm.com",
-   "description": "Coi phim trên trang huazidm",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/huazidm-uong-en.zip",
-   "icon": "https://vbook.trasua.workers.dev/s/SMVfAou7fZmyjrMHiGNy_A/huazidm/icon.png"
-  },
-  {
    "name": "Hướng dẫn sử dụng VBook",
    "author": "ngatngay,duongden - repo kychi",
    "version": 6,
@@ -2098,18 +1225,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_vbook_docs/icon.png"
   },
   {
-   "name": "Hắc Ám Chi Các",
-   "author": "QuocBao",
-   "version": 12,
-   "source": "https://haccbl.xyz/",
-   "description": "Đọc truyện trên web Hắc Ám Chi Các",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/hac-am-chi-cac-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/hacamchicac/icon.png"
-  },
-  {
    "name": "Hố Truyện",
    "author": "Nhocconsr",
    "version": 5,
@@ -2119,28 +1234,6 @@
    "locale": "vi_VN",
    "path": "plugins/ho-truyen-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/hotruyen/icon.png"
-  },
-  {
-   "name": "Hồng quả",
-   "author": "Đường đen",
-   "version": 14,
-   "source": "https://hongguoduanju.com",
-   "description": "Phim ngắn và hoạt hình Hongguo",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/hong-qua-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/hongguo/icon.png"
-  },
-  {
-   "name": "idejian",
-   "author": "Nhocconsr",
-   "version": 11,
-   "source": "https://www.idejian.com",
-   "description": "Đọc truyện trên trang idejian",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/idejian-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/idejian/icon.png"
   },
   {
    "name": "ihentai",
@@ -2166,17 +1259,6 @@
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/ihuaben/icon.png"
   },
   {
-   "name": "ijjjxsxzw",
-   "author": "Đường đen",
-   "version": 9,
-   "source": "https://m.ijjjxsxzw.com/",
-   "description": "Đọc truyện trên trang ijjjxsxzw",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/ijjjxsxzw-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/ijjjxsxzw/icon.png"
-  },
-  {
    "name": "ilwxs",
    "author": "Vearn",
    "version": 1,
@@ -2186,27 +1268,6 @@
    "locale": "zh_CN",
    "path": "plugins/ilwxs-vearn.zip",
    "icon": "https://raw.githubusercontent.com/Evamirion/vbook-ext/refs/heads/main/ilwxs/icon.png"
-  },
-  {
-   "name": "Immersive Translate",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://immersivetranslate.com/",
-   "description": "Dịch bằng Free Auto của Immersive Translate. Khi user_token hợp lệ, ext tự hiện các model Pro/Max mà tài khoản được dùng.",
-   "type": "translate",
-   "path": "plugins/immersive-translate-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/immersivetranslate/icon.png"
-  },
-  {
-   "name": "iQIYI",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://www.iq.com/",
-   "description": "iQIYI bản quốc tế. Đã hỗ trợ tự cắt ghép phụ đề cho khớp video. Tự điều chỉnh độ phân giải bằng true/false bên dưới cài đặt ext. Đăng nhập trong trình duyệt tích hợp của VBook beta nếu video cần VIP.",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/iqiyi-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/iq.com/icon.png"
   },
   {
    "name": "iqushuwang",
@@ -2242,17 +1303,6 @@
    "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/ixdzs/icon.png"
   },
   {
-   "name": "ixdzs8",
-   "author": "Nahona",
-   "version": 5,
-   "source": "https://ixdzs8.com/",
-   "description": "Đọc truyện trên trang ixdzs8",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/ixdzs8-nahona.zip",
-   "icon": "https://ixdzs8.tw/images/favicon.ico"
-  },
-  {
    "name": "ixunshu",
    "author": "vBook",
    "version": 1,
@@ -2262,51 +1312,6 @@
    "locale": "zh_CN",
    "path": "plugins/ixunshu-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/ixunshu/icon.png"
-  },
-  {
-   "name": "Japanese ASMR",
-   "author": "mizhm",
-   "version": 2,
-   "source": "https://japaneseasmr.com",
-   "regexp": "(https?://)?(www\\.)?japaneseasmr\\.com/\\d+/?",
-   "description": "Nghe ASMR / drama CD tiếng Nhật từ japaneseasmr.com",
-   "type": "audio",
-   "locale": "ja_JP",
-   "path": "plugins/japanese-asmr-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/japaneseasmr/icon.png"
-  },
-  {
-   "name": "Jelly Comics",
-   "author": "QuocBao",
-   "version": 4,
-   "source": "https://jellycomics.online/",
-   "description": "Đọc truyện trên trang Jelly Comics",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/jelly-comics-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/jellycomics/icon.png"
-  },
-  {
-   "name": "JJWXC · Tấn Giang",
-   "author": "QuocBao",
-   "version": 13,
-   "source": "http://www.jjwxc.net/",
-   "description": "Đọc truyện trên app JJWXC. ",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/jjwxc-tan-giang-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/jjwxc/icon.png"
-  },
-  {
-   "name": "Jjwxc-repo duongden💰✅",
-   "author": "Đường đen",
-   "version": 73,
-   "source": "https://www.jjwxc.net",
-   "description": "Đọc truyện trên Tấn Giang",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/jjwxc-repo-duongden-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/jjwxc/icon.png"
   },
   {
    "name": "jpxs123",
@@ -2320,18 +1325,6 @@
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/jpxs123/icon.png"
   },
   {
-   "name": "JulyComic",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://julycomics.site",
-   "description": "Đọc truyện trên JulyComic. Ext tự lấy token đăng nhập nếu có, gửi flag 18+ và tự gọi xác nhận 18+ khi có tài khoản. Search `token:<Bearer token>` để nhập nhanh token, `token:clear` xóa token đang lưu. ",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/julycomic-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/julycomics/icon.png"
-  },
-  {
    "name": "jwxs",
    "author": "TH03",
    "version": 4,
@@ -2340,18 +1333,6 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/jwxs-th03.zip"
-  },
-  {
-   "name": "Kakuyomu",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://kakuyomu.jp",
-   "regexp": "https://kakuyomu.jp/works/(.*?)$",
-   "description": "カクヨム - Web tiểu thuyết Nhật Bản (ruby hiển thị dạng 漢字《かんじ》)",
-   "type": "novel",
-   "locale": "ja_JP",
-   "path": "plugins/kakuyomu-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/kakuyomu/icon.png"
   },
   {
    "name": "kanshuwu",
@@ -2385,17 +1366,6 @@
    "locale": "vi_VN",
    "path": "plugins/kenh-truyen-ma-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_kenhtruyenma/icon.png"
-  },
-  {
-   "name": "Kho Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://khotruyenchu.fun/",
-   "description": "Đọc truyện trên Kho Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/kho-truyen-chu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/khotruyenchu.fun_ok/icon.png"
   },
   {
    "name": "Kho Truyện Chữ",
@@ -2442,17 +1412,6 @@
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/kkphim/icon.png"
   },
   {
-   "name": "Kugou Music",
-   "author": "Đường đen",
-   "version": 3,
-   "source": "https://songsearch.kugou.com",
-   "description": "Nghe nhạc từ Kuguo",
-   "type": "audio",
-   "locale": "zh_CN",
-   "path": "plugins/kugou-music-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/kugou/icon.png"
-  },
-  {
    "name": "Kỳ Huyễn",
    "author": "kychi",
    "version": 1,
@@ -2462,39 +1421,6 @@
    "locale": "vi_VN",
    "path": "plugins/ky-huyen-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_kyhuyen/icon.png"
-  },
-  {
-   "name": "La Cà Truyện",
-   "author": "ivanzzz",
-   "version": 9,
-   "source": "https://lacatruyen.homes",
-   "description": "Đọc truyện tại La Cà Truyện",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/la-ca-truyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/lacatruyen_ok/icon.png"
-  },
-  {
-   "name": "La cà truyện",
-   "author": "QuocBao",
-   "version": 24,
-   "source": "https://lacatruyen.live/",
-   "description": "Đọc truyện trên La cà truyện",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/la-ca-truyen-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/lacatruyen/icon.png"
-  },
-  {
-   "name": "Langgee",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://v5.langge.uk",
-   "description": "Sói xám Langee. Cần có tài khoản Sói xám; nhập token để đọc nội dung theo quyền tài khoản.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/langgee-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/langgee/icon.png"
   },
   {
    "name": "Legado",
@@ -2564,28 +1490,6 @@
    "icon": "https://raw.githubusercontent.com/Evamirion/vbook-ext/refs/heads/main/lnovel/icon.png"
   },
   {
-   "name": "LOFTER",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://www.sudugu.org",
-   "description": "Đọc bài chữ và tuyển tập LOFTER. Tìm #tên tuyển tập, @tác giả; nội dung giới hạn cần phiên có quyền đọc.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/lofter-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/lofter/icon.png"
-  },
-  {
-   "name": "LoHi",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://lohi2.com",
-   "description": "LoHi - đọc truyện dịch tiếng Việt (catalogue công khai LoHi Trends + chương từ lohi2.com).",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/lohi-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/lohi2.com_ok/icon.png"
-  },
-  {
    "name": "lohi2",
    "author": "B",
    "version": 1,
@@ -2595,19 +1499,6 @@
    "locale": "vi_VN",
    "path": "plugins/lohi2-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/lohi2/icon.png"
-  },
-  {
-   "name": "LoppyToon",
-   "author": "Gold2k2k2k",
-   "version": 2,
-   "source": "https://loppytoon.com",
-   "regexp": "loppytoon\\.com\\/truyen\\/[^\\/]+\\/?$",
-   "description": "LoppyToon - Truyá»n tranh & tiá»u thuyáº¿t",
-   "type": "novel",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/loppytoon-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/loppy/icon.png"
   },
   {
    "name": "LoppyToon -18+",
@@ -2633,17 +1524,6 @@
    "locale": "zh_CN"
   },
   {
-   "name": "LunarX",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://lunarx.to/novel",
-   "description": "LunarX - đọc truyện novel online (NovelFire + LunarX)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/lunarx-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/lunarx.to_ok/icon.png"
-  },
-  {
    "name": "LuotTruyen",
    "author": "Gold2k2k2k",
    "version": 8,
@@ -2656,39 +1536,6 @@
    "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/luottruyen/icon.png"
   },
   {
-   "name": "LuotTruyen",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://luottruyen.net",
-   "description": "LuotTruyen - Đọc truyện tranh online",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/luottruyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/luottruyen_ok/icon.png"
-  },
-  {
-   "name": "LuPhim",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://luphim.com",
-   "description": "Xem phim online HD Vietsub, thuyết minh trên luphim.com",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/luphim-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/luphim.com_ok/icon.png"
-  },
-  {
-   "name": "Luvevaland",
-   "author": "vBook",
-   "version": 7,
-   "source": "https://luvevalandn2.co",
-   "description": "Đọc truyện trên trang Luvevaland",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/luvevaland-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/lustaveland/icon.png"
-  },
-  {
    "name": "lwxs",
    "author": "Nahona",
    "version": 2,
@@ -2698,17 +1545,6 @@
    "locale": "zh_CN",
    "path": "plugins/lwxs-nahona.zip",
    "icon": "http://www.pi12345.com/favicon.ico"
-  },
-  {
-   "name": "Machu Team",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://machuteam.vn",
-   "description": "Nghe audio từ machuteam",
-   "type": "audio",
-   "locale": "vi_VN",
-   "path": "plugins/machu-team-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/machuteam/icon.png"
   },
   {
    "name": "Manga Read",
@@ -2753,17 +1589,6 @@
    "type": "comic"
   },
   {
-   "name": "MangaDex",
-   "author": "vBook",
-   "version": 3,
-   "source": "https://mangadex.org",
-   "description": "Đọc truyện trên trang mangadex.org",
-   "type": "comic",
-   "locale": "global",
-   "path": "plugins/mangadex-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/mangadex/icon.png"
-  },
-  {
    "name": "mangadistrict",
    "author": "B",
    "version": 1,
@@ -2774,17 +1599,6 @@
    "tag": "nsfw",
    "path": "plugins/mangadistrict-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/mangadistrict/icon.png"
-  },
-  {
-   "name": "MangaDM",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://mangadm.me/",
-   "description": "Đọc truyện trên trang MangaDM",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/mangadm-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/mangadm/icon.png"
   },
   {
    "name": "mangayeh",
@@ -2817,18 +1631,6 @@
    "locale": "vi_VN",
    "path": "plugins/manhuavn-free-chap-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/manhuavn/icon.png"
-  },
-  {
-   "name": "ManhwaBuddy",
-   "author": "Will Sun",
-   "version": 3,
-   "source": "https://manhwabuddy.com",
-   "description": "Read comics on manhwabuddy.com",
-   "type": "comic",
-   "locale": "en_US",
-   "tag": "nsfw",
-   "path": "plugins/manhwabuddy-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/manhwabuddy.com.png"
   },
   {
    "name": "ManhwaHentai",
@@ -2874,17 +1676,6 @@
    "locale": "vi_VN",
    "path": "plugins/matodex-suicao.zip",
    "icon": "https://raw.githubusercontent.com/TNTKien/vbook-extensions/master/mato/icon.png"
-  },
-  {
-   "name": "Matt Reading Translations",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://mattreadingtranslations.com/",
-   "description": "Doc truyen tu MattReadingTranslations",
-   "type": "eng_novel",
-   "locale": "en_US",
-   "path": "plugins/matt-reading-translations-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/mattreadingtranslations.com_ok/icon.png"
   },
   {
    "name": "meiguicom",
@@ -2943,28 +1734,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/metruyensangtac/icon.png"
   },
   {
-   "name": "MGTV",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://w.mgtv.com/",
-   "description": "Xem video trên MGTV/HITV quốc tế. ",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/mgtv-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/mgtv/icon.png"
-  },
-  {
-   "name": "Midureader",
-   "author": "Đường đen",
-   "version": 7,
-   "source": "https://midureader.com",
-   "description": "Đọc truyện trên Midu",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/midureader-uong-en.zip",
-   "icon": "https://vbook.trasua.workers.dev/s/SMVfAou7fZmyjrMHiGNy_A/midureader/icon.png"
-  },
-  {
    "name": "Mimihentai",
    "author": "Nahona",
    "version": 2,
@@ -2975,76 +1744,6 @@
    "tag": "nsfw",
    "path": "plugins/mimihentai-nahona.zip",
    "icon": "https://mimihentai.com/logo.png"
-  },
-  {
-   "name": "Mimimoe",
-   "author": "Gold2k2k2k",
-   "version": 4,
-   "source": "https://mimimoe.moe",
-   "regexp": "mimimoe\\.moe\\/g\\/[^\\/]+\\/?$",
-   "description": "Mimimoe - Truyá»n tranh 18+",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/mimimoe-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/mimimoe/icon.png"
-  },
-  {
-   "name": "Mino Truyện",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://minotruyenv6.xyz/",
-   "description": "Chỉ dùng được trên vBook beta. Đọc manga, truyện tranh và tiểu thuyết trên Mino Truyện.\nSearch mặc định ở kho Tiểu thuyết; có thể đổi sang Manga, Truyện tranh hoặc 18+ trong cấu hình.\nNội dung 18+ chỉ xuất hiện ở trang chủ, thể loại và search khi bật cấu hình; link trực tiếp vẫn đọc được.",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/mino-truyen-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/minotruyen/icon.png"
-  },
-  {
-   "name": "Minttea Novel",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://mintteanovel.com/",
-   "description": "Đọc truyện chữ trên Minttea Novel",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/minttea-novel-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/mintteanovel/icon.png"
-  },
-  {
-   "name": "Misskon",
-   "author": "3690",
-   "version": 1,
-   "source": "https://misskon.com/",
-   "description": "Xem gái trên misskon",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/misskon-3690.zip",
-   "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/Misskon/icon.png"
-  },
-  {
-   "name": "MoeTruyen",
-   "author": "Gold2k2k2k",
-   "version": 1,
-   "source": "https://truyen.moe",
-   "regexp": "truyen\\.moe\\/manga\\/[^\\/]+\\/?$",
-   "description": "MÃ²e Truyá»n - Cá»ng Äá»ng truyá»n tranh",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/moetruyen-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/moetruyen/icon.png"
-  },
-  {
-   "name": "MonkeyD",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://monkeydd.com",
-   "description": "Đọc truyện trên MonkeyD",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/monkeyd-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/monkeydd.com_ok/icon.png"
   },
   {
    "name": "Motchill",
@@ -3058,61 +1757,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_motchill/icon.png"
   },
   {
-   "name": "MotChill",
-   "author": "ivanzzz",
-   "version": 6,
-   "source": "https://motchille.cx/",
-   "description": "Xem phim online Vietsub, Thuyết minh trên MotChill",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/motchill-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/motchillzc.cc_ok/icon.png"
-  },
-  {
-   "name": "MotPhim",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://motphimc.mx",
-   "description": "Plugin xem phim MotPhim (motphimc.mx) - phim bộ/lẻ/hoạt hình Vietsub + Thuyết Minh",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/motphim-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/motphimc.mx_ok/icon.png"
-  },
-  {
-   "name": "Moyue · Mặc Duyệt",
-   "author": "Đường đen",
-   "version": 12,
-   "source": "https://moyue.app",
-   "description": "Tiểu thuyết Moyue. Nguồn VIP cần token Moyue.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/moyue-mac-duyet-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/moyue/icon.png"
-  },
-  {
-   "name": "MTC",
-   "author": "vBook",
-   "version": 51,
-   "source": "https://metruyencv.biz",
-   "description": "Đọc truyện trên trang Mê Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/mtc-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/metruyenchu/icon.png"
-  },
-  {
-   "name": "Multi TTS VN",
-   "author": "Meo",
-   "version": 23,
-   "source": "https://ai.zalo.solutions/docs/api/getting-started",
-   "description": "Đọc văn bản bằng Zalo AI, ElevenLabs, FPT.AI và Viettel AI; hỗ trợ nhiều API key (dán hàng loạt, phân tách bằng dấu phẩy/xuống dòng), cân bằng tải vòng tròn (Round-Robin) chống rate-limit 429, tự động chuyển key khi hết quota, tải phân trang giọng ElevenLabs và đồng bộ danh sách giọng Viettel AI từ API.\n\nHƯỚNG DẪN CÀI ĐẶT\n1. Chọn Dịch vụ TTS (Zalo AI, ElevenLabs, FPT.AI hoặc Viettel AI).\n2. Trong mục \"API key / token\", nhấn \"Thêm\" hoặc dán hàng loạt nhiều key (ngăn cách bởi dấu phẩy \",\" hoặc xuống dòng):\n   - Zalo AI: ZAI:key_cua_ban (hoặc nhập thẳng key)\n   - ElevenLabs: EL:sk_key_cua_ban (hoặc nhập thẳng key)\n   - FPT.AI: FPT:key_cua_ban (hoặc nhập thẳng key)\n   - Viettel AI: VTAI:token_cua_ban (hoặc nhập thẳng token, tự lọc Bearer)\n3. Chọn Chế độ dùng nhiều key: Vòng tròn (Round-Robin) để chống lỗi 429 hoặc Tuần tự (Failover).\n4. Chọn giọng đọc phù hợp với dịch vụ đã chọn.\n5. Chọn model (nếu dùng ElevenLabs); các tùy chọn giới hạn ký tự và tải trước ở bên dưới.\n\nLẤY API KEY / TOKEN\n- Zalo AI: https://ai.zalo.solutions/docs/api/getting-started\n- ElevenLabs: https://elevenlabs.io/docs/api-reference/authentication\n- FPT.AI: https://docs.fpt.ai/docs/en/console/documentation/console/\n- Viettel AI: https://viettelai.vn/en/tai-lieu\n\nKhóa được lưu bảo mật trong cài đặt vBook. Không chia sẻ cấu hình có chứa khóa.",
-   "type": "tts",
-   "locale": "vi_VN",
-   "path": "plugins/multi-tts-vn-meo.zip",
-   "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/tts/Meo_multi_tts/icon.png"
-  },
-  {
    "name": "municipiodaboavista.com",
    "author": "Meo",
    "version": 5,
@@ -3122,18 +1766,6 @@
    "locale": "vi_VN",
    "path": "plugins/municipiodaboavista-com-meo.zip",
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/comic/nettruyen/icon.png"
-  },
-  {
-   "name": "My Reading Manga",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://myreadingmanga.info/",
-   "description": "Đọc truyện và xem video trên MyReadingManga.",
-   "type": "comic",
-   "locale": "global",
-   "tag": "nsfw",
-   "path": "plugins/my-reading-manga-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/myreadingmanga/icon.png"
   },
   {
    "name": "Myrics",
@@ -3147,50 +1779,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/myrics/icon.png"
   },
   {
-   "name": "Mê Truyện Chữ",
-   "author": "QuocBao",
-   "version": 8,
-   "source": "https://metruyenchu.com.vn",
-   "description": "Đọc truyện chữ trên Mê Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-truyen-chu-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/metruyenchu/icon.png"
-  },
-  {
-   "name": "Mê Truyện Chữ .co",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://metruyenchu.co",
-   "description": "Mê Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-truyen-chu-co-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/metruyenchu.co_ok/icon.png"
-  },
-  {
-   "name": "Mê Truyện Chữ .com",
-   "author": "ivanzzz",
-   "version": 6,
-   "source": "https://metruyenchuvn.org/",
-   "description": "Đọc truyện trên Mê Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-truyen-chu-com-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/metruyenchu.com.vn_ok/icon.png"
-  },
-  {
-   "name": "Mê Truyện Chữ VN",
-   "author": "Nahona",
-   "version": 5,
-   "source": "https://metruyenchu.com.vn/",
-   "description": "Đọc truyện trên trang MTC",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-truyen-chu-vn-nahona.zip",
-   "icon": "https://metruyenchu.com.vn/favicon.ico?v=2"
-  },
-  {
    "name": "Mê Truyện CV",
    "author": "ivanzzz",
    "version": 2,
@@ -3202,83 +1790,6 @@
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/metruyencv.xyz_ok/icon.png"
   },
   {
-   "name": "Mê Truyện CV",
-   "author": "ivanzzz",
-   "version": 5,
-   "source": "https://metruyencv.com.vn/",
-   "description": "Doc truyen tren MeTruyenCV",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-truyen-cv-ivanzzz-2.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/metruyencv.com.vn_ok/icon.png"
-  },
-  {
-   "name": "Mê Đọc Truyện",
-   "author": "ivanzzz",
-   "version": 5,
-   "source": "https://medoctruyen.vn/",
-   "description": "Đọc truyện trên Mê Đọc Truyện",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/me-oc-truyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/medoctruyen.vn_ok/icon.png"
-  },
-  {
-   "name": "Mọt Truyện",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://mottruyen.app",
-   "description": "Đọc truyện trên app Mọt Truyện",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/mot-truyen-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/mottruyenapp/icon.png"
-  },
-  {
-   "name": "Navy Team Comic",
-   "author": "QuocBao",
-   "version": 6,
-   "source": "https://navyteams.com/",
-   "description": "Đọc truyện tranh trên Navy Team",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/navy-team-comic-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/navyteamn-comic/icon.png"
-  },
-  {
-   "name": "Navy Team Novel",
-   "author": "QuocBao",
-   "version": 7,
-   "source": "https://navyteams.com/",
-   "description": "Đọc tiểu thuyết và truyện chữ trên Navy Team",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/navy-team-novel-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/navyteamn-novel/icon.png"
-  },
-  {
-   "name": "NetEase Music",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://music.163.com",
-   "description": "Nghe nhạc từ netease",
-   "type": "audio",
-   "locale": "zh_CN",
-   "path": "plugins/netease-music-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/netease/icon.png"
-  },
-  {
-   "name": "NetTruyen",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://nettruyen.com.vn",
-   "description": "Đọc truyện trên trang nettruyen.com.vn",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/nettruyen-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/nettruyen.com.vn.png"
-  },
-  {
    "name": "nettruyen",
    "author": "longvuu",
    "version": 1,
@@ -3288,39 +1799,6 @@
    "locale": "vi_VN",
    "path": "plugins/nettruyen-longvuu.zip",
    "icon": "https://raw.githubusercontent.com/longvuu/vbook-extensions/master/nettruyen/icon.png"
-  },
-  {
-   "name": "NetTruyen18",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://nettruyen18.com",
-   "description": "NetTruyen18 - truyện tranh online",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/nettruyen18-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/nettruyen18_ok/icon.png"
-  },
-  {
-   "name": "NetTruyenViet",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://nettruyenviet10.com",
-   "description": "Đọc truyện trên trang nettruyenviet10.com",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/nettruyenviet-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/nettruyenviet10.com.png"
-  },
-  {
-   "name": "NetTruyenZ",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://nettruyenz.com",
-   "description": "NetTruyen - Đọc truyện tranh Manga, Manhua, Manhwa online miễn phí",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/nettruyenz-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/nettruyenz_ok/icon.png"
   },
   {
    "name": "NguonC",
@@ -3390,17 +1868,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/novelbuddy/icon.png"
   },
   {
-   "name": "Novel Next",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://www.novelnext.me",
-   "description": "Đọc truyện trên trang Novel Next",
-   "type": "novel",
-   "locale": "en_US",
-   "path": "plugins/novel-next-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_EN/novelnext/icon.png"
-  },
-  {
    "name": "Novel543",
    "author": "Gold2k2k2k",
    "version": 1,
@@ -3443,62 +1910,6 @@
    "locale": "en_US",
    "path": "plugins/novelfull-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/novelfull.com_ok/icon.png"
-  },
-  {
-   "name": "NovelFull.Net",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://novelfull.net",
-   "description": "Read novels on NovelFull.Net (uses Browser engine to bypass Cloudflare)",
-   "type": "eng_novel",
-   "locale": "en_US",
-   "path": "plugins/novelfull-net-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/novelfull.net_ok/icon.png"
-  },
-  {
-   "name": "NovelNext",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://novelnext.me",
-   "description": "Read novels on NovelNext",
-   "type": "eng_novel",
-   "locale": "en_US",
-   "path": "plugins/novelnext-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/novelnext.me_ok/icon.png"
-  },
-  {
-   "name": "NovelPhoenix",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://novelphoenix.net",
-   "description": "Read novels on NovelPhoenix.net",
-   "type": "novel",
-   "locale": "en_US",
-   "path": "plugins/novelphoenix-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/novelphoenix.net_ok/icon.png"
-  },
-  {
-   "name": "Novelpia Global",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://global.novelpia.com",
-   "description": "Novelpia Global English novels",
-   "type": "novel",
-   "locale": "en_US",
-   "path": "plugins/novelpia-global-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/eng_novel/global.novelpia.com_ok/icon.png"
-  },
-  {
-   "name": "Novels TW",
-   "author": "mizhm",
-   "version": 3,
-   "source": "https://www.novels.com.tw",
-   "regexp": "(https?://)?(www\\.)?novels\\.com\\.tw/novels/[^/]+/?(\\?.*)?$",
-   "description": "繁體小說 - novels.com.tw. Cần mở trang bằng trình duyệt trong app một lần để qua Cloudflare.",
-   "type": "novel",
-   "locale": "zh_TW",
-   "path": "plugins/novels-tw-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/novelstw/icon.png"
   },
   {
    "name": "nTruyen",
@@ -3579,28 +1990,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/comic/otruyen/icon.png"
   },
   {
-   "name": "Phim Nhựa",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://phimnhua.online",
-   "description": "Xem phim tren Phim Nhua - HD Vietsub mien phi.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/phim-nhua-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/phimnhua_ok/icon.png"
-  },
-  {
-   "name": "Phim4K",
-   "author": "QuocBao",
-   "version": 5,
-   "source": "https://phim4k.xyz/",
-   "description": "Xem phim trên Phim4K.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/phim4k-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/phim4k/icon.png"
-  },
-  {
    "name": "PhimFun",
    "author": "kychi",
    "version": 1,
@@ -3610,39 +1999,6 @@
    "locale": "vi_VN",
    "path": "plugins/phimfun-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/video/kychi_phimfun/icon.png"
-  },
-  {
-   "name": "Phimmoir",
-   "author": "ivanzzz",
-   "version": 5,
-   "source": "https://phimmoic.ws",
-   "description": "Xem phim online Vietsub, Thuyet minh tren Phimmoir",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/phimmoir-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/phimmoir.app_ok/icon.png"
-  },
-  {
-   "name": "Phimtv",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://phimtv.my",
-   "description": "Xem phim trên phimtv.my",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/phimtv-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/phimtv_ok/icon.png"
-  },
-  {
-   "name": "PhimTV2",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://phimtv2.com",
-   "description": "Xem phim online HD Vietsub trên phimtv2.com",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/phimtv2-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/phimtv2.com_ok/icon.png"
   },
   {
    "name": "pi12345",
@@ -3667,17 +2023,6 @@
    "path": "plugins/piaotia-vbook.zip"
   },
   {
-   "name": "piaotian-app",
-   "author": "Đường đen",
-   "version": 5,
-   "source": "https://www.piaotianapp.com",
-   "description": "Đọc sách trên trang piaotianapp.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/piaotian-app-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/piaotian-app/icon.png"
-  },
-  {
    "name": "piaotian5",
    "author": "hajljnopera",
    "version": 5,
@@ -3700,18 +2045,6 @@
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/pixiv/icon.png"
   },
   {
-   "name": "po18",
-   "author": "QuocBao",
-   "version": 10,
-   "source": "https://www.po18.tw",
-   "description": "Đọc truyện trên trang www.po18.tw",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "tag": "nsfw",
-   "path": "plugins/po18-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/po18_reader/icon.png"
-  },
-  {
    "name": "po18gv",
    "author": "Moleys",
    "version": 1,
@@ -3722,17 +2055,6 @@
    "tag": "nsfw",
    "path": "plugins/po18gv-moleys.zip",
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/po18gv/icon.png"
-  },
-  {
-   "name": "po18sm",
-   "author": "Will Sun",
-   "version": 4,
-   "source": "https://www.po18sm.com",
-   "description": "Đọc truyện trên trang po18sm.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/po18sm-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/po18sm.com.png"
   },
   {
    "name": "powanjuan",
@@ -3812,50 +2134,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/qimao/icon.png"
   },
   {
-   "name": "qimao - repo Đường đen",
-   "author": "Đường đen",
-   "version": 39,
-   "source": "https://www.qimao.com",
-   "description": "Đọc truyện trên trang qimao",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/qimao-repo-uong-en-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/qimao/icon.png"
-  },
-  {
-   "name": "Qimao Phim ngắn (七猫短剧)",
-   "author": "Đường đen",
-   "version": 7,
-   "source": "https://api-gw.wtzw.com",
-   "description": "Coi phim trên trang qimao",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/qimao-phim-ngan-uong-en.zip",
-   "icon": "https://vbook.trasua.workers.dev/s/SMVfAou7fZmyjrMHiGNy_A/qimao/icon.png"
-  },
-  {
-   "name": "qmbook",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://m.bqg998.cc/#/",
-   "description": "Đọc truyện trên trang qmbook",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/qmbook-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/qmbook/icon.png"
-  },
-  {
-   "name": "QQ Music",
-   "author": "Đường đen",
-   "version": 3,
-   "source": "ttps://y.qq.com",
-   "description": "Nghe nhạc từ qqmusic",
-   "type": "audio",
-   "locale": "zh_CN",
-   "path": "plugins/qq-music-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/qqmusic/icon.png"
-  },
-  {
    "name": "quanben",
    "author": "hajljnopera",
    "version": 3,
@@ -3865,28 +2143,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/quanben/icon.png",
    "type": "chinese_novel",
    "locale": "zh_CN"
-  },
-  {
-   "name": "quanben - repo Đường đen",
-   "author": "hajljnopera",
-   "version": 5,
-   "source": "https://quanben.io",
-   "description": "Đọc truyện trên trang quanben",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/quanben-repo-uong-en-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/quanben/icon.png"
-  },
-  {
-   "name": "quanwenyuedu",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.quanwenyuedu.io",
-   "description": "Đọc truyện trên trang quanwenyuedu",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/quanwenyuedu-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/quanwenyuedu/icon.png"
   },
   {
    "name": "qubook",
@@ -3911,17 +2167,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_quykhu/icon.png"
   },
   {
-   "name": "QuyKiep",
-   "author": "ivanzzz",
-   "version": 5,
-   "source": "https://quykiep.com",
-   "description": "Đọc truyện trên QuyKiep.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/quykiep-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/quykiep_ok/icon.png"
-  },
-  {
    "name": "ranwen",
    "author": "B",
    "version": 3,
@@ -3942,40 +2187,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/rawdevart/icon.png",
    "type": "comic",
    "locale": "ja_JP"
-  },
-  {
-   "name": "Roads Team",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://roadsteami.net/",
-   "description": "Đọc truyện trên trang Roads Team",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/roads-team-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/roadsteam/icon.png"
-  },
-  {
-   "name": "RoPhim",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://www.rophim.soy",
-   "description": "Xem phim online HD Vietsub, thuyết minh trên rophim.soy",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/rophim-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/video/rophim.soy_ok/icon.png"
-  },
-  {
-   "name": "RoPhim",
-   "author": "QuocBao",
-   "version": 5,
-   "source": "https://rophim9.online",
-   "description": "Xem video trên Rophim. Domain web đổi thường xuyên nên có thể sửa CONFIG_URL trong cấu hình nguồn.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/rophim-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/rophim/icon.png"
   },
   {
    "name": "rourouwu",
@@ -4102,29 +2313,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/chinese_novel/shibashuwu/icon.png"
   },
   {
-   "name": "Shinigami LN Team",
-   "author": "Gold2k2k2k",
-   "version": 1,
-   "source": "https://shinigamilnteam.com",
-   "regexp": "shinigamilnteam\\.com\\/truyen\\/[^\\/]+\\/?$",
-   "description": "Shinigami - Light Novel & Truyá»n tranh",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/shinigami-ln-team-gold2k2k2k.zip",
-   "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/shinigamil/icon.png"
-  },
-  {
-   "name": "Showbox",
-   "author": "QuocBao",
-   "version": 5,
-   "source": "https://pixnet.cc/",
-   "description": "Xem phim trên Showbox.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/showbox-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/showbox/icon.png"
-  },
-  {
    "name": "shubl",
    "author": "vBook",
    "version": 1,
@@ -4145,17 +2333,6 @@
    "locale": "zh_CN",
    "path": "plugins/shushuwuxs-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/shushuwuxs/icon.png"
-  },
-  {
-   "name": "Si Truyện CV",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://sitruyencv.com/",
-   "description": "Đọc truyện trên SiTruyenCV",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/si-truyen-cv-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/sitruyencv.com_ok/icon.png"
   },
   {
    "name": "sinodan",
@@ -4191,28 +2368,6 @@
    "type": "comic"
   },
   {
-   "name": "Snapd",
-   "author": "kychi",
-   "version": 3,
-   "source": "https://m.snapd.net",
-   "description": "Đọc truyện chữ từ m.snapd.net (笔趣阁). Hỗ trợ cấu hình động tên miền trang chi tiết SPA.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/snapd-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/snapd/icon.png"
-  },
-  {
-   "name": "sohu",
-   "author": "Đường đen",
-   "version": 1,
-   "source": "https://www.sohu.com",
-   "description": "Đọc sohu trên vBook",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sohu-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/VN_news/sohu/icon.png"
-  },
-  {
    "name": "ST Truyện",
    "author": "Nhocconsr",
    "version": 7,
@@ -4235,85 +2390,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/storya/icon.png"
   },
   {
-   "name": "STV",
-   "author": "bqy",
-   "version": 2,
-   "source": "http://sangtacviet.vip",
-   "description": "STV",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/stv-bqy.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/uukanshu/icon.png"
-  },
-  {
-   "name": "STV App Vi",
-   "author": "QuocBao",
-   "version": 9,
-   "source": "https://sangtacviet.com",
-   "description": "Đọc truyện trên STV App (Vi) ~",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/stv-app-vi-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/stvapp/icon.png"
-  },
-  {
-   "name": "sudugu",
-   "author": "Đường đen",
-   "version": 10,
-   "source": "https://www.sudugu.org",
-   "description": "Đọc truyện trên trang sudugu",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sudugu-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/sudugu/icon.png"
-  },
-  {
-   "name": "sweetastes",
-   "author": "Đường đen",
-   "version": 4,
-   "source": "https://www.bjtriz.com",
-   "description": "Đọc truyện trên trang bjtriz, chỉ đọc chương free",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sweetastes-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/sweetastes/icon.png"
-  },
-  {
-   "name": "Syosetu",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://ncode.syosetu.com",
-   "regexp": "https://ncode.syosetu.com/(.*?)$",
-   "description": "小説家になろう - Web tiểu thuyết Nhật Bản (ruby hiển thị dạng 漢字《かんじ》)",
-   "type": "novel",
-   "locale": "ja_JP",
-   "path": "plugins/syosetu-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/syosetu/icon.png"
-  },
-  {
-   "name": "Syosetu",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://syosetu.com",
-   "description": "小説家になろう - Đọc truyện tiếng Nhật (raw) trên Syosetu",
-   "type": "novel",
-   "locale": "ja_JP",
-   "path": "plugins/syosetu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/jp_novel/syosetu.com_ok/icon.png"
-  },
-  {
-   "name": "Syosetu R18",
-   "author": "mizhm",
-   "version": 1,
-   "source": "https://novel18.syosetu.com",
-   "regexp": "https://novel18.syosetu.com/(.*?)$",
-   "description": "ノクターン / ムーンライト / ミッドナイトノベルズ - Web tiểu thuyết R18 của Narou (ruby hiển thị dạng 漢字《かんじ》)",
-   "type": "novel",
-   "locale": "ja_JP",
-   "path": "plugins/syosetu-r18-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/syosetu18/icon.png"
-  },
-  {
    "name": "Sáng Tác Việt",
    "author": "TH03",
    "version": 4,
@@ -4322,28 +2398,6 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/sang-tac-viet-th03.zip"
-  },
-  {
-   "name": "Sáng Tác Việt Pro",
-   "author": "Klein",
-   "version": 51,
-   "source": "http://103.82.20.93",
-   "description": "Sáng Tác Việt — Free 30c/day, VIP liên hệ Admin",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sang-tac-viet-pro-klein.zip",
-   "icon": "https://raw.githubusercontent.com/chillguyk5/vbook_Klein/main/stv/icon.png"
-  },
-  {
-   "name": "Sói Xám (Fanqie)",
-   "author": "Will Sun",
-   "version": 24,
-   "source": "https://api.langge.cf",
-   "description": "Đọc truyện Fanqie trên Sói Xám",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/soi-xam-fanqie-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/api.langge.cf.png"
   },
   {
    "name": "Tadu (塔读文学)",
@@ -4369,39 +2423,6 @@
    "icon": "icons/sang-tac-viet-thu-cac.png"
   },
   {
-   "name": "TaoNovel",
-   "author": "Đường đen",
-   "version": 4,
-   "source": "https://tybook.taoyuewenhua.net",
-   "description": "Tao novel.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/taonovel-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/taonovel/icon.png"
-  },
-  {
-   "name": "Thế Giới Truyện",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://thegioitruyen.vn",
-   "description": "Đọc truyện tranh online từ thegioitruyen.vn",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/the-gioi-truyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/thegioitruyen_ok/icon.png"
-  },
-  {
-   "name": "TikTok",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "https://www.tiktok.com/",
-   "description": "Xem TikTok bằng state app/web. Hỗ trợ xem link từ app.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/tiktok-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/tiktok/icon.png"
-  },
-  {
    "name": "Timotxt",
    "author": "kychi",
    "version": 1,
@@ -4411,17 +2432,6 @@
    "locale": "zh_CN",
    "path": "plugins/timotxt-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/kychi_timotxt/icon.png"
-  },
-  {
-   "name": "Tinh Linh",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://tinhlinh.com",
-   "description": "Đọc truyện trên trang https://tinhlinh.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/tinh-linh-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_VN/tinhlinh/icon.png"
   },
   {
    "name": "Tiên Vực",
@@ -4456,17 +2466,6 @@
    "tag": "nsfw",
    "path": "plugins/tieu-bach-tv-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/Ti%E1%BB%83u%20B%E1%BA%A1ch%20TV/icon.png"
-  },
-  {
-   "name": "Tiệm Truyện Chữ",
-   "author": "Will Sun",
-   "version": 12,
-   "source": "https://tiemtruyenchu.cloud",
-   "description": "Đọc truyện trên trang tiemtruyenchu.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/tiem-truyen-chu-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/tiemtruyenchu.com.png"
   },
   {
    "name": "Top Truyện",
@@ -4514,17 +2513,6 @@
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/truyencodetheoyeucau/icon.png"
   },
   {
-   "name": "Truyen H",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyenh.top/",
-   "description": "Đọc truyện H trên truyenh.top (WordPress, lich-slg-style)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-h-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenh.top_ok/icon.png"
-  },
-  {
    "name": "Truyen Hoan",
    "author": "ivanzzz",
    "version": 3,
@@ -4548,17 +2536,6 @@
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/truyennow/icon.png"
   },
   {
-   "name": "TruyenC",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://truyenc.net",
-   "description": "Đọc truyện chữ online trên TruyenC",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyenc-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenc_ok/icon.png"
-  },
-  {
    "name": "TruyenChu",
    "author": "Meo",
    "version": 9,
@@ -4580,17 +2557,6 @@
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/truyenchuth/icon.png"
   },
   {
-   "name": "TruyenCV.io",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://truyencv.io",
-   "description": "Đọc truyện trên trang truyencv.io",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyencv-io-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/truyencv.io.png"
-  },
-  {
    "name": "TruyenDex",
    "author": "Meo",
    "version": 35,
@@ -4600,17 +2566,6 @@
    "locale": "vi_VN",
    "path": "plugins/truyendex-meo.zip",
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/comic/truyendex/icon.png"
-  },
-  {
-   "name": "TruyenDich.AI",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://truyendich.space",
-   "description": "Doc truyen tai TruyenDich.AI",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyendich-ai-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyendich.ai_ok/icon.png"
   },
   {
    "name": "TruyenDich.AI",
@@ -4658,28 +2613,6 @@
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/truyenfree/icon.png"
   },
   {
-   "name": "truyenfull",
-   "author": "vBook",
-   "version": 21,
-   "source": "https://truyenfull.live",
-   "description": "Đọc truyện trên trang Truyện full",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyenfull-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/truyenfull/icon.png"
-  },
-  {
-   "name": "TruyenGG",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyenggvn.com",
-   "description": "TruyenGGVN - Đọc truyện tranh Manhwa, Manhua, Manga Online",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/truyengg-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/truyenggvn_ok/icon.png"
-  },
-  {
    "name": "TruyenHayVN",
    "author": "vBook",
    "version": 4,
@@ -4714,28 +2647,6 @@
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/truyennet/icon.png"
   },
   {
-   "name": "TruyenQQ",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyenqqko.com",
-   "description": "TruyenQQ - Đọc truyện tranh online",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/truyenqq-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/comic/truyenqqko_ok/icon.png"
-  },
-  {
-   "name": "TruyenQQ",
-   "author": "Will Sun",
-   "version": 2,
-   "source": "https://truyenqq.com.vn",
-   "description": "Đọc truyện trên trang truyenqq.com.vn",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/truyenqq-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/truyenqq.com.vn.png"
-  },
-  {
    "name": "truyentranh3q",
    "author": "B",
    "version": 1,
@@ -4746,17 +2657,6 @@
    "tag": "nsfw",
    "path": "plugins/truyentranh3q-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/truyentranh3q/icon.png"
-  },
-  {
-   "name": "Truyentranhdammyy",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://truyentranhdammyy.site/",
-   "description": "Đọc truyện trên trang Truyentranhdammyy",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/truyentranhdammyy-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/truyentranhdammyy/icon.png"
   },
   {
    "name": "TruyenTv",
@@ -4792,17 +2692,6 @@
    "icon": "https://truyen35.vn/assets/images/icon.png"
   },
   {
-   "name": "Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyenchu.net/",
-   "description": "Đọc truyện chữ trên Truyện Chữ.",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-chu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenchu.net_ok/icon.png"
-  },
-  {
    "name": "Truyện Chữ Hay",
    "author": "ivanzzz",
    "version": 2,
@@ -4825,39 +2714,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/truyenconvert/icon.png"
   },
   {
-   "name": "Truyện CV (.io)",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyencv.io/",
-   "description": "Đọc truyện trên truyencv.io",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-cv-io-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyencv.io_ok/icon.png"
-  },
-  {
-   "name": "Truyện Dịch AI",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://truyendichai.top",
-   "description": "Đọc truyện trên truyendichai.top",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-dich-ai-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_VN/truyendichai/icon.png"
-  },
-  {
-   "name": "Truyện Dịch AI",
-   "author": "Will Sun",
-   "version": 3,
-   "source": "https://truyendichai.com",
-   "description": "Đọc truyện trên trang truyendichai.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-dich-ai-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/truyendichai.com.png"
-  },
-  {
    "name": "Truyện dịch miễn phí",
    "author": "mizhm",
    "version": 17,
@@ -4878,17 +2734,6 @@
    "locale": "vi_VN",
    "path": "plugins/truyen-full-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/truyenfull/icon.png"
-  },
-  {
-   "name": "Truyện Full",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://truyenfull.today",
-   "description": "Đọc truyện trên trang Truyện Full",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-full-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenfull.today_ok/icon.png"
   },
   {
    "name": "Truyện GG",
@@ -4935,39 +2780,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_truyenmoi/icon.png"
   },
   {
-   "name": "Truyện Mới",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://truyenmoi.app",
-   "description": "Đọc truyện online tại TruyenMoi.app: tiên hiệp, kiếm hiệp, ngôn tình, đô thị, huyền huyễn, xuyên không...",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-moi-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenmoi.app_ok/icon.png"
-  },
-  {
-   "name": "Truyện Mới KK",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://truyenmoikk.com",
-   "description": "Cào dữ liệu từ truyenmoikk.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-moi-kk-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenmoikk_ok/icon.png"
-  },
-  {
-   "name": "Truyện Net",
-   "author": "Will Sun",
-   "version": 3,
-   "source": "https://truyennet.vn",
-   "description": "Đọc truyện trên trang truyennet.vn",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-net-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/truyennet.vn.png"
-  },
-  {
    "name": "Truyện QQ",
    "author": "vBook",
    "version": 25,
@@ -4977,28 +2789,6 @@
    "locale": "vi_VN",
    "path": "plugins/truyen-qq-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/truyenqq/icon.png"
-  },
-  {
-   "name": "Truyện Zhihu Tổng Hợp",
-   "author": "Đường đen",
-   "version": 10,
-   "source": "https://www.truyendexuat.com",
-   "description": "Tổng hợp nguồn truyện Zhihu",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-zhihu-tong-hop-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_VN/zhihutonghop/icon.png"
-  },
-  {
-   "name": "TruyệnCV",
-   "author": "vBook",
-   "version": 1,
-   "source": "https://metruyencv.com",
-   "description": "Đọc truyện trên trang TruyệnCV",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyencv-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/truyencv/icon.png"
   },
   {
    "name": "TruyệnHD",
@@ -5046,17 +2836,6 @@
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/Tr%C3%B9m%20Truy%E1%BB%87n/icon.png"
   },
   {
-   "name": "Trạm B",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://www.bilibili.com",
-   "description": "Bili Trung. Cần cookie để sử dụng. Quyền xem phụ thuộc quyền truy cập của tài khoản người dùng (VIP hoặc nội dung đã mua) và giới hạn khu vực của Bilibili.",
-   "type": "video",
-   "locale": "zh_CN",
-   "path": "plugins/tram-b-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/tramb/icon.png"
-  },
-  {
    "name": "TsuMiNo",
    "author": "Nhocconsr",
    "version": 1,
@@ -5068,17 +2847,6 @@
    "type": "comic"
   },
   {
-   "name": "Tu Tiên (.pro)",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://tutien.pro/",
-   "description": "Đọc truyện trên tutien.pro",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/tu-tien-pro-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/tutien.pro_ok/icon.png"
-  },
-  {
    "name": "Tushumi",
    "author": "QuocBao",
    "version": 4,
@@ -5088,29 +2856,6 @@
    "locale": "zh_CN",
    "path": "plugins/tushumi-quocbao.zip",
    "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/tushumi.cc/icon.png"
-  },
-  {
-   "name": "TVKH",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://bananacoo.com/",
-   "description": "Đọc truyện tranh trên TVKH/Bananacoo.",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/tvkh-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/bananacoo/icon.png"
-  },
-  {
-   "name": "Twitch",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://www.twitch.tv/",
-   "description": "Xem live stream và VOD Twitch.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/twitch-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/twitch.tv/icon.png"
   },
   {
    "name": "twkan",
@@ -5212,17 +2957,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/valvrareteam/icon.png"
   },
   {
-   "name": "Viblo",
-   "author": "Đường đen",
-   "version": 4,
-   "source": "https://viblo.asia",
-   "description": "Đọc viblo trên vBook",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/viblo-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/VN_news/viblo/icon.png"
-  },
-  {
    "name": "Viettel AI TTS",
    "author": "kychi",
    "version": 1,
@@ -5234,18 +2968,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/tts/viettelai_tts/icon.png"
   },
   {
-   "name": "VinaHentai",
-   "author": "Will Sun",
-   "version": 7,
-   "source": "https://vinahentai.bond",
-   "description": "Đọc truyện trên trang vinahentai.bond",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/vinahentai-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/vinahentai.bond.png"
-  },
-  {
    "name": "Vivu Truyện",
    "author": "kychi",
    "version": 1,
@@ -5255,28 +2977,6 @@
    "locale": "vi_VN",
    "path": "plugins/vivu-truyen-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_vivutruyen/icon.png"
-  },
-  {
-   "name": "vivutruyencom",
-   "author": "Đường đen",
-   "version": 1,
-   "source": "https://vivutruyen.com",
-   "description": "Đọc truyện trên trang vivutruyen.com",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/vivutruyencom-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_VN/vivutruyencom/icon.png"
-  },
-  {
-   "name": "Việt Nam Thư Quán",
-   "author": "ivanzzz",
-   "version": 4,
-   "source": "https://vnthuquan.org/",
-   "description": "Đọc truyện từ Việt Nam Thư Quán",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/viet-nam-thu-quan-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/vnthuquan.org_ok/icon.png"
   },
   {
    "name": "Vozer",
@@ -5324,29 +3024,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/wanwansekai/icon.png"
   },
   {
-   "name": "WatchHentai.net",
-   "author": "Will Sun",
-   "version": 4,
-   "source": "https://watchhentai.net",
-   "description": "Watch videos on watchhentai.net",
-   "type": "video",
-   "locale": "en_US",
-   "tag": "nsfw",
-   "path": "plugins/watchhentai-net-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/watchhentai.net.png"
-  },
-  {
-   "name": "Wattpad",
-   "author": "vBook",
-   "version": 6,
-   "source": "https://www.wattpad.com",
-   "description": "Đọc truyện trên trang Wattpad",
-   "type": "novel",
-   "path": "plugins/wattpad-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/wattpad/icon.png",
-   "locale": "global"
-  },
-  {
    "name": "Wattpad",
    "author": "ivanzzz",
    "version": 3,
@@ -5369,17 +3046,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/wattpad/icon.png"
   },
   {
-   "name": "Web Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://webtruyenchu.com/",
-   "description": "Đọc truyện chữ online: tiên hiệp, kiếm hiệp, ngôn tình, đô thị, huyền huyễn, xuyên không…",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/web-truyen-chu-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/webtruyenchu_ok/icon.png"
-  },
-  {
    "name": "Web Truyện Dịch",
    "author": "kychi",
    "version": 1,
@@ -5391,40 +3057,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi-webtruyendich/icon.png"
   },
   {
-   "name": "WebtoonScan",
-   "author": "Will Sun",
-   "version": 4,
-   "source": "https://webtoonscan.com",
-   "description": "Read comics on webtoonscan.com",
-   "type": "comic",
-   "locale": "en_US",
-   "tag": "nsfw",
-   "path": "plugins/webtoonscan-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/webtoonscan.com.png"
-  },
-  {
-   "name": "Weeb Central",
-   "author": "vBook",
-   "version": 3,
-   "source": "https://weebcentral.com",
-   "description": "Read manga, manhwa and manhua on Weeb Central",
-   "type": "comic",
-   "locale": "en_US",
-   "path": "plugins/weeb-central-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/weebcentral/icon.png"
-  },
-  {
-   "name": "Weibo",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://m.weibo.cn",
-   "description": "Đọc bài đăng Weibo. Ưu tiên bản beta. Mở trang nguồn trước rồi quay lại app.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/weibo-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/weibo/icon.png"
-  },
-  {
    "name": "wenku8 📖🔑",
    "author": "Moleys",
    "version": 7,
@@ -5434,50 +3066,6 @@
    "locale": "zh_CN",
    "path": "plugins/wenku8-moleys.zip",
    "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/wenku8/icon.png"
-  },
-  {
-   "name": "WeTV",
-   "author": "QuocBao",
-   "version": 2,
-   "source": "https://wetv.vip/",
-   "description": "WeTV bản quốc tế. Có phụ đề (ưu tiên vi). ",
-   "type": "video",
-   "locale": "global",
-   "path": "plugins/wetv-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/wetv/icon.png"
-  },
-  {
-   "name": "Wiki Dịch",
-   "author": "vBook",
-   "version": 29,
-   "source": "https://wikicv.org",
-   "description": "Đọc truyện trên trang Wiki Dịch",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/wiki-dich-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/wikidich/icon.png"
-  },
-  {
-   "name": "Wiki Dịch",
-   "author": "ivanzzz",
-   "version": 5,
-   "source": "https://wikicv.net",
-   "description": "Đọc truyện trên trang Wiki Dịch",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/wiki-dich-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/wikicv.net_ok/icon.png"
-  },
-  {
-   "name": "wodeshucheng5",
-   "author": "Đường đen",
-   "version": 1,
-   "source": "https://www.wodeshucheng5.com",
-   "description": "Đọc truyện trên trang wodeshucheng5",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/wodeshucheng5-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/wodeshucheng5/icon.png"
   },
   {
    "name": "Wuxia World",
@@ -5512,17 +3100,6 @@
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/xalosach_ok/icon.png"
   },
   {
-   "name": "Xbanxia - repo Đường đen",
-   "author": "Đường đen",
-   "version": 6,
-   "source": "https://www.xbanxia.cc",
-   "description": "Đọc truyện trên trang Xbanxia",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/xbanxia-repo-uong-en-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/xbanxia/icon.png"
-  },
-  {
    "name": "xbiquge",
    "author": "hajljnopera",
    "version": 2,
@@ -5532,17 +3109,6 @@
    "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/xbiquge/icon.png",
    "type": "chinese_novel",
    "locale": "zh_CN"
-  },
-  {
-   "name": "Xianqihaotiami APP",
-   "author": "QuocBao",
-   "version": 3,
-   "source": "http://www.xianqihaotianmi.org/",
-   "description": "Đọc truyện ở App xianqihaotiami",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/xianqihaotiami-app-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/APPxianqihaotiami/icon.png"
   },
   {
    "name": "xiaojiaren",
@@ -5590,39 +3156,6 @@
    "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/icon.png"
   },
   {
-   "name": "xsw",
-   "author": "Will Sun",
-   "version": 3,
-   "source": "https://m.xsw.tw",
-   "description": "Đọc truyện trên trang m.xsw.tw",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/xsw-will-sun.zip",
-   "icon": "https://raw.githubusercontent.com/WillSun28/vbook-extensions/main/icon/m.xsw.tw.png"
-  },
-  {
-   "name": "xsw - 台灣小說網",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://m.xsw.tw/",
-   "description": "台灣小說網 - Đọc truyện online",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/xsw-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/chinese_novel/xsw.tw_ok/icon.png"
-  },
-  {
-   "name": "XTruyen",
-   "author": "ivanzzz",
-   "version": 2,
-   "source": "https://www.xtruyen.net/",
-   "description": "XTruyen - Doc truyen online",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/xtruyen-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/xtruyen_ok/icon.png"
-  },
-  {
    "name": "xyushu5",
    "author": "B",
    "version": 3,
@@ -5633,39 +3166,6 @@
    "tag": "nsfw",
    "path": "plugins/xyushu5-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/xyushu5/icon.png"
-  },
-  {
-   "name": "YOUKU",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://www.youku.tv/",
-   "description": "Xem video YOUKU quốc tế. Ưu tiên audio/phụ đề tiếng Việt và tự lấy cna/MTOP token khi cần.",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/youku-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/youku/icon.png"
-  },
-  {
-   "name": "YouTube",
-   "author": "QuocBao",
-   "version": 10,
-   "source": "https://www.youtube.com/",
-   "description": "Xem video, live và playlist trên Du Tu Be. Hỗ trợ video trẻ em, nhiều audio và phụ đề.\nCó thể chọn trình phát Video hoặc Audio trong cấu hình ext.",
-   "type": "video",
-   "locale": "global",
-   "path": "plugins/youtube-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/yt/icon.png"
-  },
-  {
-   "name": "YPShuo - Bình luận sách",
-   "author": "Đường đen",
-   "version": 3,
-   "source": "https://www.ypshuo.com",
-   "description": "Đọc bình luận truyện trên trang ypshuo",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/ypshuo-binh-luan-sach-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/ypshuo/icon.png"
   },
   {
    "name": "Yuri Neko",
@@ -5709,17 +3209,6 @@
    "locale": "zh_CN",
    "path": "plugins/zhenhunxiaoshuo-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/zhenhunxiaoshuo/icon.png"
-  },
-  {
-   "name": "Zing Audio",
-   "author": "Đường đen",
-   "version": 2,
-   "source": "https://zingaudio.org",
-   "description": "Nghe truyện audio chọn lọc từ Zing Audio",
-   "type": "audio",
-   "locale": "vi_VN",
-   "path": "plugins/zing-audio-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/audio/zingaudio/icon.png"
   },
   {
    "name": "Zing Truyện",
@@ -5824,18 +3313,6 @@
    "icon": "https://doctruyenchufull.org/favicon.ico"
   },
   {
-   "name": "Đọc Truyện Tranh BL",
-   "author": "QuocBao",
-   "version": 4,
-   "source": "https://truyentranhbl.com/",
-   "description": "Đọc truyện tranh BL tại doctruyentranhbl",
-   "type": "comic",
-   "locale": "vi_VN",
-   "tag": "nsfw",
-   "path": "plugins/oc-truyen-tranh-bl-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/doctruyentranhbl/icon.png"
-  },
-  {
    "name": "Đồng nhân tiểu thuyết",
    "author": "Vearn",
    "version": 1,
@@ -5869,39 +3346,6 @@
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/%C4%90%E1%BB%99c%20gi%E1%BA%A3%20s%E1%BB%91%201/icon.png"
   },
   {
-   "name": "Ưng Tỷ Comics",
-   "author": "QuocBao",
-   "version": 4,
-   "source": "https://ungtycomics.net/",
-   "description": "Đọc truyện trên trang Ưng Tỷ Comics",
-   "type": "comic",
-   "locale": "vi_VN",
-   "path": "plugins/ung-ty-comics-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/ungtycomics/icon.png"
-  },
-  {
-   "name": "【VIP】Bạch Ngọc Sách",
-   "author": "Nhocconsr",
-   "version": 1,
-   "source": "http://bnsvip.net",
-   "description": "Đọc truyện trên trang BNS",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/vipbach-ngoc-sach-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/vipbns/icon.png"
-  },
-  {
-   "name": "书本书 Shubenshu",
-   "author": "hieu05",
-   "version": 3,
-   "source": "https://www.shubenshu.com",
-   "description": "Đọc truyện chữ Trung Quốc trên 书本书 (shubenshu.com)",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/shubenshu-hieu05.zip",
-   "icon": "https://raw.githubusercontent.com/yae-miko-313/ext-vbook/main/extensions/chinese_novel/shubenshu/icon.png"
-  },
-  {
    "name": "天悦小说网",
    "author": "TH03",
    "version": 1,
@@ -5910,50 +3354,6 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/th03.zip"
-  },
-  {
-   "name": "思兔阅读[sto9]",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://sto9.com",
-   "description": "Đọc tiểu thuyết trên sto9.com.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sto9-quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/sto9/icon.png"
-  },
-  {
-   "name": "搜笔趣阁",
-   "author": "Đường đen",
-   "version": 9,
-   "source": "https://www.sobqg.com",
-   "description": "搜笔趣阁 - sobqg.com",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/sobqg/icon.png"
-  },
-  {
-   "name": "笔趣阁-abcbiquge",
-   "author": "Đường đen",
-   "version": 10,
-   "source": "http://m.abcbiquge.com",
-   "description": "Đọc truyện trên trang abcbiquge",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/abcbiquge-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/abcbiquge/icon.png"
-  },
-  {
-   "name": "黃金屋中文",
-   "author": "QuocBao",
-   "version": 1,
-   "source": "https://tw.hjwzw.com",
-   "description": "Đọc truyện trên 黃金屋中文. ",
-   "type": "chinese_novel",
-   "locale": "zh_TW",
-   "path": "plugins/quocbao.zip",
-   "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/hjwzw/icon.png"
   }
  ]
 }
