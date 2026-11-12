@@ -6,4 +6,4 @@ Thêm vào app: Cài đặt → Nguồn truyện → + → dán link raw của `
 
 - `plugin.json`: danh sách plugin (đường dẫn tương đối `plugins/…zip`, `icons/…png`)
 - `plugins/`: file zip của từng plugin
-- `tools/repos.txt`, `tools/merge.py`: danh sách kho nguồn và script gộp
+- `tools/repos.txt`, `tools/merge.py`, `tools/normalize.py`: danh sách kho nguồn, script gộp, script chuẩn hoá type/locale (chạy merge rồi normalize)

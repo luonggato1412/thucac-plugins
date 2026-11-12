@@ -305,7 +305,9 @@
    "source": "https://www.69xinshu.com",
    "description": "Đọc truyện trên trang https://www.69shuba.com",
    "path": "plugins/69shu-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/69shu/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/69shu/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "69shu",
@@ -445,7 +447,9 @@
    "source": "https://8muses.com",
    "description": "Đọc truyện trên trang https://8muses.com",
    "path": "plugins/8muses-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/8muses/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/8muses/icon.png",
+   "type": "comic",
+   "locale": "en_US"
   },
   {
    "name": "8ternal",
@@ -454,7 +458,9 @@
    "source": "https://comic.8ternal.com",
    "description": "8ternal tổng hợp truyện dịch từ nhiều nguồn khác nhau, hỗ trợ các bạn đọc comics theo đúng timeline của các sự kiện chính. Hoặc đọc truyện theo timeline nhân vật mà các bạn yêu thích..",
    "path": "plugins/8ternal-fusornat.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/8ternal/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/8ternal/icon.png",
+   "type": "comic",
+   "locale": "vi_VN"
   },
   {
    "name": "8xsk",
@@ -510,7 +516,8 @@
    "type": "comic",
    "locale": "zh_CN",
    "path": "plugins/9y02-nahona.zip",
-   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/9y.png"
+   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/9y.png",
+   "tag": "nsfw"
   },
   {
    "name": "[APP] Ciweimao",
@@ -852,7 +859,7 @@
    "regexp": "(https?://)?(www\\.)?asmr(-\\d+)?\\.(one|com)/work/[A-Z]{2}\\d+",
    "description": "Nghe ASMR / drama CD từ asmr.one (kèm phụ đề lrc/vtt khi có)",
    "type": "audio",
-   "locale": "ja",
+   "locale": "ja_JP",
    "path": "plugins/asmr-one-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrone/icon.png"
   },
@@ -864,7 +871,7 @@
    "regexp": "(https?://)?(www\\.)?asmr18\\.fans/(boys|girls|allages)/rj\\d+/?",
    "description": "Nghe ASMR / drama CD tiếng Nhật (DLsite) từ asmr18.fans",
    "type": "audio",
-   "locale": "ja",
+   "locale": "ja_JP",
    "path": "plugins/asmr-18-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmr18/icon.png"
   },
@@ -876,7 +883,7 @@
    "regexp": "(https?://)?(www\\.)?asmrchive\\.moe/share/[A-Za-z0-9_-]+/?",
    "description": "Kho lưu trữ ASMR của VTuber (YouTube, Twitch, rplay) từ asmrchive.moe",
    "type": "audio",
-   "locale": "en",
+   "locale": "en_US",
    "path": "plugins/asmrchive-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrchive/icon.png"
   },
@@ -888,7 +895,7 @@
    "regexp": "(https?://)?(www\\.)?asmrgay\\.com/[^@/][^/]*/.+",
    "description": "Kho audio ASMR / 中文音声 / 同人音声 trên asmrgay.com (OpenList)",
    "type": "audio",
-   "locale": "zh",
+   "locale": "zh_CN",
    "path": "plugins/asmr-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/asmrgay/icon.png"
   },
@@ -932,7 +939,7 @@
    "source": "https://b.faloo.com",
    "description": "Đọc truyện trên trang b.faloo.com",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/bfaloo-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/bfaloo/icon.png"
   },
@@ -943,7 +950,7 @@
    "source": "https://b.faloo.com",
    "description": "BFaloo (飞卢小说)",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/bfaloo-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/chinese_novel/bfaloo_ok/icon.png"
   },
@@ -1067,7 +1074,8 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/book18-nahona.zip",
-   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/book18.png"
+   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/book18.png",
+   "tag": "nsfw"
   },
   {
    "name": "Boylove Bất Tử",
@@ -1133,7 +1141,8 @@
    "type": "comic",
    "locale": "zh_CN",
    "path": "plugins/cartoon18-nahona.zip",
-   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/cartoon18.png"
+   "icon": "https://raw.githubusercontent.com/SoulGodEve9x9/Vbook-ext/Nahona/Image/cartoon18.png",
+   "tag": "nsfw"
   },
   {
    "name": "CBunu Comic",
@@ -1176,7 +1185,9 @@
    "source": "https://www.ciweimao.com",
    "description": "Đọc truyện trên trang www.ciweimao.com",
    "path": "plugins/ciweimao-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/ciweimao/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/ciweimao/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "ciyuanji",
@@ -1208,7 +1219,9 @@
    "source": "https://czbooks.net",
    "description": "Đọc truyện trên trang https://czbooks.net",
    "path": "plugins/czbooks-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/czbooks/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/czbooks/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "czbooks - repo Đường đen",
@@ -1219,7 +1232,8 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/czbooks-repo-uong-en-uong-en.zip",
-   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/czbooks/icon.png"
+   "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/czbooks/icon.png",
+   "tag": "nsfw"
   },
   {
    "name": "Cà Chua",
@@ -1384,7 +1398,7 @@
    "source": "https://www.dingdian666.com",
    "description": "Đọc truyện trên trang www.dingdian666.com",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/dingdian-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/dingdian/icon.png"
   },
@@ -1417,7 +1431,9 @@
    "source": "https://docsach24.co",
    "description": "Docsach24.",
    "path": "plugins/docsach24-fusornat.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/docsach24/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/docsach24/icon.png",
+   "type": "novel",
+   "locale": "vi_VN"
   },
   {
    "name": "douban",
@@ -1437,7 +1453,7 @@
    "source": "https://doujins.com",
    "description": "Đọc truyện trên trang doujins.com",
    "type": "comic",
-   "locale": "en_EN",
+   "locale": "en_US",
    "tag": "nsfw",
    "path": "plugins/doujins-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/doujins/icon.png"
@@ -1449,7 +1465,7 @@
    "source": "https://www.douyin.com",
    "description": "Xem douyin. Đăng nhập trang nguồn trong trình duyệt vBook để dùng phiên Douyin.",
    "type": "video",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/douyin-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/douyin/icon.png"
   },
@@ -1649,7 +1665,7 @@
    "regexp": "(https?://)?stash\\.frostedsakura\\.my\\.id/[^@/][^/]*/.+",
    "description": "Kho ASMR / stream VTuber trên stash.frostedsakura.my.id (OpenList)",
    "type": "audio",
-   "locale": "en",
+   "locale": "en_US",
    "path": "plugins/frostedsakura-stash-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/frostedsakura/icon.png"
   },
@@ -1671,7 +1687,7 @@
    "source": "https://aistudio.google.com/apikey",
    "description": "Dịch văn bản bằng Google Gemini API với nhiều key, prompt, tùy chỉnh theo thể loại và xử lý lỗi an toàn thông minh. DONATE CHO ADMIN VBOOK NHIỀU LÊN ĐỂ VỪA CÓ TÊN ĐẸP, ADMIN LẠI CÓ THÊM ĐỘNG LỰC HOÀN THIỆN APP",
    "type": "translate",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/gemini-baidu-translate-change-model-v2-0-3690.zip",
    "icon": "https://raw.githubusercontent.com/gh369-639/vbook-ext-public/main/Gemini-Baidu-translate-change-model-V2/icon.png"
   },
@@ -1682,7 +1698,7 @@
    "source": "https://gemini.google.com",
    "description": "Nghe truyện bằng Gemini TTS",
    "type": "tts",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/gemini-tts-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/gemini-tts/icon.png"
   },
@@ -1736,7 +1752,7 @@
    "source": "https://translate.google.com",
    "description": "Nghe truyện bằng Google TTS",
    "type": "tts",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/google-tts-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/google-tts/icon.png"
   },
@@ -1792,7 +1808,9 @@
    "source": "https://www.haitanglin.com",
    "description": "Đọc truyện trên trang https://www.haitanglin.com",
    "path": "plugins/haitanglin-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/haitanglin/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/haitanglin/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "Hako",
@@ -1847,7 +1865,7 @@
    "regexp": "(https?://)?(www\\.)?hentaiasmr\\.moe/[^/?#]+\\.html",
    "description": "Nghe ASMR / drama CD 18+ tiếng Nhật (kèm EN, 中文) từ hentaiasmr.moe",
    "type": "audio",
-   "locale": "ja",
+   "locale": "ja_JP",
    "path": "plugins/hentai-asmr-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/hentaiasmr/icon.png"
   },
@@ -1882,7 +1900,9 @@
    "source": "https://hentaic.net",
    "description": "Đọc truyện trên trang https://hentaic.net",
    "path": "plugins/hentaic-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentaic/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentaic/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "HentaiCube",
@@ -1916,7 +1936,9 @@
    "source": "https://hentaiporns.net",
    "description": "Đọc truyện trên trang https://hentaiporns.net",
    "path": "plugins/hentaiporns-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentaiporns/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentaiporns/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "hentairead",
@@ -1925,7 +1947,9 @@
    "source": "https://hentairead.com",
    "description": "Đọc truyện trên trang https://hentairead.com",
    "path": "plugins/hentairead-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentairead/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentairead/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "hentairules",
@@ -1934,7 +1958,9 @@
    "source": "https://www.hentairules.net",
    "description": "Đọc truyện trên trang https://www.hentairules.net",
    "path": "plugins/hentairules-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentairules/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hentairules/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "HentaiVietsub.com",
@@ -2046,7 +2072,8 @@
    "source": "https://hiperdex.com",
    "description": "Đọc truyện trên trang https://hiperdex.com",
    "path": "plugins/hiperdex-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hiperdex/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/hiperdex/icon.png",
+   "type": "comic"
   },
   {
    "name": "hlzjc",
@@ -2122,7 +2149,7 @@
    "source": "https://hongguoduanju.com",
    "description": "Phim ngắn và hoạt hình Hongguo",
    "type": "video",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/hong-qua-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/hongguo/icon.png"
   },
@@ -2144,7 +2171,9 @@
    "source": "https://ihentai.info",
    "description": "Đọc truyện trên trang https://ihentai.info",
    "path": "plugins/ihentai-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/ihentai/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/ihentai/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "ihuaben",
@@ -2264,7 +2293,7 @@
    "regexp": "(https?://)?(www\\.)?japaneseasmr\\.com/\\d+/?",
    "description": "Nghe ASMR / drama CD tiếng Nhật từ japaneseasmr.com",
    "type": "audio",
-   "locale": "ja",
+   "locale": "ja_JP",
    "path": "plugins/japanese-asmr-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/japaneseasmr/icon.png"
   },
@@ -2419,7 +2448,7 @@
    "source": "https://klz9.com",
    "description": "Đọc truyện trên trang klz9.com",
    "type": "comic",
-   "locale": "en_EN",
+   "locale": "en_US",
    "path": "plugins/kisslove-raw-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/kissaway/icon.png"
   },
@@ -2518,7 +2547,9 @@
    "source": "http://www.liquge.com",
    "description": "Đọc truyện trên trang http://www.liquge.com",
    "path": "plugins/liquge-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/liquge/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/liquge/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "lkdttzz",
@@ -2619,7 +2650,9 @@
    "source": "https://www.lrxs.org",
    "description": "Đọc truyện trên trang https://www.lrxs.org",
    "path": "plugins/lrxs-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/lrxs/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/lrxs/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "LunarX",
@@ -2706,7 +2739,7 @@
    "source": "https://www.mangaread.org",
    "description": "Đọc truyện trên trang mangaread.org",
    "type": "comic",
-   "locale": "en_EN",
+   "locale": "en_US",
    "tag": "nsfw",
    "path": "plugins/manga-read-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/mangaread/icon.png"
@@ -2718,7 +2751,8 @@
    "source": "https://www.manga-raw.club",
    "description": "Đọc truyện trên trang https://www.manga-raw.club",
    "path": "plugins/manga-raw-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga-raw/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga-raw/icon.png",
+   "type": "comic"
   },
   {
    "name": "manga18.club",
@@ -2727,7 +2761,8 @@
    "source": "https://manga18.club",
    "description": "Đọc truyện trên trang https://manga18.club",
    "path": "plugins/manga18-club-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga18.club/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga18.club/icon.png",
+   "type": "comic"
   },
   {
    "name": "manga18fx",
@@ -2736,7 +2771,8 @@
    "source": "https://manga18fx.com",
    "description": "Đọc truyện trên trang https://manga18fx.com",
    "path": "plugins/manga18fx-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga18fx/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manga18fx/icon.png",
+   "type": "comic"
   },
   {
    "name": "MangaDex",
@@ -2779,7 +2815,8 @@
    "source": "https://mangayeh.com",
    "description": "Đọc truyện trên trang https://mangayeh.com",
    "path": "plugins/mangayeh-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/mangayeh/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/mangayeh/icon.png",
+   "type": "comic"
   },
   {
    "name": "Manhua Gui",
@@ -2822,7 +2859,7 @@
    "source": "https://manhwahentai.me",
    "description": "Đọc truyện trên trang Manhwahentai.me",
    "type": "comic",
-   "locale": "en_EN",
+   "locale": "en_US",
    "tag": "nsfw",
    "path": "plugins/manhwahentai-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/manhwahentai/icon.png"
@@ -2834,7 +2871,9 @@
    "source": "https://manhwas.men",
    "description": "Đọc truyện trên trang https://manhwas.men",
    "path": "plugins/manhwas-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manhwas/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/manhwas/icon.png",
+   "type": "comic",
+   "tag": "nsfw"
   },
   {
    "name": "masiro 📖🔑",
@@ -3025,7 +3064,7 @@
    "source": "https://monkeydd.com",
    "description": "Đọc truyện trên MonkeyD",
    "type": "novel",
-   "locale": "vi-VN",
+   "locale": "vi_VN",
    "path": "plugins/monkeyd-ivanzzz.zip",
    "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/monkeydd.com_ok/icon.png"
   },
@@ -3069,7 +3108,7 @@
    "source": "https://moyue.app",
    "description": "Tiểu thuyết Moyue. Nguồn VIP cần token Moyue.",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/moyue-mac-duyet-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/moyue/icon.png"
   },
@@ -3091,7 +3130,7 @@
    "source": "https://ai.zalo.solutions/docs/api/getting-started",
    "description": "Đọc văn bản bằng Zalo AI, ElevenLabs, FPT.AI và Viettel AI; hỗ trợ nhiều API key (dán hàng loạt, phân tách bằng dấu phẩy/xuống dòng), cân bằng tải vòng tròn (Round-Robin) chống rate-limit 429, tự động chuyển key khi hết quota, tải phân trang giọng ElevenLabs và đồng bộ danh sách giọng Viettel AI từ API.\n\nHƯỚNG DẪN CÀI ĐẶT\n1. Chọn Dịch vụ TTS (Zalo AI, ElevenLabs, FPT.AI hoặc Viettel AI).\n2. Trong mục \"API key / token\", nhấn \"Thêm\" hoặc dán hàng loạt nhiều key (ngăn cách bởi dấu phẩy \",\" hoặc xuống dòng):\n   - Zalo AI: ZAI:key_cua_ban (hoặc nhập thẳng key)\n   - ElevenLabs: EL:sk_key_cua_ban (hoặc nhập thẳng key)\n   - FPT.AI: FPT:key_cua_ban (hoặc nhập thẳng key)\n   - Viettel AI: VTAI:token_cua_ban (hoặc nhập thẳng token, tự lọc Bearer)\n3. Chọn Chế độ dùng nhiều key: Vòng tròn (Round-Robin) để chống lỗi 429 hoặc Tuần tự (Failover).\n4. Chọn giọng đọc phù hợp với dịch vụ đã chọn.\n5. Chọn model (nếu dùng ElevenLabs); các tùy chọn giới hạn ký tự và tải trước ở bên dưới.\n\nLẤY API KEY / TOKEN\n- Zalo AI: https://ai.zalo.solutions/docs/api/getting-started\n- ElevenLabs: https://elevenlabs.io/docs/api-reference/authentication\n- FPT.AI: https://docs.fpt.ai/docs/en/console/documentation/console/\n- Viettel AI: https://viettelai.vn/en/tai-lieu\n\nKhóa được lưu bảo mật trong cài đặt vBook. Không chia sẻ cấu hình có chứa khóa.",
    "type": "tts",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/multi-tts-vn-meo.zip",
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/tts/Meo_multi_tts/icon.png"
   },
@@ -3368,7 +3407,7 @@
    "source": "https://novelbuddy.com",
    "description": "Đọc truyện trên trang novelbuddy.com",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/novel-buddy-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/novelbuddy/icon.png"
   },
@@ -3523,7 +3562,7 @@
    "source": "https://omegascans.org",
    "description": "Đọc truyện trên trang omegascans.org",
    "type": "comic",
-   "locale": "en_EN",
+   "locale": "en_US",
    "tag": "nsfw",
    "path": "plugins/omega-scans-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/omegascans/icon.png"
@@ -3667,7 +3706,9 @@
    "source": "https://www.piaotian55.net",
    "description": "Đọc truyện trên trang https://www.piaotian55.net",
    "path": "plugins/piaotian5-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/piaotian5/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/piaotian5/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "pixiv",
@@ -3733,7 +3774,9 @@
    "source": "https://www.piaotian.com",
    "description": "Đọc truyện trên trang https://www.piaotian.com",
    "path": "plugins/ptwxz-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/ptwxz/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/ptwxz/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "ptwxzOrg",
@@ -3841,7 +3884,9 @@
    "source": "http://quanben.io",
    "description": "Đọc truyện trên trang http://quanben.io",
    "path": "plugins/quanben-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/quanben/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/quanben/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "quanben - repo Đường đen",
@@ -3850,7 +3895,7 @@
    "source": "https://quanben.io",
    "description": "Đọc truyện trên trang quanben",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/quanben-repo-uong-en-hajljnopera.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/quanben/icon.png"
   },
@@ -3872,7 +3917,7 @@
    "source": "https://sj.qubook.cc/",
    "description": "Đọc truyện trên trang qubook.cc",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/qubook-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/qubook/icon.png"
   },
@@ -3916,7 +3961,9 @@
    "source": "https://rawdevart.com",
    "description": "Đọc truyện trên trang https://rawdevart.com",
    "path": "plugins/rawdevart-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/rawdevart/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/rawdevart/icon.png",
+   "type": "comic",
+   "locale": "ja_JP"
   },
   {
    "name": "Roads Team",
@@ -3970,7 +4017,7 @@
    "source": "https://www.royalroad.com",
    "description": "Royal Road® is the home of web novels and fan fictions! In our amazing community, you can find various talented individuals who write as a hobby or even professionally, artists who create art for them, and many, many readers who provide valuable feedback and encouragement.",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/royalroad-fusornat.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/royalroad/icon.png"
   },
@@ -3981,7 +4028,8 @@
    "source": "https://www.sachhayonline.com",
    "description": "Đọc truyện trên trang sachhayonline.com",
    "path": "plugins/sachhayonline-fusornat.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/sachhayonline/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/sachhayonline/icon.png",
+   "type": "novel"
   },
   {
    "name": "Sany Team",
@@ -4161,7 +4209,8 @@
    "source": "https://skymanga.co",
    "description": "Đọc truyện trên trang https://skymanga.co",
    "path": "plugins/skymanga-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/skymanga/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/skymanga/icon.png",
+   "type": "comic"
   },
   {
    "name": "Snapd",
@@ -4336,7 +4385,7 @@
    "source": "https://tybook.taoyuewenhua.net",
    "description": "Tao novel.",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/taonovel-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/Novel_Zh/taonovel/icon.png"
   },
@@ -4825,7 +4874,7 @@
    "source": "https://comnguoinovel.com",
    "description": "TruyenDichMienPhi.com là nền tảng đọc truyện chữ online miễn phí. Truyện dịch rõ nghĩa, mượt mà, không quảng cáo, không cần đăng nhập. Cập nhật nhanh các thể loại hot: tiên hiệp, huyền ảo, đô thị, kiếm hiệp, xuyên không...",
    "type": "novel",
-   "locale": "vi-VN",
+   "locale": "vi_VN",
    "path": "plugins/truyen-dich-mien-phi-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/truyendichmienphi/icon.png"
   },
@@ -4980,7 +5029,9 @@
    "source": "http://trxs.cc",
    "description": "Đọc truyện trên trang http://trxs.cc",
    "path": "plugins/trxs-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/trxs/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/trxs/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "trxsme",
@@ -5011,7 +5062,7 @@
    "source": "https://www.bilibili.com",
    "description": "Bili Trung. Cần cookie để sử dụng. Quyền xem phụ thuộc quyền truy cập của tài khoản người dùng (VIP hoặc nội dung đã mua) và giới hạn khu vực của Bilibili.",
    "type": "video",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/tram-b-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/video/tramb/icon.png"
   },
@@ -5023,7 +5074,8 @@
    "description": "Đọc truyện trên trang www.tsumino.com",
    "tag": "nsfw",
    "path": "plugins/tsumino-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/tsumino/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/tsumino/icon.png",
+   "type": "comic"
   },
   {
    "name": "Tu Tiên (.pro)",
@@ -5243,7 +5295,7 @@
    "source": "https://quykhu.com",
    "description": "Vozer là web đọc truyện online miễn phí với với tổng hợp đầy đủ chuyện trên trời dưới đất, nhưng nổi bật nhất vẫn là là Truyện Voz. Nơi đây sản sinh ra những tác giả có những cuốn tự truyện có thể nói là huyền thoại một thời. Vozer có nhiều truyện mới nhất từ các tác giả với tất cả thể loại như Tâm linh, Tình yêu, Truyện ma,...",
    "type": "novel",
-   "locale": "vi-VN",
+   "locale": "vi_VN",
    "path": "plugins/vozer-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/vozer/icon.png"
   },
@@ -5254,7 +5306,9 @@
    "source": "https://vozer.vn",
    "description": "Truyện Voz.",
    "path": "plugins/vozer-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/vozer/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/vozer/icon.png",
+   "type": "novel",
+   "locale": "vi_VN"
   },
   {
    "name": "vvbiquge",
@@ -5299,7 +5353,8 @@
    "description": "Đọc truyện trên trang Wattpad",
    "type": "novel",
    "path": "plugins/wattpad-vbook.zip",
-   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/wattpad/icon.png"
+   "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/wattpad/icon.png",
+   "locale": "global"
   },
   {
    "name": "Wattpad",
@@ -5319,7 +5374,7 @@
    "source": "https://www.wattpad.com",
    "description": "Đọc truyện tiếng Việt trên Wattpad",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/wattpad-tieng-viet-meo.zip",
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/wattpad/icon.png"
   },
@@ -5364,7 +5419,7 @@
    "source": "https://weebcentral.com",
    "description": "Read manga, manhwa and manhua on Weeb Central",
    "type": "comic",
-   "locale": "en",
+   "locale": "en_US",
    "path": "plugins/weeb-central-vbook.zip",
    "icon": "https://raw.githubusercontent.com/Darkrai9x/vbook-extensions/master/weebcentral/icon.png"
   },
@@ -5441,7 +5496,8 @@
    "source": "https://www.wuxiaworld.com",
    "description": "Đọc truyện trên trang www.wuxiaworld.com",
    "path": "plugins/wuxia-world-nhocconsr.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/wuxiaworld/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/wuxiaworld/icon.png",
+   "type": "novel"
   },
   {
    "name": "x33xs4",
@@ -5472,7 +5528,7 @@
    "source": "https://www.xbanxia.cc",
    "description": "Đọc truyện trên trang Xbanxia",
    "type": "chinese_novel",
-   "locale": "zh-CN",
+   "locale": "zh_CN",
    "path": "plugins/xbanxia-repo-uong-en-uong-en.zip",
    "icon": "https://raw.githubusercontent.com/duongden/vbook/main/FixedDomain/xbanxia/icon.png"
   },
@@ -5483,7 +5539,9 @@
    "source": "https://www.xbiquge.so",
    "description": "Đọc truyện trên trang https://www.xbiquge.so",
    "path": "plugins/xbiquge-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/xbiquge/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/xbiquge/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "Xianqihaotiami APP",
@@ -5525,7 +5583,7 @@
    "source": "https://m.xinyushuwu2.com",
    "description": "Đọc truyện trên trang xinyushuwu. tác giả hajljnopera mà xóa rồi, dat-bi sửa",
    "type": "chinese_novel",
-   "locale": "vi-VN",
+   "locale": "vi_VN",
    "tag": "nsfw",
    "path": "plugins/xinyushuwu-b.zip",
    "icon": "https://raw.githubusercontent.com/dat-bi/ext-vbook/main/extensions/xinyushuwu/icon.png"
@@ -5626,7 +5684,8 @@
    "source": "https://yurineko.net",
    "description": "Đọc truyện trên trang https://yurineko.net",
    "path": "plugins/yuri-neko-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/yurineko/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/yurineko/icon.png",
+   "type": "comic"
   },
   {
    "name": "Yushubo",
@@ -5702,7 +5761,9 @@
    "source": "http://www.zongheng.com",
    "description": "Đọc truyện trên trang http://www.zongheng.com",
    "path": "plugins/zongheng-hajljnopera.zip",
-   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/zongheng/icon.png"
+   "icon": "https://raw.githubusercontent.com/hajljnopera/vbook-ext/main/zongheng/icon.png",
+   "type": "chinese_novel",
+   "locale": "zh_CN"
   },
   {
    "name": "zTruyện",
@@ -5711,7 +5772,9 @@
    "source": "https://ztruyen.vn",
    "description": "zTruyen.vn",
    "path": "plugins/ztruyen-fusornat.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/ztruyen/icon.png"
+   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/ztruyen/icon.png",
+   "type": "novel",
+   "locale": "vi_VN"
   },
   {
    "name": "Zumi Novel",
@@ -5833,7 +5896,7 @@
    "source": "http://bnsvip.net",
    "description": "Đọc truyện trên trang BNS",
    "type": "novel",
-   "locale": "vi",
+   "locale": "vi_VN",
    "path": "plugins/vipbach-ngoc-sach-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/vipbns/icon.png"
   },
