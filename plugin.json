@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (301 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (302 plugin)"
  },
  "data": [
   {
@@ -2398,6 +2398,18 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/sang-tac-viet-th03.zip"
+  },
+  {
+   "name": "Đam Mỹ dammyy",
+   "author": "luonggato",
+   "version": 1,
+   "source": "https://dammyy.cc",
+   "regexp": "dammyy\\.cc/[a-z0-9-]+\\.html",
+   "description": "dammyy.cc: truyện chữ đam mỹ, ngôn tình tiếng Việt. Đọc miễn phí, không cần đăng nhập. Plugin tự giải các chữ bị site giấu bằng CSS và bỏ dòng watermark.",
+   "type": "novel",
+   "locale": "vi_VN",
+   "path": "plugins/dam-my-dammyy.zip",
+   "icon": "icons/dam-my-dammyy.png"
   },
   {
    "name": "Tadu (塔读文学)",
