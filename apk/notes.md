@@ -1,8 +1,7 @@
-Thư Các 0.6.18b (bản điện thoại, arm64)
+Thư Các 0.6.19 (bản điện thoại, arm64)
 
-- APK nhỏ (~17 MB): từ điển VietPhrase/Names tải về khi mở lần đầu
-- Đồng bộ Names theo từng truyện
+- Tự cập nhật: app tự kiểm tra bản mới trên GitHub (lúc mở app và mỗi 12 giờ), tự tải về rồi cài.
+- Android 12 trở lên: từ lần cập nhật sau, cài luôn không cần bấm. Máy cũ hơn: chạm vào thông báo để cài.
+- Bật/tắt và kiểm tra thủ công: Cá nhân > Giới thiệu > Cập nhật ứng dụng.
 
-Tải: ThuCac-0.6.18b.apk ở mục Assets bên dưới.
-
-<!-- versionCode: 50 -->
+<!-- versionCode: 51 -->
