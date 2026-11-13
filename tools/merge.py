@@ -17,6 +17,7 @@ for p in sys.argv[1:]:
     own.append(dict(m=m,b=b,icon=icon if os.path.exists(icon) else None))
 items=json.load(open(DL+'/items.json'))
 best={}; bad=[]
+DEAD={(x['name'].strip().lower(),host(x.get('source',''))) for x in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'dead-removed.json'),encoding='utf-8'))}
 for e in sorted(items,key=lambda e:order.index(e['_repo'])):
     f=f"{DL}/zips/{e['_id']}.zip"
     if not os.path.exists(f): bad.append((e['_repo'],e['name'],'không tải được')); continue
@@ -25,6 +26,7 @@ for e in sorted(items,key=lambda e:order.index(e['_repo'])):
     except Exception as ex: bad.append((e['_repo'],e['name'],'zip hỏng/không có plugin.json')); continue
     if re.search(r'"encrypt"\s*:\s*"?true',zipfile.ZipFile(io.BytesIO(b)).read('plugin.json').decode('utf-8-sig','ignore')): bad.append((e['_repo'],e['name'],'mã hoá, Thư Các không chạy được')); continue  # Lương 2026-11-12: bỏ plugin mã hoá
     k=(e['name'].strip().lower(),host(e.get('source','')))
+    if k in DEAD: bad.append((e['_repo'],e['name'],'trang đã chết')); continue  # Lương 2026-11-13: bỏ plugin có domain chết
     v=int(e.get('version') or 1)
     if k not in best or v>best[k][0]: best[k]=(v,e,b)
 ownhosts={host(o['m'].get('source','')) for o in own}
