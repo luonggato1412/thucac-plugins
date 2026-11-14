@@ -114,7 +114,7 @@ class ImageOcr(private val ctx: Context) {
     ): OcrResult? = runCatching { ocrSteps(url, http, headers, referer, null) {} }.getOrNull()
 
     /** True when the page was already read before (memory or disk cache). */
-    fun cached(url: String): Boolean = sha1(url).let { mem.containsKey(it) || File(dir, "o10-$it.json").exists() }
+    fun cached(url: String, nextUrl: String? = null): Boolean = sha1(if (nextUrl != null) "$url|$nextUrl" else url).let { mem.containsKey(it) || File(dir, "o10-$it.json").exists() }
 
     /**
      * OCR one image, reporting each step. [langHint] ("zh"/"ko"/"en") limits OCR to the matching
@@ -126,9 +126,12 @@ class ImageOcr(private val ctx: Context) {
         headers: Map<String, String>,
         referer: String?,
         langHint: String?,
+        nextUrl: String? = null,
+        nextReferer: String? = null,
         onStep: (String) -> Unit,
     ): OcrResult {
-        val key = sha1(url)
+        // The result depends on the next image too (its top is read together with this one).
+        val key = sha1(if (nextUrl != null) "$url|$nextUrl" else url)
         mem[key]?.let { return it }
         val file = File(dir, "o10-$key.json")
         if (file.exists()) {
@@ -136,12 +139,15 @@ class ImageOcr(private val ctx: Context) {
         }
         onStep("Tải ảnh")
         val bytes = try {
-            fetchBytesOrThrow(url, http, headers, referer)
+            recent[url] ?: fetchBytesOrThrow(url, http, headers, referer).also { remember(url, it) }
         } catch (e: Exception) {
             throw ComicStepException("Tải ảnh", e)
         }
+        // Chinese comics cut long strips into short images, often through a speech bubble.
+        // Read the top of the next image together with this one so a cut bubble is read whole.
+        val nextBytes = nextUrl?.let { n -> recent[n] ?: runCatching { fetchBytesOrThrow(n, http, headers, nextReferer) }.getOrNull()?.also { remember(n, it) } }
         val res = try {
-            runOcrOnBytes(bytes, langHint, onStep) ?: throw IllegalStateException("không giải mã được ảnh (${bytes.size / 1024} KB)")
+            runOcrOnBytes(bytes, nextBytes, langHint, onStep) ?: throw IllegalStateException("không giải mã được ảnh (${bytes.size / 1024} KB)")
         } catch (e: ComicStepException) {
             throw e
         } catch (e: Throwable) {
@@ -151,6 +157,13 @@ class ImageOcr(private val ctx: Context) {
         runCatching { file.writeText(res.toJson()) }
         return res
     }
+
+    /** The last few downloaded images: page i downloads page i+1, which is then read next. */
+    private val recent = java.util.Collections.synchronizedMap(object : LinkedHashMap<String, ByteArray>(4, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, ByteArray>?) = size > 3
+    })
+
+    private fun remember(url: String, b: ByteArray) { recent[url] = b }
 
     private fun fetchBytesOrThrow(
         url: String,
@@ -188,7 +201,7 @@ class ImageOcr(private val ctx: Context) {
         }
     }.getOrNull()
 
-    private fun runOcrOnBytes(bytes: ByteArray, langHint: String?, onStep: (String) -> Unit): OcrResult? {
+    private fun runOcrOnBytes(bytes: ByteArray, nextBytes: ByteArray?, langHint: String?, onStep: (String) -> Unit): OcrResult? {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
         val origW = bounds.outWidth
@@ -201,10 +214,11 @@ class ImageOcr(private val ctx: Context) {
             inSampleSize = sample
             inPreferredConfig = Bitmap.Config.ARGB_8888
         }
-        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts) ?: return null
+        val page = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts) ?: return null
+        val bmp = withNextStrip(page, nextBytes)
         try {
-            val scaleX = origW.toFloat() / bmp.width
-            val scaleY = origH.toFloat() / bmp.height
+            val scaleX = origW.toFloat() / page.width
+            val scaleY = origH.toFloat() / page.height
             // A hint only narrows the recognizers. "en" keeps the Chinese one too (watermarks are often Latin
             // on Chinese comics), and an empty page is read again with all of them.
             val hinted = when (langHint) {
@@ -255,9 +269,12 @@ class ImageOcr(private val ctx: Context) {
             }
             var merged = read(hinted ?: all)
             if (merged.isEmpty() && hinted != null) merged = read(all)
+            // Bubbles that start in the next image belong to it; ones starting here may run past the bottom.
+            merged = merged.filter { it.top < origH - 4 }
             return OcrResult(origW, origH, merged)
         } finally {
-            bmp.recycle()
+            if (bmp !== page) bmp.recycle()
+            page.recycle()
         }
     }
 
@@ -332,6 +349,34 @@ class ImageOcr(private val ctx: Context) {
         } catch (e: Throwable) {
             throw ComicStepException("Nhận dạng chữ", e)
         }
+    }
+
+    /** [page] with the top of the next image (scaled to the same width) glued under it, or [page] itself. */
+    private fun withNextStrip(page: Bitmap, nextBytes: ByteArray?): Bitmap {
+        if (nextBytes == null) return page
+        return runCatching {
+            val nb = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeByteArray(nextBytes, 0, nextBytes.size, nb)
+            if (nb.outWidth <= 0 || nb.outHeight <= 0) return page
+            var sample = 1
+            while (nb.outWidth / (sample * 2) >= page.width) sample *= 2
+            val next = BitmapFactory.decodeByteArray(nextBytes, 0, nextBytes.size, BitmapFactory.Options().apply { inSampleSize = sample }) ?: return page
+            try {
+                val k = page.width.toFloat() / next.width
+                val stripH = min((next.height * k).toInt(), max(400, (page.width * 0.6f).toInt()))
+                if (stripH < 8) return page
+                val out = Bitmap.createBitmap(page.width, page.height + stripH, Bitmap.Config.ARGB_8888)
+                val c = android.graphics.Canvas(out)
+                c.drawBitmap(page, 0f, 0f, null)
+                c.drawBitmap(
+                    next, android.graphics.Rect(0, 0, next.width, (stripH / k).toInt().coerceIn(1, next.height)),
+                    android.graphics.Rect(0, page.height, page.width, page.height + stripH), android.graphics.Paint(android.graphics.Paint.FILTER_BITMAP_FLAG),
+                )
+                out
+            } finally {
+                next.recycle()
+            }
+        }.getOrDefault(page)
     }
 
     private fun collectLines(

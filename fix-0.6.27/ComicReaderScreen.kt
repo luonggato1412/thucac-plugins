@@ -68,6 +68,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -141,7 +142,11 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
     var menu by remember { mutableStateOf(false) }
     var showToc by remember { mutableStateOf(false) }
     var showTranslate by remember { mutableStateOf(false) }
-    var translateOn by remember { mutableStateOf(prefs.getBoolean("on_$bookKey", true)) }
+    // On by default for foreign comic sources; Vietnamese sources need no translation.
+    val foreign = remember(pid) {
+        app.sources.plugins.firstOrNull { it.id == pid }?.let { app.sources.facts(it).lang != vn.thucac.reader.data.PluginLang.VI } ?: true
+    }
+    var translateOn by remember { mutableStateOf(prefs.getBoolean("on_$bookKey", foreign)) }
     var engine by remember {
         mutableStateOf(prefs.getString("engine_$bookKey", null) ?: "auto")
     }
@@ -269,7 +274,8 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
             val hint = langHint
             val outcome: Result<Pair<PageText, PageStatus>> = withContext(Dispatchers.IO) {
                 runCatching {
-                    val res = app.ocr.ocrSteps(page.link, app.http, emptyMap(), refererFor(page, c.url), hint, step)
+                    val nx = list.getOrNull(i + 1)
+                    val res = app.ocr.ocrSteps(page.link, app.http, emptyMap(), refererFor(page, c.url), hint, nx?.link, nx?.let { refererFor(it, c.url) }, step)
                     if (res.blocks.isEmpty()) {
                         PageText(res, emptyList()) to PageStatus("$label · Không thấy chữ")
                     } else {
@@ -313,7 +319,8 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                     if (slow) kotlinx.coroutines.delay(400)
                     val label = "Ảnh ${j + 1}"
                     runCatching {
-                        val res = app.ocr.ocrSteps(pg.link, app.http, emptyMap(), refererFor(pg, next.url), hint) {}
+                        val nx = np.getOrNull(j + 1)
+                        val res = app.ocr.ocrSteps(pg.link, app.http, emptyMap(), refererFor(pg, next.url), hint, nx?.link, nx?.let { refererFor(it, next.url) }) {}
                         nc[j] = if (res.blocks.isEmpty()) PageText(res, emptyList()) to PageStatus("$label · Không thấy chữ")
                         else {
                             val tx = tr.translateComic(res.blocks.map { it.text }, eng, bookKey) {}
@@ -410,12 +417,24 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                 ) {
                     item { Spacer(Modifier.statusBarsPadding()) }
                     itemsIndexed(list, key = { i, p -> "$i ${p.link}" }) { i, page ->
+                        val cur = if (translateOn) texts[i] else null
+                        val prev = if (translateOn && i > 0) texts[i - 1] else null
+                        // Bubbles of the previous image that run into this one: drawn by that image, skipped here.
+                        val skip = if (cur != null && prev != null && prev.res.width > 0) {
+                            val k = cur.res.width.toFloat() / prev.res.width
+                            prev.res.blocks.filter { it.bottom > prev.res.height }.map { b ->
+                                intArrayOf((b.left * k).toInt(), 0, (b.right * k).toInt(), ((b.bottom - prev.res.height) * k).toInt() + 8)
+                            }
+                        } else emptyList()
+                        val overflows = cur != null && cur.res.blocks.any { it.bottom > cur.res.height }
                         ComicPageView(
                             page, chapter?.url ?: bookUrl, loader, if (translateOn) texts[i] else null,
                             // Only errors (and the circled region being read in manual mode) are shown on the page,
                             // so the label never hides a speech bubble.
                             if (translateOn) status[i]?.takeIf { it.error || (ocrMode == "manual" && it.busy) } else null,
                             selecting = translateOn && ocrMode == "manual" && selecting,
+                            skip = skip,
+                            modifier = if (overflows) Modifier.zIndex(1f) else Modifier,
                         ) { x0, y0, x1, y1 -> translateRegion(i, page, x0, y0, x1, y1) }
                     }
                     item {
@@ -599,7 +618,8 @@ private fun refererFor(page: ComicPage, chapterUrl: String): String? =
 @Composable
 private fun ComicPageView(
     page: ComicPage, chapterUrl: String, loader: ImageLoader, text: PageText?, status: PageStatus?,
-    selecting: Boolean = false, onRegion: (Float, Float, Float, Float) -> Unit = { _, _, _, _ -> },
+    selecting: Boolean = false, skip: List<IntArray> = emptyList(), modifier: Modifier = Modifier,
+    onRegion: (Float, Float, Float, Float) -> Unit = { _, _, _, _ -> },
 ) {
     val ctx = LocalContext.current
     val urls = remember(page) { listOf(page.link) + page.fallback }
@@ -613,7 +633,7 @@ private fun ComicPageView(
             addHeader("User-Agent", App.instance.userAgent)
         }.build()
     }
-    BoxWithConstraints(Modifier.fillMaxWidth().heightIn(min = if (loaded) 0.dp else 320.dp)) {
+    BoxWithConstraints(modifier.fillMaxWidth().heightIn(min = if (loaded) 0.dp else 320.dp)) {
         AsyncImage(
             model = request, imageLoader = loader, contentDescription = null,
             contentScale = ContentScale.FillWidth, modifier = Modifier.fillMaxWidth(),
@@ -628,7 +648,10 @@ private fun ComicPageView(
         if (loaded && text != null && text.res.width > 0) {
             val density = LocalDensity.current
             val scale = constraints.maxWidth.toFloat() / text.res.width
-            text.res.blocks.forEachIndexed { i, b -> Bubble(b, text.texts.getOrNull(i) ?: b.text, scale, density) }
+            text.res.blocks.forEachIndexed { i, b ->
+                val covered = skip.any { r -> b.top < r[3] && minOf(b.right, r[2]) > maxOf(b.left, r[0]) }
+                if (!covered) Bubble(b, text.texts.getOrNull(i) ?: b.text, scale, density)
+            }
         }
         if (loaded && selecting) {
             // Drag a box around the text to translate; the box is sent as fractions of the image.
