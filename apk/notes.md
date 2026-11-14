@@ -1,7 +1,7 @@
-<!-- versionCode: 67 -->
-## Thư Các 0.6.25b
+<!-- versionCode: 68 -->
+## Thư Các 0.6.25c
 
-- Sửa khung chữ dịch ảnh: gom dòng đúng bong bóng, chỉ phủ chữ gốc, chữ tự co, bỏ "[1]", bỏ qua tiếng động tiếng Hàn.
-- Cài đặt AI: nút Chọn lấy danh sách model từ Google.
-- Tự chọn model Gemini flash mới nhất; model lỗi 404 tự đổi.
-- Dịch theo lô bằng AI: câu nào AI trả lỗi thì riêng câu đó dịch bằng Google.
+- **Sửa dịch tên truyện** tiếng Anh/Hàn (Khám phá, Tìm kiếm, Kệ sách): trước đây nhiều tên bị lưu nguyên văn và không bao giờ dịch lại. Nay tên chưa dịch được sẽ tự thử lại, bộ nhớ tên cũ bị lỗi được dọn.
+- Tên truyện dịch bằng **AI theo lô** (gom cả trang, 25 tên/lần) như dịch trang truyện; AI giữ nguyên tên nào thì Google dịch bù từng tên, không lệch thứ tự.
+- Lời nhắc AI dịch nghĩa cả tên, chỉ giữ tên nhân vật.
+- AI lỗi thì hiện bản Google ngay, ghi lại lỗi, sau 3 phút tự dịch lại bằng AI.
