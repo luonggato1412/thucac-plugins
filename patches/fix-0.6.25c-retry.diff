@@ -1,0 +1,103 @@
+--- /tmp/ts.bak	2026-11-14 09:38:10.280413966 +0000
++++ TranslateService.kt	2026-11-14 09:38:10.302629035 +0000
+@@ -368,7 +368,12 @@
+         if (src.any { Converter.isCjk(it) }) return convertTitle(src, bookKey)
+         @Suppress("UNUSED_VARIABLE") val v = titleVersion // recompose when a title comes back
+         val lang = foreignTitleLang(src) ?: return src
+-        titleCache[src]?.let { return it }
++        titleCache[src]?.let { v ->
++            // Shown from Google because AI failed: after the wait, try AI again (the Google text stays meanwhile).
++            val g = titleGoogle[src]
++            if (g != null && aiConfigured() && System.currentTimeMillis() - g >= TITLE_RETRY_MS) queueTitle(src, lang)
++            return v
++        }
+         queueTitle(src, lang)
+         return src
+     }
+@@ -388,6 +393,22 @@
+     }
+     private val titleQueue = java.util.LinkedHashMap<String, String>()
+     private val titleFailed = ConcurrentHashMap<String, Long>()
++    private val titleTries = ConcurrentHashMap<String, Int>()
++    /** Last error per title (AI or Google), for the log. */
++    val titleErrors = ConcurrentHashMap<String, String>()
++    private val TITLE_RETRY_MS = 3 * 60_000L
++    private val titleGoogleFile = File(app.filesDir, "title-google.json")
++    /** Titles whose cached text came from Google because AI failed: source -> time. */
++    private val titleGoogle: ConcurrentHashMap<String, Long> by lazy {
++        val m = ConcurrentHashMap<String, Long>()
++        runCatching { val o = org.json.JSONObject(titleGoogleFile.readText()); for (k in o.keys()) m[k] = o.getLong(k) }
++        m
++    }
++    private fun titleError(srcs: List<String>, where: String, e: Throwable?) {
++        val msg = where + ": " + (e?.message ?: e?.javaClass?.simpleName ?: "không rõ")
++        android.util.Log.w("title-tr", msg + " (" + srcs.size + " tên)")
++        srcs.forEach { titleErrors[it] = msg }
++    }
+     @Volatile private var titleWorker = false
+     private val VI_MARKS = Regex("[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]", RegexOption.IGNORE_CASE)
+ 
+@@ -398,7 +419,8 @@
+     }
+ 
+     private fun queueTitle(src: String, lang: String) {
+-        if (titleFailed[src]?.let { System.currentTimeMillis() - it < 3 * 60_000 } == true) return
++        if (titleFailed[src]?.let { System.currentTimeMillis() - it < TITLE_RETRY_MS } == true) return
++        if ((titleTries[src] ?: 0) >= 4) return
+         synchronized(titleQueue) {
+             if (titleQueue.containsKey(src)) return
+             titleQueue[src] = lang
+@@ -415,24 +437,42 @@
+                 for ((lang, items) in batch.groupBy { it.second }) {
+                     val srcs = items.map { it.first }
+                     // AI batch first; titles it got wrong go to Google in one call, the rest keep the AI result.
+-                    val res = (if (aiConfigured()) runCatching {
+-                        val provider = AiProvider.byId(app.settings.aiProvider)
+-                        val m = withAiModel(provider) { mdl ->
+-                            ai.titles(srcs, app.settings.aiKey(provider.id).trim(), mdl, provider,
+-                                app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                    val viaGoogle = HashSet<String>()
++                    var res: List<String>? = null
++                    if (aiConfigured()) {
++                        try {
++                            val provider = AiProvider.byId(app.settings.aiProvider)
++                            val m = withAiModel(provider) { mdl ->
++                                ai.titles(srcs, app.settings.aiKey(provider.id).trim(), mdl, provider,
++                                    app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                            }
++                            res = vn.thucac.engine.AiTranslator.fillBad(srcs, { m[it] }) { bad ->
++                                viaGoogle += bad
++                                try { google.translateEach(bad, from = lang) } catch (e: Exception) { titleError(bad, "Google", e); throw e }
++                            }
++                        } catch (e: Exception) {
++                            titleError(srcs, "AI", e)
+                         }
+-                        vn.thucac.engine.AiTranslator.fillBad(srcs, { m[it] }) { bad -> google.translateEach(bad, from = lang) }
+-                    }.getOrNull() else null)
+-                        ?: runCatching { google.translateEach(srcs, from = lang) }.getOrNull()
+-                    // Only real translations are cached; a title that came back unchanged is retried later.
++                    }
++                    if (res == null) {
++                        // AI not set up or failed: show Google now; AI is tried again after the wait.
++                        res = try { google.translateEach(srcs, from = lang) } catch (e: Exception) { titleError(srcs, "Google", e); null }
++                        if (aiConfigured()) viaGoogle += srcs
++                    }
++                    val now = System.currentTimeMillis()
++                    // Only real translations are cached; a title that came back unchanged is retried after the wait.
+                     srcs.forEachIndexed { i, s ->
+                         val v = res?.getOrNull(i)?.trim().orEmpty()
+-                        if (res != null && res.size == srcs.size && v.isNotEmpty() && v != s.trim()) titleCache[s] = v
+-                        else titleFailed[s] = System.currentTimeMillis()
++                        if (res != null && res.size == srcs.size && v.isNotEmpty() && v != s.trim()) {
++                            titleCache[s] = v
++                            if (s in viaGoogle) { titleGoogle[s] = now; titleTries.merge(s, 1, Int::plus) }
++                            else { titleGoogle.remove(s); titleTries.remove(s); titleErrors.remove(s) }
++                        } else { titleFailed[s] = now; titleTries.merge(s, 1, Int::plus) }
+                     }
+                 }
+                 synchronized(titleQueue) { batch.forEach { titleQueue.remove(it.first) } }
+                 runCatching { titleFile.writeText(org.json.JSONObject(titleCache as Map<*, *>).toString()) }
++                runCatching { titleGoogleFile.writeText(org.json.JSONObject(titleGoogle as Map<*, *>).toString()) }
+                 android.os.Handler(android.os.Looper.getMainLooper()).post { titleVersion++ }
+             }
+         }
