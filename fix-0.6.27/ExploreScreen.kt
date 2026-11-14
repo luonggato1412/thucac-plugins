@@ -240,10 +240,10 @@ private fun SourcePicker(current: String, onDismiss: () -> Unit, onPick: (String
     }
 }
 
-/** "Lọc" dialog: author, language, type and an NSFW switch, applied only on "Áp dụng". */
+/** "Lọc" dialog: author, language, type and NSFW (all / hide / only), applied only on "Áp dụng". */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SourceFilterDialog(
+internal fun SourceFilterDialog(
     start: vn.thucac.reader.data.PluginFilter,
     facts: List<vn.thucac.reader.data.PluginFacts>,
     onDismiss: () -> Unit,
@@ -264,10 +264,7 @@ private fun SourceFilterDialog(
                 if (authors.isNotEmpty()) FilterChips("Tác giả", authors.map { it to it }, f.author) { f = f.copy(author = it) }
                 if (langs.isNotEmpty()) FilterChips("Ngôn ngữ", langs.map { it.code to it.label }, f.lang) { f = f.copy(lang = it) }
                 if (types.isNotEmpty()) FilterChips("Loại", types.map { it to it.uppercase() }, f.type) { f = f.copy(type = it) }
-                Row(Modifier.fillMaxWidth().padding(top = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Text("Nội dung NSFW", Modifier.weight(1f))
-                    androidx.compose.material3.Switch(f.adult != "hide", { f = f.copy(adult = if (it) "all" else "hide") })
-                }
+                FilterChips("Nội dung NSFW", listOf("hide" to "Ẩn NSFW", "only" to "Chỉ NSFW"), f.adult) { f = f.copy(adult = it) }
             }
         },
         confirmButton = { androidx.compose.material3.TextButton(onClick = { onApply(f) }) { Text("Áp dụng") } },
@@ -277,7 +274,7 @@ private fun SourceFilterDialog(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun FilterChips(title: String, options: List<Pair<String, String>>, value: String, onChange: (String) -> Unit) {
+internal fun FilterChips(title: String, options: List<Pair<String, String>>, value: String, onChange: (String) -> Unit) {
     Text(title, style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(top = 12.dp, bottom = 6.dp))
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         (listOf("all" to "Tất cả") + options).forEach { (id, label) ->
