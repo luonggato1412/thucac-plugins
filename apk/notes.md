@@ -1,9 +1,13 @@
-## Thư Các 0.6.24
+<!-- versionCode: 66 -->
+## Thư Các 0.6.25
 
-- Màn nghe truyện mới toàn màn hình (bìa, tua, chương trước/sau, Mục lục, Hẹn giờ, Tốc độ, Nhạc nền, Cài đặt).
-- Nút Tải trên màn nghe: tạo trước audio cho 10/20/50 hoặc số chương tự nhập, chạy nền, tiến độ ở thông báo, dừng/xóa được; nghe offline từ audio đã tạo.
-- Bộ lọc plugin (loại, ngôn ngữ, 18+, đã cài).
-- Sắp xếp kệ sách.
-- Bấm Quay lại lần nữa để thoát.
-
-<!-- versionCode: 65 -->
+- Tải xuống & dịch sẵn.
+- Dấu trang và ghi chú.
+- Thử plugin.
+- Trình duyệt trong app (lùi trang, Đọc trong app).
+- Tìm kiếm tự dịch từ khoá sang tiếng Trung.
+- Trình đọc: tự sang chương sau, Tắt xuống dòng, Hiện mọi nghĩa VietPhrase.
+- Theo dõi tất cả, thống kê tháng.
+- Sửa dịch ảnh truyện tranh bị treo, dòng trạng thái và lỗi dưới mỗi ảnh, Anh/Hàn dịch bằng AI, Trung bằng từ điển.
+- Dịch tên truyện Anh/Hàn.
+- Mở truyện tải trước 1 chương.
