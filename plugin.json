@@ -445,7 +445,7 @@
   {
    "name": "bachashuku",
    "author": "luonggato",
-   "version": 4,
+   "version": 5,
    "source": "https://bachashuku.org",
    "regexp": "(www\\.)?(bachashuku|8xsk)\\.org/(book|read)/\\d+",
    "description": "Đọc truyện trên trang bachashuku.org (八叉书库) - 18+",
@@ -2857,7 +2857,7 @@
   {
    "name": "HentaiZ",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://hentaiz2.com",
    "regexp": "(www\\.)?hentaiz2?\\.com/(watch|browse)/.*",
    "description": "Kho phim anime hentai 18+ Vietsub Full HD siêu mượt trên hentaiz2.com",
