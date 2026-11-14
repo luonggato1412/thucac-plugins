@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (269 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (266 plugin)"
  },
  "data": [
   {
@@ -1235,17 +1235,6 @@
   },
   {
    "name": "Kho Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://khotruyenchu.me/",
-   "description": "Đọc truyện trên Kho Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/kho-truyen-chu-ivanzzz-2.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/khotruyenchu.me_ok/icon.png"
-  },
-  {
-   "name": "Kho Truyện Chữ",
    "author": "B",
    "version": 7,
    "source": "https://khotruyenchu.space/",
@@ -2154,16 +2143,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/storya/icon.png"
   },
   {
-   "name": "Sáng Tác Việt",
-   "author": "TH03",
-   "version": 4,
-   "source": "https://sangtacviet.app/",
-   "description": "Liên Hệ để mua HTTP SEVER",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sang-tac-viet-th03.zip"
-  },
-  {
    "name": "Đam Mỹ dammyy",
    "author": "luonggato",
    "version": 1,
@@ -2219,17 +2198,6 @@
    "locale": "vi_VN",
    "path": "plugins/tien-vuc-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/tienvuc/icon.png"
-  },
-  {
-   "name": "Tiên Vực",
-   "author": "Nhocconsr",
-   "version": 13,
-   "source": "https://tienvuc.me",
-   "description": "Đừng có sửa Author nếu bạn ko tự viết script nhé!",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/tien-vuc-nhocconsr-2.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/tienvuc/icon.png"
   },
   {
    "name": "Top Truyện",
