@@ -1,10 +1,8 @@
-## Thư Các 0.6.22c
+## Thư Các 0.6.22d
 
-- Sửa lỗi các giọng đọc nghe giống nhau: danh sách giọng System TTS giờ chỉ hiện giọng của ngôn ngữ đang chọn, ghi tên giọng và đánh dấu giọng "chưa tải". Thanh đọc hiện rõ đang dùng giọng AI nào hoặc TTS hệ thống; nếu giọng AI không nạp được sẽ báo lỗi rõ ràng.
-- Plugin chuyển vào Cài đặt > Tiện ích mở rộng. Thanh điều hướng mới dạng nổi: Kệ sách, Khám phá, Cài đặt, kèm nút Tìm kiếm.
-- Nguồn mặc định chỉ còn kho Thư Các Chính Thức (luonggato1412/thucac-plugins). Các kho bên ngoài được cài sẵn trước đây đã gỡ khỏi danh sách; bạn vẫn tự thêm được.
-- Trang chủ mới: lời chào, truyện đang đọc, thống kê đọc hôm nay và chuỗi ngày đọc, xem gần đây.
-- Cài đặt có thẻ hồ sơ tài khoản; giao diện đăng nhập mới.
-- Kệ sách: danh mục, theo dõi chương mới, thông báo chương mới và cập nhật plugin.
+- Từ điển: danh sách Names, VietPhrase, ChinesePhienAmWords, Pronouns, LuatNhan kèm số từ. Chạm để xem, tìm, thêm và sửa từ; nhập file thay cho từng từ điển hoặc nhập nhiều file cùng lúc; nút Xoá từ điển. Từ bạn tự thêm được lưu riêng, không mất khi xoá hay nhập lại.
+- Tùy chọn dịch mới: Ưu tiên Name - VP, Ưu tiên Riêng - Chung, Ưu tiên VP dài, Luật nhân (Tắt / Names / Names + Pronouns), Chia đoạn theo câu, Tự động chuyển sang giản thể, In nghiêng câu thoại.
+- Đổi tùy chọn dịch hoặc từ điển thì chương đã convert được dịch lại ngay.
+- Máy mới cài sẽ tự tải bộ từ điển mặc định.
 
-<!-- versionCode: 61 -->
+<!-- versionCode: 62 -->
