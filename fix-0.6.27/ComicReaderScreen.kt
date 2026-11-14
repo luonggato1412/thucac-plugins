@@ -191,25 +191,28 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
         val window = (index - KEEP..index + KEEP).mapNotNull { chapters.getOrNull(it)?.url }.toSet()
         pageCache.keys.retainAll(window)
         transCache.keys.removeAll { k -> k.substringBeforeLast('|').substringBeforeLast('|') !in window }
+        val host = hostOf(c.url)
         if (prefetch) launch(Dispatchers.IO) {
-            kotlinx.coroutines.delay(2000)
+            val slow = isSlow(host)
+            if (slow) kotlinx.coroutines.delay(2000)
             val near = (1..KEEP).flatMap { listOf(index + it, index - it) }
             for (k in near) {
-                if (!prefetchAllowed()) break
+                if (!prefetchAllowed(host)) break
                 val n = chapters.getOrNull(k) ?: continue
                 val np = pageCache[n.url] ?: run {
-                    kotlinx.coroutines.delay(1500)
-                    runCatching { app.sources.comicPages(pid, n.url) }.onFailure { noteLimit(it) }.getOrNull()?.also { pageCache[n.url] = it }
+                    if (slow) kotlinx.coroutines.delay(1500)
+                    runCatching { app.sources.comicPages(pid, n.url) }.onFailure { noteLimit(host, it) }.getOrNull()?.also { pageCache[n.url] = it }
                 } ?: continue
                 for (pg in np) {
-                    if (!prefetchAllowed()) break
+                    if (!prefetchAllowed(host)) break
                     val req = ImageRequest.Builder(ctx).data(pg.link).apply {
                         refererFor(pg, n.url)?.let { addHeader("Referer", it) }
                         addHeader("User-Agent", app.userAgent)
                     }.build()
-                    // One image at a time, with a short pause, instead of queuing whole chapters at once.
+                    if (!slow) { loader.enqueue(req); continue }
+                    // Rate-limited sites: one image at a time, with a short pause, instead of whole chapters at once.
                     val r = loader.execute(req)
-                    if (r is coil.request.ErrorResult) noteLimit(r.throwable)
+                    if (r is coil.request.ErrorResult) noteLimit(host, r.throwable)
                     kotlinx.coroutines.delay(250)
                 }
             }
@@ -296,16 +299,18 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
         if (failed > 0) { kotlinx.coroutines.delay(5000); ocrProgress = null }
         // Translate the next KEEP chapters ahead, so they open already translated.
         val hint = langHint
+        val host = hostOf(c.url)
+        val slow = isSlow(host)
         if (prefetch) withContext(Dispatchers.IO) {
             for (k in 1..KEEP) {
-                if (!prefetchAllowed()) break
+                if (!prefetchAllowed(host)) break
                 val next = chapters.getOrNull(index + k) ?: break
-                val np = pageCache[next.url] ?: runCatching { app.sources.comicPages(pid, next.url) }.onFailure { noteLimit(it) }.getOrNull()?.also { pageCache[next.url] = it } ?: continue
+                val np = pageCache[next.url] ?: runCatching { app.sources.comicPages(pid, next.url) }.onFailure { noteLimit(host, it) }.getOrNull()?.also { pageCache[next.url] = it } ?: continue
                 val nc = transCache.getOrPut("${next.url}|$eng|$ver") { java.util.concurrent.ConcurrentHashMap() }
                 for ((j, pg) in np.withIndex()) {
                     if (nc.containsKey(j)) continue
-                    if (!prefetchAllowed()) break
-                    kotlinx.coroutines.delay(400)
+                    if (!prefetchAllowed(host)) break
+                    if (slow) kotlinx.coroutines.delay(400)
                     val label = "Ảnh ${j + 1}"
                     runCatching {
                         val res = app.ocr.ocrSteps(pg.link, app.http, emptyMap(), refererFor(pg, next.url), hint) {}
@@ -316,7 +321,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                                 (if (tx.warnings.isNotEmpty()) " · ⚠ " + tx.warnings.joinToString("; ") else "")
                             PageText(res, tx.texts) to PageStatus(info, error = tx.warnings.isNotEmpty())
                         }
-                    }.onFailure { noteLimit(it) }
+                    }.onFailure { noteLimit(host, it) }
                 }
             }
         }
@@ -562,17 +567,24 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
     }
 }
 
-/** Until when preloading stays paused after a site answered "too many requests" (shared by all readers). */
-@Volatile private var limitedUntil = 0L
+/** Sites known to rate-limit preloading. Only these (and any site that answered HTTP 429) preload slowly. */
+private val slowSites = listOf("kuaikanmanhua.com")
 
-private fun prefetchAllowed(): Boolean = System.currentTimeMillis() >= limitedUntil
+/** Per site: until when preloading stays paused after it answered "too many requests". */
+private val limitedUntil = java.util.concurrent.ConcurrentHashMap<String, Long>()
 
-/** Pause preloading for 5 minutes when an error looks like a rate limit (HTTP 429 / "Too many requests"). */
-private fun noteLimit(e: Throwable?) {
+private fun hostOf(url: String): String = runCatching { java.net.URI(url).host ?: "" }.getOrDefault("").removePrefix("www.").removePrefix("m.")
+
+private fun isSlow(host: String): Boolean = slowSites.any { host.endsWith(it) } || limitedUntil.containsKey(host)
+
+private fun prefetchAllowed(host: String): Boolean = System.currentTimeMillis() >= (limitedUntil[host] ?: 0L)
+
+/** Pause preloading of [host] for 5 minutes when an error looks like a rate limit (HTTP 429 / "Too many requests"). */
+private fun noteLimit(host: String, e: Throwable?) {
     var t = e
     while (t != null) {
         val m = (t.message ?: "") + " " + t.javaClass.simpleName
-        if ("429" in m || m.contains("too many", ignoreCase = true)) { limitedUntil = System.currentTimeMillis() + 5 * 60_000L; return }
+        if ("429" in m || m.contains("too many", ignoreCase = true)) { limitedUntil[host] = System.currentTimeMillis() + 5 * 60_000L; return }
         t = t.cause
     }
 }
