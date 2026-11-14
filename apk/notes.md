@@ -7,4 +7,4 @@ Thư Các 0.6.22 (bản điện thoại, arm64)
 - Tự đọc tiếp chương sau khi hết chương (có công tắc tắt).
 - Nếu giọng AI lỗi, app tự chuyển sang System TTS thay vì dừng.
 
-<!-- versionCode: 58 -->
+<!-- versionCode: 59 -->
