@@ -219,13 +219,15 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
         shown = out
         notice = err
         if (restoreScroll > 0) { listState.scrollToItem(restoreScroll.coerceAtMost(out.size)); restoreScroll = 0 }
-        // Translate the next chapter ahead (Convert and AI results are cached per chapter).
-        if (mode == TransMode.CONVERT || mode == TransMode.GEMINI) chapters.getOrNull(index + 1)?.let { n ->
+        // Tải trước 2 chương kế (N+1, N+2) vào ChapterCache ở mọi chế độ; Convert/AI thì dịch trước luôn (có cache theo chương).
+        for (n in listOfNotNull(chapters.getOrNull(index + 1), chapters.getOrNull(index + 2))) {
             withContext(Dispatchers.IO) {
                 runCatching {
                     val nr = app.sources.chapter(pid, n.url)
-                    tr.chapter(nr, mode, bookKey, n.url)
-                    tr.takeNotice()
+                    if (mode == TransMode.CONVERT || mode == TransMode.GEMINI) {
+                        tr.chapter(nr, mode, bookKey, n.url)
+                        tr.takeNotice()
+                    }
                 }
             }
         }

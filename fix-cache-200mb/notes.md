@@ -13,3 +13,6 @@ Thụt đầu dòng 2em, căn đều, cách đoạn theo cỡ chữ, tiêu đề
 
 ## Kéo qua chương (cùng ReaderScreen.kt)
 Ở cuối chương kéo tiếp ~120dp thì sang chương sau; ở đầu chương kéo ngược thì về cuối chương trước. Không chạy khi đang nghe TTS.
+
+## Tải trước 2 chương (cùng ReaderScreen.kt)
+Đang đọc chương N: tải nguyên văn N+1, N+2 vào ChapterCache ở mọi chế độ; Convert/AI dịch trước luôn.
