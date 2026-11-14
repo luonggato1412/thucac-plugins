@@ -1,11 +1,9 @@
-Thư Các 0.6.21c (bản điện thoại, arm64)
+Thư Các 0.6.22 (bản điện thoại, arm64)
 
-Trang cài đặt mới **Cá nhân > Đọc văn bản (TTS)**:
-- **Công cụ đọc**: chọn Thư Các AI (offline) hoặc bộ đọc của máy; nghe thử giọng đang dùng; mở cài đặt TTS của hệ thống.
-- **Quản lý mô hình giọng**: tìm kiếm, lọc theo công cụ, giới tính, vùng miền, chất lượng; tải, xóa, nghe thử từng giọng; chọn giọng số 1–65 trong gói vivos; nhập gói giọng Piper/VITS (.tar.bz2) từ máy.
-- **Hành vi khi đọc**: tự mở rộng thanh điều khiển, kiểu điều khiển nổi (thanh, nút tròn, ẩn), tạm dừng âm thanh ứng dụng khác (tự dừng khi có cuộc gọi rồi đọc tiếp), chọn luồng âm thanh (phương tiện, thông báo, báo thức).
-- **Khi thoát trình đọc**: tùy chọn dừng đọc khi thoát.
-- **Điều khiển phát**: nút tai nghe, Bluetooth và màn hình khóa; tạm dừng khi rút tai nghe. Thông báo đọc truyện có thêm nút đoạn trước/sau.
-- **Nội dung**: thay thế từ khi đọc (ví dụ "ko" → "không"), nhạc nền từ file nhạc trong máy với âm lượng riêng.
+Giọng AI mới: **VieNeu-TTS v3 Nano** (11 giọng: Minh Quân, Trúc Ly, Mai Anh, Anh Khôi, Mạnh Dũng, Adam, Ái Hân, Mỹ Duyên, Đức Trí, Hữu Quân, Xuân Tiên).
+- Mở **Cá nhân > Đọc văn bản (TTS) > Quản lý mô hình giọng**, lọc "Công cụ: VieNeu", bấm tải một giọng. Lần đầu tải khoảng 345 MB (mô hình 282 MB từ Hugging Face + từ điển phát âm sea-g2p 63 MB), dùng chung cho cả 11 giọng. Nên dùng Wi-Fi.
+- Đọc offline, giọng tự nhiên hơn Piper, đọc đúng số, ngày tháng, đơn vị và từ tiếng Anh nhờ sea-g2p.
+- Tùy chọn "Chất lượng cao" (16 bước thay vì 8): hay hơn một chút, chậm gấp đôi.
+- Mô hình và giọng là bản gốc mã nguồn mở (Apache-2.0) của tác giả Phạm Nguyễn Ngọc Bảo, không dùng gì của vBook.
 
-<!-- versionCode: 57 -->
+<!-- versionCode: 58 -->
