@@ -18,3 +18,4 @@ Gộp thêm bộ từ điển Lương gửi (Name.txt, VietPhrase.txt, PhienAm.t
 | ChinesePhienAmWords | 16.867 |
 | Pronouns | 32 |
 | LuatNhan | không đổi |
+| Rule (mới) | 396 quy tắc số, giờ, đơn vị dạng `<n:1-2>点<n:1-2>分={0} giờ {1} phút`, dùng từ app 0.6.22e |
