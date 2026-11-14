@@ -437,7 +437,7 @@ index 9f293c0..e54534a 100644
      fun videoTrack(pluginId: String, server: vn.thucac.engine.VideoServer): vn.thucac.engine.VideoTrack = api(pluginId).videoTrack(server)
  
 diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
-index 23e0362..8b1f718 100644
+index 23e0362..f4ef028 100644
 --- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
 +++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
 @@ -135,16 +135,18 @@ class TranslateService(private val app: App) {
@@ -461,7 +461,7 @@ index 23e0362..8b1f718 100644
          }
          out.trim()
      }
-@@ -375,6 +377,65 @@ class TranslateService(private val app: App) {
+@@ -375,6 +377,92 @@ class TranslateService(private val app: App) {
          return converter().convert(prep(src), bookDict(bookKey))
      }
  
@@ -502,8 +502,8 @@ index 23e0362..8b1f718 100644
 +                    val provider = AiProvider.byId(app.settings.aiProvider)
 +                    val key = app.settings.aiKey(provider.id).trim()
 +                    if (key.isNotEmpty()) runCatching {
-+                        ai.titles(group, key, app.settings.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
-+                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                        withAiModel(provider) { m -> ai.titles(group, key, m, provider,
++                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang) }
 +                    }.getOrNull()?.takeIf { it.isNotEmpty() } ?: googleTitles(group, lang)
 +                    else googleTitles(group, lang)
 +                }.getOrDefault(emptyMap())
@@ -511,6 +511,33 @@ index 23e0362..8b1f718 100644
 +            }
 +            runCatching { titleFile.writeText(org.json.JSONObject(titleCache as Map<*, *>).toString()) }
 +            android.os.Handler(android.os.Looper.getMainLooper()).post { titleTick++ }
++        }
++    }
++
++    /**
++     * Runs an AI call with the model for [provider]. Gemini without a model picked by the user: take the newest
++     * "flash" model from models.list (fallback gemini-2.5-flash). A model that answers 404 is swapped for another
++     * flash model from the list, which is then saved.
++     */
++    fun <T> withAiModel(provider: AiProvider, block: (String) -> T): T {
++        val s = app.settings
++        val isGemini = provider.id == "gemini"
++        if (isGemini && !s.sp.contains("geminiModel") && s.aiKey(provider.id).isNotBlank()) {
++            val auto = runCatching { aiModels(provider.id).firstOrNull { it.contains("flash") } }.getOrNull() ?: "gemini-2.5-flash"
++            s.setAiModel(provider.id, auto)
++        }
++        val model = s.aiModel(provider.id).ifBlank { provider.defaultModel }
++        return try {
++            block(model)
++        } catch (e: vn.thucac.engine.AiHttpException) {
++            if (e.status != 404) throw e
++            val other = runCatching { aiModels(provider.id) }.getOrDefault(emptyList())
++                .filter { it != model && (!isGemini || it.contains("flash")) }.firstOrNull()
++                ?: (if (isGemini && model != "gemini-2.5-flash") "gemini-2.5-flash" else throw e)
++            val r = block(other)
++            s.setAiModel(provider.id, other)
++            notice = "Model $model không tồn tại, đã chuyển sang $other"
++            r
 +        }
 +    }
 +
@@ -527,7 +554,7 @@ index 23e0362..8b1f718 100644
      fun text(src: String, mode: TransMode = TransMode.CONVERT, bookKey: String? = null): String {
          if (src.isBlank() || mode == TransMode.ORIGINAL) return src
          return when (mode) {
-@@ -416,7 +477,10 @@ class TranslateService(private val app: App) {
+@@ -416,7 +504,10 @@ class TranslateService(private val app: App) {
              return out
          }
          if (mode == TransMode.GOOGLE) {
@@ -539,10 +566,35 @@ index 23e0362..8b1f718 100644
          }
          if (mode == TransMode.EXT) {
              val ext = app.sources.extension(app.settings.activeExtension)
-@@ -462,6 +526,57 @@ class TranslateService(private val app: App) {
-         )
-     }
- 
+@@ -448,18 +539,70 @@ class TranslateService(private val app: App) {
+         val s = app.settings
+         val provider = AiProvider.byId(s.aiProvider)
+         val key = s.aiKey(provider.id).trim()
+-        val model = s.aiModel(provider.id).ifBlank { provider.defaultModel }
+         val baseUrl = s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }
+         val glossary = bookNameMap(bookKey ?: "")
+-        return ai.translate(
+-            paragraphs = paras,
+-            key = key,
+-            model = model,
+-            glossary = glossary,
+-            extraPrompt = s.geminiPrompt,
+-            provider = provider,
+-            baseUrl = baseUrl,
+-        )
++        return withAiModel(provider) { model ->
++            ai.translate(
++                paragraphs = paras,
++                key = key,
++                model = model,
++                glossary = glossary,
++                extraPrompt = s.geminiPrompt,
++                provider = provider,
++                baseUrl = baseUrl,
++            )
++        }
++    }
++
 +    /** Vietnamese search keyword to Chinese, for sources that only understand Chinese. */
 +    fun toChinese(text: String): String =
 +        runCatching { google.translate(listOf(text), from = "vi", to = "zh-CN").firstOrNull() }.getOrNull()?.trim()?.ifEmpty { null } ?: text
@@ -571,8 +623,8 @@ index 23e0362..8b1f718 100644
 +            var aiError: String? = null
 +            if (key.isNotEmpty() && mode != TransMode.GOOGLE) {
 +                val r = runCatching {
-+                    ai.bubbles(src, context, key, s.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
-+                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt)
++                    withAiModel(provider) { mdl -> ai.bubbles(src, context, key, mdl, provider,
++                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt) }
 +                }
 +                val m = r.getOrNull()
 +                if (!m.isNullOrEmpty()) {
@@ -592,11 +644,9 @@ index 23e0362..8b1f718 100644
 +        }
 +        val marker = Regex("^\\s*[\\[(（【]\\s*\\d+\\s*[\\])）】]\\s*[:.]?\\s*")
 +        return out.map { it.replace(marker, "").trim() } to used.joinToString(" + ")
-+    }
-+
+     }
+ 
      fun translateBubbles(bubbles: List<OcrBlock>, mode: TransMode, bookKey: String? = null): List<String> {
-         if (bubbles.isEmpty()) return emptyList()
-         val texts = bubbles.map { it.text }
 diff --git a/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
 new file mode 100644
 index 0000000..898945d

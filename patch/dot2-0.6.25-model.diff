@@ -1,0 +1,90 @@
+diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+index 8b1f718..f4ef028 100644
+--- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
++++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+@@ -414,8 +414,8 @@ class TranslateService(private val app: App) {
+                     val provider = AiProvider.byId(app.settings.aiProvider)
+                     val key = app.settings.aiKey(provider.id).trim()
+                     if (key.isNotEmpty()) runCatching {
+-                        ai.titles(group, key, app.settings.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
+-                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                        withAiModel(provider) { m -> ai.titles(group, key, m, provider,
++                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang) }
+                     }.getOrNull()?.takeIf { it.isNotEmpty() } ?: googleTitles(group, lang)
+                     else googleTitles(group, lang)
+                 }.getOrDefault(emptyMap())
+@@ -426,6 +426,33 @@ class TranslateService(private val app: App) {
+         }
+     }
+ 
++    /**
++     * Runs an AI call with the model for [provider]. Gemini without a model picked by the user: take the newest
++     * "flash" model from models.list (fallback gemini-2.5-flash). A model that answers 404 is swapped for another
++     * flash model from the list, which is then saved.
++     */
++    fun <T> withAiModel(provider: AiProvider, block: (String) -> T): T {
++        val s = app.settings
++        val isGemini = provider.id == "gemini"
++        if (isGemini && !s.sp.contains("geminiModel") && s.aiKey(provider.id).isNotBlank()) {
++            val auto = runCatching { aiModels(provider.id).firstOrNull { it.contains("flash") } }.getOrNull() ?: "gemini-2.5-flash"
++            s.setAiModel(provider.id, auto)
++        }
++        val model = s.aiModel(provider.id).ifBlank { provider.defaultModel }
++        return try {
++            block(model)
++        } catch (e: vn.thucac.engine.AiHttpException) {
++            if (e.status != 404) throw e
++            val other = runCatching { aiModels(provider.id) }.getOrDefault(emptyList())
++                .filter { it != model && (!isGemini || it.contains("flash")) }.firstOrNull()
++                ?: (if (isGemini && model != "gemini-2.5-flash") "gemini-2.5-flash" else throw e)
++            val r = block(other)
++            s.setAiModel(provider.id, other)
++            notice = "Model $model không tồn tại, đã chuyển sang $other"
++            r
++        }
++    }
++
+     fun aiModels(providerId: String): List<String> {
+         val p = AiProvider.byId(providerId)
+         return ai.listModels(p, app.settings.aiKey(p.id), app.settings.aiBaseUrl(p.id).ifBlank { p.baseUrl })
+@@ -512,18 +539,19 @@ class TranslateService(private val app: App) {
+         val s = app.settings
+         val provider = AiProvider.byId(s.aiProvider)
+         val key = s.aiKey(provider.id).trim()
+-        val model = s.aiModel(provider.id).ifBlank { provider.defaultModel }
+         val baseUrl = s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }
+         val glossary = bookNameMap(bookKey ?: "")
+-        return ai.translate(
+-            paragraphs = paras,
+-            key = key,
+-            model = model,
+-            glossary = glossary,
+-            extraPrompt = s.geminiPrompt,
+-            provider = provider,
+-            baseUrl = baseUrl,
+-        )
++        return withAiModel(provider) { model ->
++            ai.translate(
++                paragraphs = paras,
++                key = key,
++                model = model,
++                glossary = glossary,
++                extraPrompt = s.geminiPrompt,
++                provider = provider,
++                baseUrl = baseUrl,
++            )
++        }
+     }
+ 
+     /** Vietnamese search keyword to Chinese, for sources that only understand Chinese. */
+@@ -554,8 +582,8 @@ class TranslateService(private val app: App) {
+             var aiError: String? = null
+             if (key.isNotEmpty() && mode != TransMode.GOOGLE) {
+                 val r = runCatching {
+-                    ai.bubbles(src, context, key, s.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
+-                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt)
++                    withAiModel(provider) { mdl -> ai.bubbles(src, context, key, mdl, provider,
++                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt) }
+                 }
+                 val m = r.getOrNull()
+                 if (!m.isNullOrEmpty()) {
