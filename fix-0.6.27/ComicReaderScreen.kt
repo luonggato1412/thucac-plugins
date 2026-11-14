@@ -261,7 +261,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                 vote(hit.first.res)
                 continue
             }
-            ocrProgress = "Đang dịch ảnh ${done + 1}/${list.size}" + if (failed > 0) " · $failed lỗi" else ""
+            ocrProgress = "Dịch ${done + 1}/${list.size}" + if (failed > 0) " · $failed lỗi" else ""
             val page = list[i]
             val label = "Ảnh ${i + 1}"
             val step: (String) -> Unit = { t -> status[i] = PageStatus("$label · $t…", busy = true) }
@@ -411,7 +411,10 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                     item { Spacer(Modifier.statusBarsPadding()) }
                     itemsIndexed(list, key = { i, p -> "$i ${p.link}" }) { i, page ->
                         ComicPageView(
-                            page, chapter?.url ?: bookUrl, loader, if (translateOn) texts[i] else null, if (translateOn) status[i] else null,
+                            page, chapter?.url ?: bookUrl, loader, if (translateOn) texts[i] else null,
+                            // Only errors (and the circled region being read in manual mode) are shown on the page,
+                            // so the label never hides a speech bubble.
+                            if (translateOn) status[i]?.takeIf { it.error || (ocrMode == "manual" && it.busy) } else null,
                             selecting = translateOn && ocrMode == "manual" && selecting,
                         ) { x0, y0, x1, y1 -> translateRegion(i, page, x0, y0, x1, y1) }
                     }
@@ -429,12 +432,13 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
         ocrProgress?.let { p ->
             Surface(
                 shape = RoundedCornerShape(16.dp), color = Color.Black.copy(alpha = 0.7f),
-                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = if (menu) 140.dp else 16.dp),
+                // Small, in the top corner (over the status bar area), so it does not cover the dialogue.
+                modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(top = if (menu) 64.dp else 4.dp, end = 8.dp),
             ) {
-                Row(Modifier.padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                    CircularProgressIndicator(Modifier.size(14.dp), color = Color.White, strokeWidth = 2.dp)
-                    Spacer(Modifier.size(8.dp))
-                    Text(p, color = Color.White, fontSize = 13.sp)
+                Row(Modifier.padding(horizontal = 8.dp, vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(Modifier.size(10.dp), color = Color.White, strokeWidth = 1.5.dp)
+                    Spacer(Modifier.size(5.dp))
+                    Text(p, color = Color.White, fontSize = 11.sp)
                 }
             }
         }
