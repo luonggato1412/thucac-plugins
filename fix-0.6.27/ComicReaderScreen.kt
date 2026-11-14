@@ -141,7 +141,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
     var menu by remember { mutableStateOf(false) }
     var showToc by remember { mutableStateOf(false) }
     var showTranslate by remember { mutableStateOf(false) }
-    var translateOn by remember { mutableStateOf(prefs.getBoolean("on_$bookKey", false)) }
+    var translateOn by remember { mutableStateOf(prefs.getBoolean("on_$bookKey", true)) }
     var engine by remember {
         mutableStateOf(prefs.getString("engine_$bookKey", null) ?: "auto")
     }
