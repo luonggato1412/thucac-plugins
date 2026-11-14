@@ -1,0 +1,1495 @@
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index c093628..6f7bceb 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -10,8 +10,8 @@ android {
+         applicationId = "vn.thucac.reader"
+         minSdk = 24
+         targetSdk = 35
+-        versionCode = 65
+-        versionName = "0.6.24"
++        versionCode = 66
++        versionName = "0.6.25"
+         ndk {
+             abiFilters += "arm64-v8a"
+         }
+diff --git a/app/src/main/java/vn/thucac/reader/App.kt b/app/src/main/java/vn/thucac/reader/App.kt
+index 4910e42..d607920 100644
+--- a/app/src/main/java/vn/thucac/reader/App.kt
++++ b/app/src/main/java/vn/thucac/reader/App.kt
+@@ -46,6 +46,9 @@ class App : Application() {
+     val ocr: ImageOcr by lazy { ImageOcr(this) }
+     val updater: UpdateChecker by lazy { UpdateChecker(this) }
+     val appUpdate: AppUpdate by lazy { AppUpdate(this) }
++    val prefs: vn.thucac.reader.data.ExtraPrefs by lazy { vn.thucac.reader.data.ExtraPrefs(this) }
++    val bookmarks: vn.thucac.reader.data.Bookmarks by lazy { vn.thucac.reader.data.Bookmarks(this) }
++    val batch: vn.thucac.reader.data.BatchTranslator by lazy { vn.thucac.reader.data.BatchTranslator(this) }
+ 
+     val userAgent: String by lazy {
+         runCatching { WebSettings.getDefaultUserAgent(this) }
+diff --git a/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt b/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
+index f89a545..44ef980 100644
+--- a/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
++++ b/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
+@@ -18,6 +18,12 @@ class ChapterCache(app: App) {
+ 
+     fun hasChapter(url: String): Boolean = key("raw", url).exists()
+ 
++    /** Deletes the raw text and every cached translation of one chapter. */
++    fun deleteChapter(url: String) {
++        val hex = MessageDigest.getInstance("MD5").digest(url.toByteArray()).joinToString("") { "%02x".format(it) }
++        dir.listFiles()?.filter { it.name.endsWith("_$hex.txt") }?.forEach { it.delete() }
++    }
++
+     fun get(url: String): List<String>? =
+         key("raw", url).takeIf { it.exists() }?.readLines()
+ 
+diff --git a/app/src/main/java/vn/thucac/reader/data/Extras.kt b/app/src/main/java/vn/thucac/reader/data/Extras.kt
+new file mode 100644
+index 0000000..d7a169d
+--- /dev/null
++++ b/app/src/main/java/vn/thucac/reader/data/Extras.kt
+@@ -0,0 +1,162 @@
++package vn.thucac.reader.data
++
++import android.content.Context
++import androidx.compose.runtime.mutableStateListOf
++import androidx.compose.runtime.mutableStateMapOf
++import androidx.compose.runtime.mutableStateOf
++import org.json.JSONArray
++import org.json.JSONObject
++import vn.thucac.reader.App
++import java.io.File
++import kotlin.properties.ReadWriteProperty
++import kotlin.reflect.KProperty
++
++/** Small reader / shelf options added in batch 2. Kept apart from Settings to avoid JVM name clashes. */
++class ExtraPrefs(ctx: Context) {
++    private val sp = ctx.getSharedPreferences("thucac_settings", Context.MODE_PRIVATE)
++
++    private inner class Pref(private val key: String, def: Boolean) : ReadWriteProperty<Any?, Boolean> {
++        private val state = mutableStateOf(sp.getBoolean(key, def))
++        override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean = state.value
++        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
++            state.value = value
++            sp.edit().putBoolean(key, value).apply()
++        }
++    }
++
++    /** Move to the next chapter when the user scrolls past the end. */
++    var autoLoadNext by Pref("autoLoadNext", false)
++    /** "Tắt xuống dòng": join lines that the site broke in the middle of a sentence. */
++    var joinBrokenLines by Pref("joinBrokenLines", false)
++    /** Translate a Vietnamese search keyword to Chinese before searching. */
++    var searchToChinese by Pref("searchToChinese", false)
++    /** Translate English / Korean book names. */
++    var translateForeignTitles by Pref("translateForeignTitles", true)
++}
++
++private val sentenceEnd = Regex("[.!?…。！？”」』\"'）)》:：~～*]$")
++
++/** Joins a line to the next one when it does not end a sentence. */
++fun joinBrokenLines(paras: List<String>): List<String> {
++    val out = ArrayList<String>()
++    val buf = StringBuilder()
++    for (p in paras) {
++        val t = p.trim()
++        if (t.isEmpty()) continue
++        if (buf.isNotEmpty()) {
++            val cjk = buf.last().code > 0x2e80 || t.first().code > 0x2e80
++            if (!cjk) buf.append(' ')
++        }
++        buf.append(t)
++        if (sentenceEnd.containsMatchIn(t)) { out.add(buf.toString()); buf.setLength(0) }
++    }
++    if (buf.isNotEmpty()) out.add(buf.toString())
++    return out
++}
++
++data class Bookmark(
++    val id: Long,
++    val pluginId: String,
++    val bookUrl: String,
++    val bookName: String,
++    val chapterIndex: Int,
++    val chapterName: String,
++    val para: Int,
++    val excerpt: String,
++    val note: String,
++    val time: Long,
++) {
++    val bookKey: String get() = "$pluginId|$bookUrl"
++    fun toJson(): JSONObject = JSONObject().apply {
++        put("id", id); put("pluginId", pluginId); put("bookUrl", bookUrl); put("bookName", bookName)
++        put("chapterIndex", chapterIndex); put("chapterName", chapterName); put("para", para)
++        put("excerpt", excerpt); put("note", note); put("time", time)
++    }
++
++    companion object {
++        fun fromJson(o: JSONObject) = Bookmark(
++            o.optLong("id"), o.optString("pluginId"), o.optString("bookUrl"), o.optString("bookName"),
++            o.optInt("chapterIndex"), o.optString("chapterName"), o.optInt("para"),
++            o.optString("excerpt"), o.optString("note"), o.optLong("time"),
++        )
++    }
++}
++
++/** Bookmarks and notes, stored in files/bookmarks.json. */
++class Bookmarks(app: App) {
++    private val file = File(app.filesDir, "bookmarks.json")
++    val all = mutableStateListOf<Bookmark>()
++
++    init {
++        runCatching {
++            if (file.exists()) {
++                val arr = JSONArray(file.readText())
++                for (i in 0 until arr.length()) all.add(Bookmark.fromJson(arr.getJSONObject(i)))
++            }
++        }
++    }
++
++    private fun save() {
++        val arr = JSONArray()
++        all.forEach { arr.put(it.toJson()) }
++        runCatching { file.writeText(arr.toString()) }
++    }
++
++    fun of(bookKey: String): List<Bookmark> =
++        all.filter { it.bookKey == bookKey }.sortedWith(compareBy({ it.chapterIndex }, { it.para }))
++
++    fun add(b: Bookmark) { all.add(0, b); save() }
++
++    fun updateNote(id: Long, note: String) {
++        val i = all.indexOfFirst { it.id == id }
++        if (i >= 0) { all[i] = all[i].copy(note = note); save() }
++    }
++
++    fun remove(id: Long) { all.removeAll { it.id == id }; save() }
++
++    fun exportJson(): JSONArray = JSONArray().apply { all.forEach { put(it.toJson()) } }
++
++    fun importJson(arr: JSONArray) {
++        val have = all.map { it.id }.toHashSet()
++        for (i in 0 until arr.length()) {
++            val b = runCatching { Bookmark.fromJson(arr.getJSONObject(i)) }.getOrNull() ?: continue
++            if (b.id !in have) all.add(b)
++        }
++        save()
++    }
++}
++
++/** Translates every downloaded chapter of a book ahead of time, so reading later needs no network. */
++class BatchTranslator(private val app: App) {
++    data class Progress(val done: Int, val total: Int, val failed: Int, val running: Boolean, val mode: TransMode)
++
++    val progress = mutableStateMapOf<String, Progress>()
++    private val cancelled = HashSet<String>()
++
++    fun start(pluginId: String, bookUrl: String, mode: TransMode) {
++        val key = "$pluginId|$bookUrl"
++        if (progress[key]?.running == true || mode == TransMode.ORIGINAL) return
++        synchronized(cancelled) { cancelled.remove(key) }
++        progress[key] = Progress(0, 0, 0, true, mode)
++        Thread {
++            val toc = app.sources.cachedToc(pluginId, bookUrl)
++                ?: runCatching { app.sources.loadToc(pluginId, bookUrl, false) }.getOrNull()
++                ?: emptyList()
++            val cached = toc.filter { app.chapters.hasChapter(it.url) }
++            var done = 0
++            var failed = 0
++            for (c in cached) {
++                if (synchronized(cancelled) { key in cancelled }) break
++                val raw = app.chapters.get(c.url)
++                if (raw == null || runCatching { app.translator.chapter(raw, mode, key, c.url) }.isFailure) failed++
++                done++
++                progress[key] = Progress(done, cached.size, failed, true, mode)
++            }
++            progress[key] = Progress(done, cached.size, failed, false, mode)
++        }.apply { isDaemon = true }.start()
++    }
++
++    fun cancel(pluginId: String, bookUrl: String) {
++        synchronized(cancelled) { cancelled.add("$pluginId|$bookUrl") }
++    }
++}
+diff --git a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+index 67e8f25..d738010 100644
+--- a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
++++ b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+@@ -123,6 +123,89 @@ class ImageOcr(private val ctx: Context) {
+         return res
+     }
+ 
++    /** An OCR failure that says which step broke, shown under the image. */
++    class StageException(val stage: String, message: String) : Exception("$stage: $message")
++
++    /**
++     * Like [ocr] but reports each step through [onStage] and throws [StageException] instead of returning null.
++     * [lang] ("en", "ko", "zh" or null for unknown) picks one recognizer, which is much faster than running all three.
++     */
++    fun ocrStaged(url: String, http: OkHttpClient, referer: String?, lang: String?, onStage: (String) -> Unit): OcrResult {
++        val key = sha1(url)
++        mem[key]?.let { return it }
++        for (name in listOf("o7-${lang ?: "all"}-$key.json", "o6-$key.json")) {
++            val f = File(dir, name)
++            if (f.exists()) OcrResult.fromJson(f.readText())?.let { mem[key] = it; return it }
++        }
++        onStage("Tải ảnh")
++        val req = Request.Builder().url(url).apply {
++            if (referer != null) header("Referer", referer)
++            header("User-Agent", vn.thucac.reader.App.instance.userAgent)
++        }.build()
++        val bytes = try {
++            http.newCall(req).execute().use { resp ->
++                if (!resp.isSuccessful) throw StageException("Tải ảnh", "máy chủ trả mã ${resp.code}")
++                resp.body?.bytes() ?: throw StageException("Tải ảnh", "ảnh rỗng")
++            }
++        } catch (e: StageException) { throw e } catch (e: Exception) {
++            throw StageException("Tải ảnh", e.message ?: e.javaClass.simpleName)
++        }
++        onStage("Nhận chữ" + when (lang) { "en" -> " (Anh)"; "ko" -> " (Hàn)"; "zh" -> " (Trung)"; else -> "" })
++        val res = runOcr(bytes, lang)
++        mem[key] = res
++        runCatching { File(dir, "o7-${lang ?: "all"}-$key.json").writeText(res.toJson()) }
++        return res
++    }
++
++    private fun runOcr(bytes: ByteArray, lang: String?): OcrResult {
++        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
++        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
++        val origW = bounds.outWidth
++        val origH = bounds.outHeight
++        if (origW <= 0 || origH <= 0) throw StageException("Đọc ảnh", "không giải mã được ảnh (${bytes.size} byte)")
++        var sample = 1
++        while (origW / sample > 1600) sample *= 2
++        val opts = BitmapFactory.Options().apply { inSampleSize = sample; inPreferredConfig = Bitmap.Config.ARGB_8888 }
++        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts) ?: throw StageException("Đọc ảnh", "không đủ bộ nhớ để mở ảnh")
++        val recognizers = when (lang) {
++            "en" -> listOf(latin)
++            "ko" -> listOf(korean)
++            "zh" -> listOf(chinese)
++            else -> listOf(latin, korean, chinese)
++        }
++        try {
++            val scaleX = origW.toFloat() / bmp.width
++            val scaleY = origH.toFloat() / bmp.height
++            val raw = mutableListOf<OcrBlock>()
++            var calls = 0
++            var fails = 0
++            var lastError = ""
++            var y0 = 0
++            while (y0 < bmp.height) {
++                val y1 = min(bmp.height, y0 + 1600)
++                val tile = Bitmap.createBitmap(bmp, 0, y0, bmp.width, y1 - y0)
++                try {
++                    val img = InputImage.fromBitmap(tile, 0)
++                    for (r in recognizers) {
++                        calls++
++                        val out = runCatching { Tasks.await(r.process(img), 20, TimeUnit.SECONDS) }
++                        out.exceptionOrNull()?.let { fails++; lastError = it.message ?: it.javaClass.simpleName }
++                        collectLines(out.getOrNull(), bmp, y0, scaleX, scaleY, raw)
++                    }
++                } finally {
++                    tile.recycle()
++                }
++                if (y1 >= bmp.height) break
++                y0 = y1 - 240
++            }
++            if (calls > 0 && fails == calls) throw StageException("Nhận chữ", "ML Kit lỗi ($lastError). Có thể mô hình nhận chữ chưa tải xong, thử lại sau ít phút")
++            val merged = mergeBlocks(OcrResult(origW, origH, dedupLines(raw)))
++            return OcrResult(origW, origH, merged)
++        } finally {
++            bmp.recycle()
++        }
++    }
++
+     private fun fetchBytes(
+         url: String,
+         http: OkHttpClient,
+diff --git a/app/src/main/java/vn/thucac/reader/data/Library.kt b/app/src/main/java/vn/thucac/reader/data/Library.kt
+index 5549128..210a8fd 100644
+--- a/app/src/main/java/vn/thucac/reader/data/Library.kt
++++ b/app/src/main/java/vn/thucac/reader/data/Library.kt
+@@ -194,6 +194,7 @@ class Library(private val app: App) {
+         root.put("books", JSONArray().apply { books.forEach { put(it.toJson()) } })
+         root.put("settings", app.settings.toCloudJson())
+         root.put("stats", app.stats.toJson())
++        root.put("bookmarks", app.bookmarks.exportJson())
+         val pluginsArr = JSONArray()
+         app.sources.plugins.forEach { p ->
+             val src = app.sources.sourceUrls[p.id]
+@@ -231,6 +232,7 @@ class Library(private val app: App) {
+             }
+             root.optJSONObject("settings")?.let { app.settings.applyCloudJson(it) }
+             root.optJSONObject("stats")?.let { app.stats.mergeJson(it) }
++            root.optJSONArray("bookmarks")?.let { runCatching { app.bookmarks.importJson(it) } }
+             root.optJSONArray("plugins")?.let { arr ->
+                 for (i in 0 until arr.length()) {
+                     val o = arr.optJSONObject(i) ?: continue
+@@ -323,6 +325,18 @@ class ReadingStats(ctx: Context) {
+         return streak
+     }
+ 
++    /** Minutes read in the last [days] days, today included. */
++    fun lastDaysMinutes(days: Int): Int {
++        val cal = Calendar.getInstance()
++        val keyFmt = SimpleDateFormat("yyyy-MM-dd", Locale.US)
++        var sec = 0L
++        repeat(days) {
++            sec += sp.getLong("day_${keyFmt.format(cal.time)}", 0L)
++            cal.add(Calendar.DAY_OF_YEAR, -1)
++        }
++        return (sec / 60L).toInt()
++    }
++
+     fun last7Days(): List<Pair<String, Int>> {
+         val cal = Calendar.getInstance()
+         val keyFmt = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+diff --git a/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt b/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
+index 9f293c0..e54534a 100644
+--- a/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
++++ b/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
+@@ -336,7 +336,28 @@ class SourceRepo(private val app: App) {
+         return paras
+     }
+ 
+-    fun comicPages(pluginId: String, url: String): List<ComicPage> = api(pluginId).comicPages(url)
++    private val comicPageCache = java.util.concurrent.ConcurrentHashMap<String, List<ComicPage>>()
++
++    fun comicPages(pluginId: String, url: String, refresh: Boolean = false): List<ComicPage> =
++        comicPageCache["$pluginId|$url"]?.takeIf { !refresh } ?: api(pluginId).comicPages(url).also { comicPageCache["$pluginId|$url"] = it }
++
++    /** Loads one chapter ahead of time: text for novels, page list and images for comics (into the HTTP cache). */
++    fun prefetchChapter(pluginId: String, url: String) {
++        val p = get(pluginId) ?: return
++        when {
++            p.isVideo -> Unit
++            p.isComic -> comicPages(pluginId, url).take(12).forEach { pg ->
++                runCatching {
++                    val req = okhttp3.Request.Builder().url(pg.link).apply {
++                        if (!pg.referrerPolicy.equals("no-referrer", true)) header("Referer", url)
++                        header("User-Agent", app.userAgent)
++                    }.build()
++                    app.http.newCall(req).execute().use { it.body?.bytes() }
++                }
++            }
++            else -> chapter(pluginId, url)
++        }
++    }
+     fun videoServers(pluginId: String, url: String): List<vn.thucac.engine.VideoServer> = api(pluginId).videoServers(url)
+     fun videoTrack(pluginId: String, server: vn.thucac.engine.VideoServer): vn.thucac.engine.VideoTrack = api(pluginId).videoTrack(server)
+ 
+diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+index 23e0362..9bd005f 100644
+--- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
++++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+@@ -135,16 +135,18 @@ class TranslateService(private val app: App) {
+     fun userFile(kind: DictKind): File = File(dictDir, "${kind.name.lowercase()}_user.txt")
+ 
+     private fun loadDictAssetOrFile(kind: DictKind, assetPath: String, out: PhraseDict) {
++        // "Hiện mọi nghĩa VietPhrase": keep "nghĩa 1/nghĩa 2" instead of cutting at the first one.
++        val all = kind == DictKind.VIETPHRASE && !app.settings.firstMeaningOnly
+         runCatching {
+             app.assets.open(assetPath).use { raw ->
+                 val stream: InputStream = if (assetPath.endsWith(".xz")) XZInputStream(raw) else raw
+                 BufferedReader(InputStreamReader(stream, Charsets.UTF_8)).use { br ->
+-                    out.load(br)
++                    out.load(br, all)
+                 }
+             }
+         }
+         for (f in listOf(dictFile(kind), userFile(kind))) {
+-            if (f.exists()) runCatching { f.bufferedReader(Charsets.UTF_8).use { br -> out.load(br) } }
++            if (f.exists()) runCatching { f.bufferedReader(Charsets.UTF_8).use { br -> out.load(br, all) } }
+         }
+         out.trim()
+     }
+@@ -375,6 +377,60 @@ class TranslateService(private val app: App) {
+         return converter().convert(prep(src), bookDict(bookKey))
+     }
+ 
++    // ---- Foreign (English / Korean) book titles: translated in the background, cached on disk. ----
++    private val titleFile by lazy { File(app.filesDir, "title_cache.json") }
++    private val titleCache: java.util.concurrent.ConcurrentHashMap<String, String> by lazy {
++        java.util.concurrent.ConcurrentHashMap<String, String>().also { m ->
++            runCatching { val o = org.json.JSONObject(titleFile.readText()); o.keys().forEach { k -> m[k] = o.getString(k) } }
++        }
++    }
++    private val titlePending = java.util.LinkedHashSet<String>()
++    private val titleFailed = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
++    private var titleWorker: Thread? = null
++    var titleTick by androidx.compose.runtime.mutableIntStateOf(0)
++        private set
++
++    /** Book name for display: Chinese goes through the dictionary, English/Korean is translated (AI if a key is set, else Google). */
++    fun bookTitle(src: String, bookKey: String? = null): String {
++        if (src.isBlank()) return src
++        if (src.any { Converter.isCjk(it) }) return text(src, TransMode.CONVERT, bookKey)
++        if (!app.prefs.translateForeignTitles || src.none { it.isLetter() }) return src
++        titleTick
++        titleCache[src]?.let { return it }
++        if (src !in titleFailed) synchronized(titlePending) {
++            titlePending.add(src)
++            if (titleWorker?.isAlive != true) titleWorker = Thread { drainTitles() }.apply { isDaemon = true; start() }
++        }
++        return src
++    }
++
++    private fun drainTitles() {
++        while (true) {
++            Thread.sleep(500)
++            val batch = synchronized(titlePending) { titlePending.take(40).also { titlePending.removeAll(it.toSet()) } }
++            if (batch.isEmpty()) return
++            for ((lang, group) in batch.groupBy { t -> if (t.any { ImageOcr.isHangul(it) }) "ko" else "en" }) {
++                val res: Map<Int, String> = runCatching {
++                    val provider = AiProvider.byId(app.settings.aiProvider)
++                    val key = app.settings.aiKey(provider.id).trim()
++                    if (key.isNotEmpty()) runCatching {
++                        ai.titles(group, key, app.settings.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
++                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                    }.getOrNull()?.takeIf { it.isNotEmpty() } ?: googleTitles(group, lang)
++                    else googleTitles(group, lang)
++                }.getOrDefault(emptyMap())
++                group.forEachIndexed { i, t -> val v = res[i]; if (v.isNullOrBlank()) titleFailed.add(t) else titleCache[t] = v }
++            }
++            runCatching { titleFile.writeText(org.json.JSONObject(titleCache as Map<*, *>).toString()) }
++            android.os.Handler(android.os.Looper.getMainLooper()).post { titleTick++ }
++        }
++    }
++
++    private fun googleTitles(group: List<String>, lang: String): Map<Int, String> {
++        val out = google.translate(group, from = lang, to = "vi")
++        return out.withIndex().filter { (i, v) -> v.isNotBlank() && v != group.getOrNull(i) }.associate { it.index to it.value }
++    }
++
+     fun text(src: String, mode: TransMode = TransMode.CONVERT, bookKey: String? = null): String {
+         if (src.isBlank() || mode == TransMode.ORIGINAL) return src
+         return when (mode) {
+@@ -416,7 +472,10 @@ class TranslateService(private val app: App) {
+             return out
+         }
+         if (mode == TransMode.GOOGLE) {
+-            return google.translate(paras)
++            chapterUrl?.let { url -> app.chapters.getTranslated(url)?.let { if (it.size == paras.size) return it } }
++            val out = google.translate(paras)
++            if (chapterUrl != null && out.size == paras.size && out != paras) app.chapters.putTranslated(chapterUrl, out)
++            return out
+         }
+         if (mode == TransMode.EXT) {
+             val ext = app.sources.extension(app.settings.activeExtension)
+@@ -462,6 +521,56 @@ class TranslateService(private val app: App) {
+         )
+     }
+ 
++    /** Vietnamese search keyword to Chinese, for sources that only understand Chinese. */
++    fun toChinese(text: String): String =
++        runCatching { google.translate(listOf(text), from = "vi", to = "zh-CN").firstOrNull() }.getOrNull()?.trim()?.ifEmpty { null } ?: text
++
++    /**
++     * Comic bubbles: Chinese through the dictionary (unless the user picked AI), English / Korean through AI when a key
++     * is set, otherwise Google. Returns the texts and a short label of what was used. Throws with the step name on failure.
++     */
++    fun comicBubbles(blocks: List<OcrBlock>, mode: TransMode, bookKey: String?, context: List<String>): Pair<List<String>, String> {
++        val texts = blocks.map { it.text }
++        if (texts.isEmpty() || mode == TransMode.ORIGINAL) return texts to "Bản gốc"
++        val out = texts.toMutableList()
++        val used = LinkedHashSet<String>()
++        val byLang = texts.indices.groupBy { ImageOcr.detectLang(texts[it]) ?: "en" }
++        val s = app.settings
++        val provider = AiProvider.byId(s.aiProvider)
++        val key = s.aiKey(provider.id).trim()
++        for ((lang, idx) in byLang) {
++            val src = idx.map { texts[it] }
++            if (lang == "zh" && mode != TransMode.GEMINI) {
++                val conv = converter(); val bd = bookDict(bookKey)
++                idx.forEachIndexed { k, i -> out[i] = conv.convert(prep(src[k]), bd) }
++                used += "Từ điển"
++                continue
++            }
++            var aiError: String? = null
++            if (key.isNotEmpty() && mode != TransMode.GOOGLE) {
++                val r = runCatching {
++                    ai.bubbles(src, context, key, s.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
++                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt)
++                }
++                val m = r.getOrNull()
++                if (!m.isNullOrEmpty()) {
++                    idx.forEachIndexed { k, i -> m[k]?.let { v -> out[i] = v } }
++                    used += "AI ${provider.name}"
++                    continue
++                }
++                aiError = r.exceptionOrNull()?.message ?: "AI không trả kết quả"
++            }
++            val g = runCatching { google.translate(src, from = if (lang == "zh") "zh-CN" else lang, to = "vi") }
++            val gv = g.getOrNull()
++            if (gv == null || gv.size != src.size) {
++                throw ImageOcr.StageException("Dịch", (aiError?.let { "AI lỗi ($it), " } ?: "") + "Google lỗi (" + (g.exceptionOrNull()?.message ?: "không trả kết quả") + ")")
++            }
++            idx.forEachIndexed { k, i -> out[i] = gv[k] }
++            used += if (aiError != null) "Google (AI lỗi: ${aiError.take(60)})" else if (key.isEmpty() && mode != TransMode.GOOGLE) "Google (chưa nhập key AI)" else "Google"
++        }
++        return out to used.joinToString(" + ")
++    }
++
+     fun translateBubbles(bubbles: List<OcrBlock>, mode: TransMode, bookKey: String? = null): List<String> {
+         if (bubbles.isEmpty()) return emptyList()
+         val texts = bubbles.map { it.text }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
+new file mode 100644
+index 0000000..898945d
+--- /dev/null
++++ b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
+@@ -0,0 +1,336 @@
++package vn.thucac.reader.ui
++
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.lazy.LazyColumn
++import androidx.compose.foundation.lazy.items
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.text.selection.SelectionContainer
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.automirrored.filled.ArrowBack
++import androidx.compose.material.icons.filled.Delete
++import androidx.compose.material.icons.filled.Edit
++import androidx.compose.material3.AlertDialog
++import androidx.compose.material3.Button
++import androidx.compose.material3.DropdownMenu
++import androidx.compose.material3.DropdownMenuItem
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.FilterChip
++import androidx.compose.material3.HorizontalDivider
++import androidx.compose.material3.Icon
++import androidx.compose.material3.IconButton
++import androidx.compose.material3.LinearProgressIndicator
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.OutlinedButton
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.Scaffold
++import androidx.compose.material3.Tab
++import androidx.compose.material3.TabRow
++import androidx.compose.material3.Text
++import androidx.compose.material3.TextButton
++import androidx.compose.material3.TopAppBar
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.text.font.FontFamily
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import androidx.navigation.NavHostController
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import vn.thucac.engine.PluginStore
++import vn.thucac.reader.App
++import vn.thucac.reader.data.BookEntry
++import vn.thucac.reader.data.Bookmark
++import vn.thucac.reader.data.TransMode
++import java.io.File
++import java.text.SimpleDateFormat
++import java.util.Date
++import java.util.Locale
++
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++private fun SimpleTop(nav: NavHostController, title: String, actions: @Composable () -> Unit = {}) {
++    TopAppBar(
++        colors = appBarColors(), title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
++        navigationIcon = { IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Quay lại") } },
++        actions = { actions() },
++    )
++}
++
++private data class DlRow(val book: BookEntry, val cached: Int, val total: Int)
++
++/** "Tải xuống": downloaded books, running downloads, and batch translation of downloaded chapters. */
++@Composable
++fun DownloadsScreen(nav: NavHostController) {
++    val app = App.instance
++    val tr = app.translator
++    var rows by remember { mutableStateOf<List<DlRow>?>(null) }
++    var refresh by remember { mutableIntStateOf(0) }
++    var confirmDelete by remember { mutableStateOf<DlRow?>(null) }
++    var pickMode by remember { mutableStateOf<DlRow?>(null) }
++    val active = app.downloader.progress
++    val batch = app.batch.progress
++    val scope = rememberCoroutineScope()
++    LaunchedEffect(refresh, active.values.count { !it.running }, batch.values.count { !it.running }) {
++        rows = withContext(Dispatchers.IO) {
++            app.library.books.filter { it.inLibrary || it.inHistory }.mapNotNull { b ->
++                val toc = app.sources.cachedToc(b.pluginId, b.url) ?: return@mapNotNull null
++                val n = toc.count { app.chapters.hasChapter(it.url) }
++                if (n == 0 && active[b.key] == null) null else DlRow(b, n, toc.size)
++            }
++        }
++    }
++    Scaffold(topBar = { SimpleTop(nav, "Tải xuống & dịch sẵn") }) { pad ->
++        val list = rows
++        when {
++            list == null -> Loading(Modifier.padding(pad).fillMaxSize())
++            list.isEmpty() -> EmptyBox("Chưa có truyện nào được tải.\nMở trang truyện và bấm \"Tải xuống\" để đọc không cần mạng.", Modifier.padding(pad).fillMaxSize())
++            else -> LazyColumn(Modifier.padding(pad).fillMaxSize()) {
++                item {
++                    Text("Dịch sẵn sẽ dịch mọi chương đã tải theo chế độ bạn chọn và lưu lại, đọc sau không phải chờ dịch.",
++                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(16.dp))
++                }
++                items(list, key = { it.book.key }) { r ->
++                    val b = r.book
++                    val d = active[b.key]
++                    val t = batch[b.key]
++                    Column(Modifier.fillMaxWidth().clickable { nav.navigate(Routes.detail(b.pluginId, b.url)) }.padding(horizontal = 16.dp, vertical = 10.dp)) {
++                        Text(tr.bookTitle(b.name, b.key).ifEmpty { b.url }, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text("Đã tải ${r.cached}/${r.total} chương · ${app.sources.get(b.pluginId)?.name ?: b.pluginId}",
++                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++                        if (d?.running == true) {
++                            Text("Đang tải ${d.done}/${d.total}" + if (d.failed > 0) " · lỗi ${d.failed}" else "", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
++                            LinearProgressIndicator(progress = { if (d.total > 0) d.done / d.total.toFloat() else 0f }, Modifier.fillMaxWidth().padding(vertical = 4.dp))
++                        }
++                        if (t != null) {
++                            Text((if (t.running) "Đang dịch sẵn (${t.mode.label}) " else "Đã dịch sẵn (${t.mode.label}) ") + "${t.done}/${t.total}" + if (t.failed > 0) " · lỗi ${t.failed}" else "",
++                                style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
++                            if (t.running) LinearProgressIndicator(progress = { if (t.total > 0) t.done / t.total.toFloat() else 0f }, Modifier.fillMaxWidth().padding(vertical = 4.dp))
++                        }
++                        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                            if (d?.running == true) TextButton(onClick = { app.downloader.cancel(b.pluginId, b.url) }) { Text("Dừng tải") }
++                            else if (r.cached < r.total) TextButton(onClick = { app.downloader.start(b.pluginId, b.url) }) { Text("Tải tiếp") }
++                            if (t?.running == true) TextButton(onClick = { app.batch.cancel(b.pluginId, b.url) }) { Text("Dừng dịch") }
++                            else TextButton(onClick = { pickMode = r }, enabled = r.cached > 0) { Text("Dịch sẵn") }
++                            TextButton(onClick = { nav.navigate(Routes.reader(b.pluginId, b.url)) }) { Text("Đọc") }
++                            TextButton(onClick = { confirmDelete = r }, enabled = d?.running != true) { Text("Xoá đã tải") }
++                        }
++                    }
++                    HorizontalDivider()
++                }
++            }
++        }
++    }
++    pickMode?.let { r ->
++        AlertDialog(
++            onDismissRequest = { pickMode = null },
++            title = { Text("Dịch sẵn ${r.cached} chương") },
++            text = {
++                Column {
++                    Text("Chọn cách dịch. AI và Google cần mạng và có thể mất vài phút.", style = MaterialTheme.typography.bodySmall)
++                    TransMode.entries.filter { it != TransMode.ORIGINAL }.forEach { m ->
++                        TextButton(onClick = { app.batch.start(r.book.pluginId, r.book.url, m); pickMode = null }, modifier = Modifier.fillMaxWidth()) {
++                            Text(m.label + if (m == (r.book.mode ?: app.settings.transMode)) " (đang dùng cho truyện này)" else "")
++                        }
++                    }
++                }
++            },
++            confirmButton = { TextButton(onClick = { pickMode = null }) { Text("Đóng") } },
++        )
++    }
++    confirmDelete?.let { r ->
++        AlertDialog(
++            onDismissRequest = { confirmDelete = null },
++            title = { Text("Xoá nội dung đã tải?") },
++            text = { Text("Xoá ${r.cached} chương đã tải và bản dịch sẵn của truyện này. Truyện vẫn ở trên kệ.") },
++            confirmButton = {
++                TextButton(onClick = {
++                    confirmDelete = null
++                    scope.launch {
++                        withContext(Dispatchers.IO) { app.sources.cachedToc(r.book.pluginId, r.book.url)?.forEach { app.chapters.deleteChapter(it.url) } }
++                        app.batch.progress.remove(r.book.key)
++                        refresh++
++                    }
++                }) { Text("Xoá") }
++            },
++            dismissButton = { TextButton(onClick = { confirmDelete = null }) { Text("Huỷ") } },
++        )
++    }
++}
++
++private val bmTime = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
++
++/** All bookmarks and notes, or only those of one book when [bookKey] is set. */
++@Composable
++fun BookmarksScreen(nav: NavHostController, bookKey: String = "") {
++    val app = App.instance
++    val tr = app.translator
++    val list = (if (bookKey.isEmpty()) app.bookmarks.all.sortedByDescending { it.time } else app.bookmarks.of(bookKey))
++    var editing by remember { mutableStateOf<Bookmark?>(null) }
++    Scaffold(topBar = { SimpleTop(nav, "Dấu trang & ghi chú") }) { pad ->
++        if (list.isEmpty()) EmptyBox("Chưa có dấu trang.\nTrong trình đọc, bấm giữ một đoạn văn rồi chọn \"Thêm dấu trang\" hoặc \"Ghi chú\".", Modifier.padding(pad).fillMaxSize())
++        else LazyColumn(Modifier.padding(pad).fillMaxSize()) {
++            items(list, key = { it.id }) { b ->
++                BookmarkRow(b, showBook = bookKey.isEmpty(), onOpen = { nav.navigate(Routes.reader(b.pluginId, b.bookUrl, b.chapterIndex, b.para)) },
++                    onEdit = { editing = b }, onDelete = { app.bookmarks.remove(b.id) })
++                HorizontalDivider()
++            }
++        }
++    }
++    editing?.let { b -> NoteDialog(b.note, onDismiss = { editing = null }) { app.bookmarks.updateNote(b.id, it); editing = null } }
++}
++
++@Composable
++internal fun BookmarkRow(b: Bookmark, showBook: Boolean, onOpen: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit) {
++    val tr = App.instance.translator
++    Row(Modifier.fillMaxWidth().clickable(onClick = onOpen).padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
++        Column(Modifier.weight(1f)) {
++            if (showBook) Text(tr.bookTitle(b.bookName, b.bookKey), style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            Text("Chương ${b.chapterIndex + 1}: ${tr.text(b.chapterName, bookKey = b.bookKey)}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            if (b.excerpt.isNotBlank()) Text(b.excerpt, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
++            if (b.note.isNotBlank()) Text("Ghi chú: " + b.note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.tertiary)
++            Text(bmTime.format(Date(b.time)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++        }
++        IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, "Sửa ghi chú") }
++        IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Xoá") }
++    }
++}
++
++@Composable
++internal fun NoteDialog(initial: String, onDismiss: () -> Unit, onSave: (String) -> Unit) {
++    var text by remember { mutableStateOf(initial) }
++    AlertDialog(
++        onDismissRequest = onDismiss,
++        title = { Text("Ghi chú") },
++        text = { OutlinedTextField(text, { text = it }, minLines = 3, modifier = Modifier.fillMaxWidth(), placeholder = { Text("Viết ghi chú cho đoạn này") }) },
++        confirmButton = { TextButton(onClick = { onSave(text.trim()) }) { Text("Lưu") } },
++        dismissButton = { TextButton(onClick = onDismiss) { Text("Huỷ") } },
++    )
++}
++
++private data class TestLine(val text: String, val link: String? = null)
++
++/** "Thử plugin": run each script of a source plugin and look at its files. */
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++fun PluginTestScreen(nav: NavHostController, id: String) {
++    val app = App.instance
++    val plugin = app.sources.get(id)
++    if (plugin == null) { Scaffold { EmptyBox("Plugin đã bị gỡ.", Modifier.padding(it)) }; return }
++    var tab by remember { mutableIntStateOf(0) }
++    val funcs = listOf("home", "genre", "search", "detail", "toc", "chap").filter { plugin.hasScript(it) }
++    var func by remember { mutableStateOf(funcs.firstOrNull() ?: "home") }
++    var input by remember { mutableStateOf("") }
++    var running by remember { mutableStateOf(false) }
++    var result by remember { mutableStateOf<List<TestLine>>(emptyList()) }
++    var status by remember { mutableStateOf("") }
++    var openFile by remember { mutableStateOf<String?>(null) }
++    val scope = rememberCoroutineScope()
++
++    fun run() {
++        running = true; result = emptyList(); status = ""
++        val f = func; val inp = input.trim()
++        scope.launch {
++            val t0 = System.currentTimeMillis()
++            val r = withContext(Dispatchers.IO) {
++                runCatching {
++                    val api = app.sources.api(id)
++                    when (f) {
++                        "home", "genre" -> (if (f == "home") api.home() else api.genres()).map { TestLine("${it.title}\n  script: ${it.script} · input: ${it.input}") }
++                        "search" -> api.search(inp, null).let { p -> p.items.map { TestLine("${it.name}\n  ${it.url}", it.url) } + TestLine("next: ${p.next ?: "(hết)"}") }
++                        "detail" -> api.detail(inp).let { d ->
++                            listOf(TestLine("Tên: ${d.name}"), TestLine("Tác giả: ${d.author}"), TestLine("Bìa: ${d.cover}"),
++                                TestLine("Trạng thái: ${when (d.ongoing) { true -> "Đang ra"; false -> "Hoàn thành"; null -> "?" }}"),
++                                TestLine("Mô tả: ${d.description.take(600)}"), TestLine("Chi tiết: ${d.detail.take(600)}"),
++                                TestLine("Thể loại: ${d.genres.joinToString { it.title }}"), TestLine("Url: ${d.url}", d.url.ifEmpty { inp }))
++                        }
++                        "toc" -> api.toc(inp).let { l -> listOf(TestLine("${l.size} chương")) + l.take(200).map { TestLine("${it.name}${if (it.pay) " (VIP)" else ""}\n  ${it.url}", it.url) } }
++                        else -> when {
++                            plugin.isComic -> api.comicPages(inp).let { l -> listOf(TestLine("${l.size} ảnh")) + l.map { TestLine(it.link) } }
++                            plugin.isVideo -> api.videoServers(inp).map { TestLine("${it.title}\n  ${it.data.take(300)}") }
++                            else -> api.chapter(inp).let { c -> listOf(TestLine("${c.length} ký tự"), TestLine(c.take(8000))) }
++                        }
++                    }
++                }
++            }
++            val ms = System.currentTimeMillis() - t0
++            r.fold({ result = it; status = "Xong trong $ms ms · ${it.size} dòng" }, { status = "Lỗi sau $ms ms"; result = listOf(TestLine(it.stackTraceToString().take(4000))) })
++            running = false
++        }
++    }
++
++    Scaffold(topBar = { SimpleTop(nav, "Thử plugin: ${plugin.name}") }) { pad ->
++        Column(Modifier.padding(pad).fillMaxSize()) {
++            TabRow(tab) {
++                Tab(tab == 0, { tab = 0 }, text = { Text("Chạy thử") })
++                Tab(tab == 1, { tab = 1 }, text = { Text("Mã nguồn") })
++            }
++            if (tab == 0) {
++                Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                    funcs.forEach { f -> FilterChip(func == f, { func = f }, label = { Text(f) }) }
++                }
++                if (func !in listOf("home", "genre")) OutlinedTextField(
++                    input, { input = it }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
++                    label = { Text(if (func == "search") "Từ khoá" else "Url") },
++                )
++                Row(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                    Button(onClick = { run() }, enabled = !running) { Text("Chạy") }
++                    if (func != "search" && input.startsWith("http")) OutlinedButton(onClick = { nav.navigate(Routes.web(input.trim())) }) { Text("Mở trang web") }
++                }
++                if (running) LinearProgressIndicator(Modifier.fillMaxWidth())
++                if (status.isNotEmpty()) Text(status, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 12.dp))
++                val next = mapOf("search" to "detail", "detail" to "toc", "toc" to "chap")[func]
++                if (next != null && result.any { it.link != null }) Text("Chạm một kết quả để chạy tiếp \"$next\"", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 12.dp))
++                LazyColumn(Modifier.fillMaxSize()) {
++                    items(result) { l ->
++                        SelectionContainer {
++                            Text(l.text, fontFamily = FontFamily.Monospace, fontSize = 12.sp,
++                                modifier = Modifier.fillMaxWidth().then(if (l.link != null && next != null) Modifier.clickable { input = l.link; func = next; run() } else Modifier).padding(horizontal = 12.dp, vertical = 4.dp))
++                        }
++                        HorizontalDivider()
++                    }
++                }
++            } else {
++                val files = remember(id) { runCatching { PluginStore.files(plugin) }.getOrDefault(emptyList()) }
++                LazyColumn(Modifier.fillMaxSize()) {
++                    items(files) { f ->
++                        Text(f, fontFamily = FontFamily.Monospace, modifier = Modifier.fillMaxWidth().clickable { openFile = f }.padding(16.dp, 12.dp))
++                        HorizontalDivider()
++                    }
++                }
++            }
++        }
++    }
++    openFile?.let { f ->
++        val text = remember(f) { runCatching { File(plugin.dir, f).let { if (it.length() > 400_000) "(file quá lớn: ${it.length()} byte)" else it.readText() } }.getOrElse { it.message ?: "Lỗi đọc file" } }
++        AlertDialog(
++            onDismissRequest = { openFile = null },
++            title = { Text(f, maxLines = 1, overflow = TextOverflow.Ellipsis) },
++            text = {
++                SelectionContainer {
++                    Text(text, fontFamily = FontFamily.Monospace, fontSize = 11.sp,
++                        modifier = Modifier.height(480.dp).verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()))
++                }
++            },
++            confirmButton = { TextButton(onClick = { openFile = null }) { Text("Đóng") } },
++        )
++    }
++}
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+index 14eea86..48f714d 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+@@ -86,12 +86,16 @@ import vn.thucac.engine.ComicPage
+ import vn.thucac.reader.App
+ import vn.thucac.reader.data.BookEntry
+ import vn.thucac.reader.data.OcrBlock
++import vn.thucac.reader.data.ImageOcr
+ import vn.thucac.reader.data.OcrResult
+ import vn.thucac.reader.data.TransMode
+ 
+ /** Translated speech bubbles of one page, in the page's own pixel coordinates. */
+ private data class PageText(val res: OcrResult, val texts: List<String>)
+ 
++/** One small line under each page while translating: step, engine, or the step that failed. */
++private data class PageStatus(val text: String, val error: Boolean = false, val busy: Boolean = false)
++
+ private val comicModes = listOf(TransMode.CONVERT, TransMode.GOOGLE, TransMode.GEMINI)
+ 
+ @Volatile private var comicLoader: ImageLoader? = null
+@@ -132,6 +136,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+     }
+     val texts = remember { mutableStateMapOf<Int, PageText>() }
+     var ocrProgress by remember { mutableStateOf<String?>(null) }
++    val pageStatus = remember { mutableStateMapOf<Int, PageStatus>() }
+     val listState = rememberLazyListState()
+     val noRipple = remember { MutableInteractionSource() }
+ 
+@@ -155,7 +160,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+         pages = Load.Loading
+         texts.clear()
+         pages = withContext(Dispatchers.IO) {
+-            runCatching { app.sources.comicPages(pid, c.url) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) })
++            runCatching { app.sources.comicPages(pid, c.url, reload > 0) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) })
+         }
+         val p = (pages as? Load.Ok)?.value
+         if (p != null && restoreScroll > 0) { listState.scrollToItem(restoreScroll.coerceAtMost(p.size)); restoreScroll = 0 }
+@@ -166,21 +171,50 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+         val list = (pages as? Load.Ok)?.value ?: return@LaunchedEffect
+         val c = chapter ?: return@LaunchedEffect
+         texts.clear()
++        pageStatus.clear()
+         if (!translateOn) { ocrProgress = null; return@LaunchedEffect }
+         val start = (listState.firstVisibleItemIndex - 1).coerceIn(0, (list.size - 1).coerceAtLeast(0))
+         val order = (start until list.size) + (0 until start)
++        val loc = app.sources.get(pid)?.locale.orEmpty().lowercase()
++        var lang: String? = when {
++            loc.startsWith("en") -> "en"
++            loc.startsWith("ko") -> "ko"
++            loc.startsWith("zh") -> "zh"
++            else -> null
++        }
++        var context = emptyList<String>()
+         var done = 0
++        var errors = 0
+         for (i in order) {
+-            ocrProgress = "Đang dịch ảnh ${done + 1}/${list.size}"
++            ocrProgress = "Đang dịch ảnh ${done + 1}/${list.size}" + if (errors > 0) " · $errors ảnh lỗi" else ""
+             val page = list[i]
++            pageStatus[i] = PageStatus("Đang chờ…", busy = true)
+             val result = withContext(Dispatchers.IO) {
+                 runCatching {
+-                    val res = app.ocr.ocr(page.link, app.http, referer = refererFor(page, c.url)) ?: return@runCatching null
+-                    val out = if (res.blocks.isEmpty()) emptyList() else tr.translateBubbles(res.blocks, mode, bookKey)
+-                    PageText(res, out)
+-                }.getOrNull()
++                    val res = app.ocr.ocrStaged(page.link, app.http, refererFor(page, c.url), lang) { st ->
++                        pageStatus[i] = PageStatus("$st…", busy = true)
++                    }
++                    if (res.blocks.isEmpty()) return@runCatching Triple(PageText(res, emptyList()), "Không thấy chữ trong ảnh", emptyList<String>())
++                    if (lang == null) {
++                        lang = res.blocks.mapNotNull { ImageOcr.detectLang(it.text) }.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
++                    }
++                    pageStatus[i] = PageStatus("Dịch ${res.blocks.size} ô chữ…", busy = true)
++                    val (out, engine) = try {
++                        tr.comicBubbles(res.blocks, mode, bookKey, context)
++                    } catch (e: ImageOcr.StageException) { throw e } catch (e: Exception) {
++                        throw ImageOcr.StageException("Dịch", e.message ?: e.javaClass.simpleName)
++                    }
++                    Triple(PageText(res, out), "${res.blocks.size} ô chữ · dịch bằng $engine", res.blocks.map { it.text })
++                }
+             }
+-            if (result != null) texts[i] = result
++            result.fold({ (pt, label, src) ->
++                texts[i] = pt
++                pageStatus[i] = PageStatus(label)
++                if (src.isNotEmpty()) context = src.takeLast(8)
++            }, { e ->
++                errors++
++                pageStatus[i] = PageStatus("Lỗi ở bước " + (e.message ?: e.javaClass.simpleName), error = true)
++            })
+             done++
+         }
+         ocrProgress = null
+@@ -227,6 +261,13 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                     item { Spacer(Modifier.statusBarsPadding()) }
+                     itemsIndexed(list, key = { i, p -> "$i ${p.link}" }) { i, page ->
+                         ComicPageView(page, chapter?.url ?: bookUrl, loader, if (translateOn) texts[i] else null)
++                        if (translateOn) pageStatus[i]?.let { st ->
++                            Text(
++                                "Ảnh ${i + 1}: " + st.text, fontSize = 11.sp, maxLines = 3,
++                                color = if (st.error) Color(0xFFFF8A80) else Color.White.copy(alpha = 0.85f),
++                                modifier = Modifier.fillMaxWidth().background(Color.Black.copy(alpha = 0.75f)).padding(horizontal = 8.dp, vertical = 3.dp),
++                            )
++                        }
+                     }
+                     item {
+                         Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+@@ -257,7 +298,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                 Row(Modifier.fillMaxWidth().statusBarsPadding().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                     IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Quay lại") }
+                     Column(Modifier.weight(1f)) {
+-                        Text(tr.title(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
++                        Text(tr.bookTitle(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                         val pageCount = (pages as? Load.Ok)?.value?.size ?: 0
+                         Text("${index + 1}/${chapters.size} · " + tr.title(chapter?.name ?: "", bookKey) + if (pageCount > 0) " · $pageCount ảnh" else "", maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                     }
+@@ -311,13 +352,13 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                     comicModes.forEachIndexed { i, m ->
+                         SegmentedButton(selected = mode == m, onClick = { setTranslate(true, m) }, shape = SegmentedButtonDefaults.itemShape(i, comicModes.size), icon = {}) {
+-                            Text(m.label, maxLines = 1, softWrap = false)
++                            Text(if (m == TransMode.CONVERT) "Tự động" else m.label, maxLines = 1, softWrap = false)
+                         }
+                     }
+                 }
+                 Spacer(Modifier.height(8.dp))
+                 Text(
+-                    "Convert dùng từ điển cho chữ Trung (chữ Hàn, Anh dịch bằng Google). AI dùng dịch vụ chọn ở Cài đặt > Dịch bằng AI.",
++                    "Tự động: chữ Trung dịch bằng từ điển, chữ Anh và Hàn dịch bằng AI (nếu đã nhập key ở Cài đặt > Dịch bằng AI), lỗi thì dùng Google. Chọn Google để luôn dùng Google, chọn AI để dịch cả chữ Trung bằng AI. Dưới mỗi ảnh có dòng báo đang ở bước nào và lỗi ở đâu.",
+                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                 )
+             }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt b/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
+index b2d4435..b9c42aa 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
+@@ -71,6 +71,7 @@ import androidx.navigation.NavHostController
+ import coil.compose.AsyncImage
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
++import kotlinx.coroutines.launch
+ import vn.thucac.engine.BookDetail
+ import vn.thucac.engine.ChapterRef
+ import vn.thucac.engine.HtmlText
+@@ -105,6 +106,11 @@ fun DetailScreen(nav: NavHostController, pid: String, url: String) {
+     LaunchedEffect(reloadToc) {
+         toc = Load.Loading
+         toc = withContext(Dispatchers.IO) { runCatching { app.sources.loadToc(pid, url, reloadToc > 0) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) }) }
++        // Fetch the chapter the user is about to read, so opening it is instant.
++        (toc as? Load.Ok)?.value?.let { list ->
++            val c = list.getOrNull(app.library.get(pid, url)?.chapterIndex ?: 0) ?: list.firstOrNull() ?: return@let
++            launch(Dispatchers.IO) { runCatching { app.sources.prefetchChapter(pid, c.url) } }
++        }
+     }
+     LaunchedEffect(toc, dl?.done) {
+         val t = (toc as? Load.Ok)?.value ?: return@LaunchedEffect
+@@ -178,7 +184,7 @@ fun DetailScreen(nav: NavHostController, pid: String, url: String) {
+                         Column(Modifier.weight(1f)) {
+                             val name = d?.name ?: entry?.name ?: ""
+                             SelectionContainer {
+-                                Text(tr.text(name, bookKey = bookKey), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold, maxLines = 4, overflow = TextOverflow.Ellipsis)
++                                Text(tr.bookTitle(name, bookKey), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold, maxLines = 4, overflow = TextOverflow.Ellipsis)
+                             }
+                             Spacer(Modifier.height(8.dp))
+                             val author = d?.author ?: entry?.author ?: ""
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
+index f59d0cb..47a009d 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
+@@ -268,7 +268,7 @@ fun BookListPane(nav: NavHostController, pid: String, script: String, input: Str
+             horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(14.dp),
+         ) {
+             gridItems(items, key = { it.url }) { b ->
+-                BookCard(tr.text(b.name), tr.text(authorOf(b.description)), b.cover) { nav.navigate(Routes.detail(pid, b.url)) }
++                BookCard(tr.bookTitle(b.name), tr.text(authorOf(b.description)), b.cover) { nav.navigate(Routes.detail(pid, b.url)) }
+             }
+             item(span = { GridItemSpan(maxLineSpan) }) {
+                 Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+diff --git a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
+index a19fe3c..fab38ce 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
+@@ -100,7 +100,7 @@ internal fun HomeHeader(nav: NavHostController) {
+                 items(recent, key = { it.key }) { b ->
+                     Column(Modifier.width(104.dp).clickable { nav.navigate(Routes.reader(b.pluginId, b.url)) }) {
+                         Cover(b.cover, Modifier.width(104.dp).height(146.dp).clip(RoundedCornerShape(12.dp)))
+-                        Text(tr.text(b.name, bookKey = b.key), maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
++                        Text(tr.bookTitle(b.name, b.key), maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+                     }
+                 }
+             }
+@@ -122,7 +122,7 @@ private fun ContinueCard(b: BookEntry, onClick: () -> Unit) {
+                     Icon(Icons.AutoMirrored.Filled.MenuBook, null, Modifier.size(16.dp), tint = cs.primary)
+                     Text("  Đang đọc", style = MaterialTheme.typography.labelLarge, color = cs.primary)
+                 }
+-                Text(tr.text(b.name, bookKey = b.key), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
++                Text(tr.bookTitle(b.name, b.key), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                 if (b.author.isNotEmpty()) Text(tr.text(b.author), style = MaterialTheme.typography.bodyMedium, color = cs.onSurfaceVariant, maxLines = 1)
+                 if (b.chapterName.isNotEmpty()) Text(tr.text(b.chapterName, bookKey = b.key), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                 Spacer(Modifier.weight(1f))
+@@ -159,7 +159,7 @@ private fun StatsCard() {
+                     Text("$today", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.SemiBold)
+                     Text(" phút", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp))
+                 }
+-                Text("7 ngày qua: ${week.sumOf { it.second }} phút", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
++                Text("Tuần: ${week.sumOf { it.second }} phút · Tháng: ${stats.lastDaysMinutes(30)} phút", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+             }
+             VerticalDivider(Modifier.padding(horizontal = 12.dp))
+             Column(Modifier.weight(1f)) {
+diff --git a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
+index 30bdc6e..fe5fe01 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
+@@ -94,6 +94,15 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+                                 onClick = { shelfSort = k; app.settings.sp.edit().putInt("shelfSort", k).apply(); sortMenu = false },
+                             )
+                         }
++                        androidx.compose.material3.HorizontalDivider()
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Theo dõi tất cả") }, onClick = {
++                            app.library.books.filter { it.inLibrary && !it.follow }.forEach { app.library.setFollow(it.key, true) }; sortMenu = false
++                        })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Bỏ theo dõi tất cả") }, onClick = {
++                            app.library.books.filter { it.inLibrary && it.follow }.forEach { app.library.setFollow(it.key, false) }; sortMenu = false
++                        })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Tải xuống & dịch sẵn") }, onClick = { sortMenu = false; nav.navigate("downloads") })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Dấu trang & ghi chú") }, onClick = { sortMenu = false; nav.navigate("bookmarks") })
+                     }
+                 }
+             }
+@@ -128,7 +137,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+                         val plugin = app.sources.get(b.pluginId)
+                         val progress = if (b.chapterCount > 0) "Đang đọc ${b.chapterIndex + 1}/${b.chapterCount}" else if (b.lastRead > 0) "Đang đọc chương ${b.chapterIndex + 1}" else "Chưa đọc"
+                         BookRow(
+-                            name = tr.text(b.name, bookKey = b.key),
++                            name = tr.bookTitle(b.name, b.key),
+                             sub = listOfNotNull(tr.text(b.author).ifEmpty { null }, plugin?.name ?: "Plugin đã gỡ").joinToString(" · "),
+                             cover = b.cover,
+                             extra = (if (b.newChapters > 0) "+${b.newChapters} chương mới · " else "") +
+@@ -173,7 +182,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+     menuBook?.let { b ->
+         AlertDialog(
+             onDismissRequest = { menuBook = null },
+-            title = { Text(tr.text(b.name, bookKey = b.key), maxLines = 2, overflow = TextOverflow.Ellipsis) },
++            title = { Text(tr.bookTitle(b.name, b.key), maxLines = 2, overflow = TextOverflow.Ellipsis) },
+             text = {
+                 Column {
+                     MenuLine("Chi tiết") { menuBook = null; nav.navigate(Routes.detail(b.pluginId, b.url)) }
+@@ -193,7 +202,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+     confirm?.let { b ->
+         AlertDialog(
+             onDismissRequest = { confirm = null },
+-            title = { Text(tr.text(b.name, bookKey = b.key)) },
++            title = { Text(tr.bookTitle(b.name, b.key)) },
+             text = { Text(if (tab == 0) "Bỏ truyện này khỏi kệ?" else "Xoá khỏi lịch sử?") },
+             confirmButton = {
+                 TextButton(onClick = {
+@@ -234,7 +243,7 @@ private fun HistoryRow(b: BookEntry, source: String, onLongClick: () -> Unit, on
+         Cover(b.cover, Modifier.width(56.dp).height(76.dp))
+         Spacer(Modifier.width(12.dp))
+         Column(Modifier.weight(1f)) {
+-            Text(tr.text(b.name, bookKey = b.key), style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            Text(tr.bookTitle(b.name, b.key), style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+             val chap = if (b.chapterName.isNotEmpty()) tr.text(b.chapterName, bookKey = b.key) else "Chương ${b.chapterIndex + 1}"
+             Text(chap, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+             Spacer(Modifier.height(4.dp))
+diff --git a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt b/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
+index a09c250..0ad2f8a 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
+@@ -37,7 +37,8 @@ object Routes {
+     fun source(pid: String) = "source/${e(pid)}"
+     fun list(pid: String, title: String, script: String, input: String) = "list/${e(pid)}?title=${e(title)}&script=${e(script)}&input=${e(input)}"
+     fun detail(pid: String, url: String) = "detail/${e(pid)}?url=${e(url)}"
+-    fun reader(pid: String, url: String, index: Int = -1) = "reader/${e(pid)}?url=${e(url)}&index=$index"
++    fun reader(pid: String, url: String, index: Int = -1, para: Int = -1) = "reader/${e(pid)}?url=${e(url)}&index=$index&para=$para"
++    fun pluginTest(id: String) = "ptest/${e(id)}"
+     fun search(pid: String = "") = "search?pid=${e(pid)}"
+     fun ext(id: String) = "ext/${e(id)}"
+     fun repo(url: String) = "repo?url=${e(url)}"
+@@ -90,14 +91,18 @@ fun AppNav() {
+             DetailScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "")
+         }
+         composable(
+-            "reader/{pid}?url={url}&index={index}",
++            "reader/{pid}?url={url}&index={index}&para={para}",
+             arguments = listOf(
+                 navArgument("url") { type = NavType.StringType; defaultValue = "" },
+                 navArgument("index") { type = NavType.IntType; defaultValue = -1 },
++                navArgument("para") { type = NavType.IntType; defaultValue = -1 },
+             ),
+         ) {
+-            ReaderScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "", it.arguments?.getInt("index") ?: -1)
++            ReaderScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "", it.arguments?.getInt("index") ?: -1, it.arguments?.getInt("para") ?: -1)
+         }
++        composable("downloads") { DownloadsScreen(nav) }
++        composable("bookmarks") { BookmarksScreen(nav) }
++        composable("ptest/{id}") { PluginTestScreen(nav, it.arguments?.getString("id") ?: "") }
+         composable("search?pid={pid}", arguments = listOf(navArgument("pid") { type = NavType.StringType; defaultValue = "" })) {
+             SearchScreen(nav, it.arguments?.getString("pid") ?: "")
+         }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt b/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
+index b3bcdc0..c29c4ab 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
+@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.automirrored.filled.ArrowBack
+ import androidx.compose.material.icons.filled.Add
+ import androidx.compose.material.icons.filled.Delete
++import androidx.compose.material.icons.filled.BugReport
+ import androidx.compose.material.icons.filled.Description
+ import androidx.compose.material3.AlertDialog
+ import androidx.compose.material3.DropdownMenu
+@@ -159,6 +160,7 @@ fun PluginsScreen(nav: NavHostController, modifier: Modifier = Modifier, onBack:
+                                 Text("Hỗ trợ: $caps", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                             }
+                         }
++                        if (!isExt) IconButton(onClick = { nav.navigate(Routes.pluginTest(p.id)) }) { Icon(Icons.Default.BugReport, "Thử plugin") }
+                         IconButton(onClick = { removing = p }) { Icon(Icons.Default.Delete, "Gỡ") }
+                     }
+                     HorizontalDivider()
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
+index ca0f66e..0796f7a 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
+@@ -97,6 +97,10 @@ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.rememberCoroutineScope
+ import androidx.compose.runtime.setValue
+ import androidx.compose.runtime.snapshotFlow
++import kotlinx.coroutines.flow.first
++import androidx.compose.material.icons.filled.BookmarkAdd
++import androidx.compose.material.icons.filled.Bookmarks
++import vn.thucac.reader.data.joinBrokenLines
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
+@@ -119,16 +123,16 @@ import vn.thucac.reader.data.BookEntry
+ import vn.thucac.reader.data.TransMode
+ 
+ @Composable
+-fun ReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int) {
++fun ReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int, startPara: Int = -1) {
+     val plugin = remember(pid) { App.instance.sources.get(pid) }
+     if (plugin?.isComic == true) ComicReaderScreen(nav, pid, bookUrl, startIndex)
+     else if (plugin?.isVideo == true) VideoScreen(nav, pid, bookUrl, startIndex)
+-    else NovelReaderScreen(nav, pid, bookUrl, startIndex)
++    else NovelReaderScreen(nav, pid, bookUrl, startIndex, startPara)
+ }
+ 
+ @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, FlowPreview::class)
+ @Composable
+-private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int) {
++private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int, startPara: Int) {
+     val app = App.instance
+     val tr = app.translator
+     val s = app.settings
+@@ -139,7 +143,14 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+ 
+     val initial = remember { app.library.get(pid, bookUrl) }
+     var index by remember { mutableIntStateOf(if (startIndex >= 0) startIndex else initial?.chapterIndex ?: 0) }
+-    var restoreScroll by remember { mutableStateOf(if (startIndex < 0 || startIndex == initial?.chapterIndex) initial?.scrollIndex ?: 0 else 0) }
++    var restoreScroll by remember { mutableStateOf(if (startPara >= 0) startPara else if (startIndex < 0 || startIndex == initial?.chapterIndex) initial?.scrollIndex ?: 0 else 0) }
++    val prefs = app.prefs
++    var srcParas by remember { mutableStateOf<List<String>>(emptyList()) }
++    var paraAction by remember { mutableStateOf<Int?>(null) }
++    var noteFor by remember { mutableStateOf<Int?>(null) }
++    var showBookmarks by remember { mutableStateOf(false) }
++    val clipboard = androidx.compose.ui.platform.LocalClipboardManager.current
++    val toastCtx = androidx.compose.ui.platform.LocalContext.current
+     var toc by remember { mutableStateOf<Load<List<ChapterRef>>>(Load.Loading) }
+     var raw by remember { mutableStateOf<Load<List<String>>>(Load.Loading) }
+     var shown by remember { mutableStateOf<List<String>>(emptyList()) }
+@@ -194,12 +205,14 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+             launch(Dispatchers.IO) { for (k in 1..2) chapters.getOrNull(index + k)?.let { n -> runCatching { app.sources.chapter(pid, n.url) } } }
+         }
+     }
+-    LaunchedEffect(raw, mode, tr.version, s.namesFirst, s.bookNamesFirst, s.longestFirst, s.luatNhanMode, s.maxPhrase, s.splitSentences, s.autoSimplified, s.applyNumberRules) {
++    LaunchedEffect(raw, mode, tr.version, s.namesFirst, s.bookNamesFirst, s.longestFirst, s.luatNhanMode, s.maxPhrase, s.splitSentences, s.autoSimplified, s.applyNumberRules, prefs.joinBrokenLines) {
+         val r = raw as? Load.Ok ?: return@LaunchedEffect
+         val c = chapter ?: return@LaunchedEffect
+         notice = null
++        val input = if (prefs.joinBrokenLines) joinBrokenLines(r.value) else r.value
++        srcParas = input
+         val (out, err) = withContext(Dispatchers.Default) {
+-            runCatching { tr.chapter(r.value, mode, bookKey, c.url) }.fold({ it to tr.takeNotice() }, { r.value to errorText(it) })
++            runCatching { tr.chapter(input, mode, bookKey, c.url) }.fold({ it to tr.takeNotice() }, { input to errorText(it) })
+         }
+         shown = out
+         notice = err
+@@ -257,6 +270,25 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+         if (tts.active) startTts(fromStart = true)
+     }
+ 
++    // "Tự tải chương sau": move on once the reader has scrolled to the very end.
++    LaunchedEffect(shown, prefs.autoLoadNext) {
++        if (!prefs.autoLoadNext || shown.isEmpty()) return@LaunchedEffect
++        snapshotFlow { listState.firstVisibleItemIndex > 0 && !listState.canScrollForward }.first { it }
++        kotlinx.coroutines.delay(800)
++        if (!listState.canScrollForward && !ttsHere && index + 1 < chapters.size) go(index + 1)
++    }
++
++    fun addBookmark(item: Int, note: String = "") {
++        val c = chapter ?: return
++        val name = app.library.get(pid, bookUrl)?.name ?: initial?.name ?: ""
++        app.bookmarks.add(vn.thucac.reader.data.Bookmark(
++            id = System.currentTimeMillis(), pluginId = pid, bookUrl = bookUrl, bookName = name,
++            chapterIndex = index, chapterName = c.name, para = item,
++            excerpt = shown.getOrNull((item - 1).coerceAtLeast(0))?.take(200) ?: "", note = note, time = System.currentTimeMillis(),
++        ))
++        android.widget.Toast.makeText(toastCtx, if (note.isEmpty()) "Đã thêm dấu trang" else "Đã lưu ghi chú", android.widget.Toast.LENGTH_SHORT).show()
++    }
++
+     fun setMode(m: TransMode) {
+         mode = m
+         app.library.get(pid, bookUrl)?.let { app.library.upsert(it.copy(mode = m)) }
+@@ -291,7 +323,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         if (s.italicDialogue) italicDialogue(p) else androidx.compose.ui.text.AnnotatedString(p), color = fg,
+                         style = androidx.compose.ui.text.TextStyle(background = if (speaking) fg.copy(alpha = 0.12f) else Color.Unspecified), fontFamily = family, fontSize = s.fontSize.sp, lineHeight = (s.lineHeight / 100f).em,
+                         modifier = Modifier.fillMaxWidth()
+-                            .combinedClickable(interactionSource = noRipple, indication = null, onClick = { menu = !menu }, onLongClick = { if (mode == TransMode.CONVERT) wordPara = i })
++                            .combinedClickable(interactionSource = noRipple, indication = null, onClick = { menu = !menu }, onLongClick = { paraAction = i })
+                             .padding(horizontal = 20.dp, vertical = 6.dp),
+                     )
+                 }
+@@ -313,6 +345,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         Text(tr.text(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", mode, bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                         Text("${index + 1}/${chapters.size} · " + tr.text(chapter?.name ?: "", mode, bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                     }
++                    IconButton(onClick = { addBookmark(listState.firstVisibleItemIndex) }) { Icon(Icons.Default.BookmarkAdd, "Thêm dấu trang") }
+                     IconButton(onClick = { chapter?.let { nav.navigate(Routes.web(it.url)) } }) { Icon(Icons.Default.Public, "Mở trang gốc") }
+                     IconButton(onClick = { reload++ }) { Icon(Icons.Default.Refresh, "Tải lại chương") }
+                 }
+@@ -331,6 +364,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         MenuAction(Icons.AutoMirrored.Filled.List, "Mục lục", Modifier.weight(1f)) { showToc = true }
+                         MenuAction(Icons.Default.TextFields, "Giao diện", Modifier.weight(1f)) { showStyle = true }
+                         MenuAction(Icons.Default.Headphones, "Nghe", Modifier.weight(1f)) { showTts = true }
++                        MenuAction(Icons.Default.Bookmarks, "Dấu trang", Modifier.weight(1f)) { showBookmarks = true }
+                         IconButton(onClick = { go(index + 1) }, enabled = index < chapters.size - 1) { Icon(Icons.Default.ChevronRight, "Chương sau") }
+                     }
+                 }
+@@ -343,7 +377,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+     if (ttsHere && showPlayer) {
+         val e = app.library.get(pid, bookUrl) ?: initial
+         TtsPlayerScreen(
+-            title = tr.title(e?.name ?: "", bookKey),
++            title = tr.bookTitle(e?.name ?: "", bookKey),
+             author = tr.title(e?.author ?: "", bookKey),
+             cover = e?.cover ?: "",
+             chapterTitle = tr.text(chapter?.name ?: "", mode, bookKey),
+@@ -422,12 +456,60 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                     Text("Chữ có chân (Serif)", Modifier.weight(1f))
+                     Switch(s.readerFont == "serif", { s.setReaderFont(if (it) "serif" else "sans") })
+                 }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Tự tải chương sau khi cuộn hết", Modifier.weight(1f))
++                    Switch(prefs.autoLoadNext, { prefs.autoLoadNext = it })
++                }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Tắt xuống dòng (nối câu bị ngắt)", Modifier.weight(1f))
++                    Switch(prefs.joinBrokenLines, { prefs.joinBrokenLines = it })
++                }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Hiện mọi nghĩa VietPhrase", Modifier.weight(1f))
++                    Switch(!s.firstMeaningOnly, { s.setFirstMeaningOnly(!it); tr.reloadAsync() })
++                }
+             }
+         }
+     }
+ 
++    paraAction?.let { pi ->
++        val text = shown.getOrNull(pi) ?: ""
++        AlertDialog(
++            onDismissRequest = { paraAction = null },
++            title = { Text("Đoạn văn") },
++            text = {
++                Column {
++                    Text(text, maxLines = 4, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
++                    Spacer(Modifier.height(8.dp))
++                    if (mode == TransMode.CONVERT) TextButton(onClick = { paraAction = null; wordPara = pi }, modifier = Modifier.fillMaxWidth()) { Text("Sửa từ / thêm tên riêng") }
++                    TextButton(onClick = { paraAction = null; addBookmark(pi + 1) }, modifier = Modifier.fillMaxWidth()) { Text("Thêm dấu trang") }
++                    TextButton(onClick = { paraAction = null; noteFor = pi }, modifier = Modifier.fillMaxWidth()) { Text("Ghi chú") }
++                    TextButton(onClick = { paraAction = null; clipboard.setText(androidx.compose.ui.text.AnnotatedString(text)) }, modifier = Modifier.fillMaxWidth()) { Text("Sao chép") }
++                }
++            },
++            confirmButton = { TextButton(onClick = { paraAction = null }) { Text("Đóng") } },
++        )
++    }
++    noteFor?.let { pi -> NoteDialog("", onDismiss = { noteFor = null }) { n -> noteFor = null; addBookmark(pi + 1, n) } }
++    if (showBookmarks) {
++        ModalBottomSheet(onDismissRequest = { showBookmarks = false }) {
++            val marks = app.bookmarks.of(bookKey)
++            if (marks.isEmpty()) Text("Chưa có dấu trang. Bấm giữ một đoạn văn để thêm dấu trang hoặc ghi chú.", Modifier.padding(20.dp))
++            var editMark by remember { mutableStateOf<vn.thucac.reader.data.Bookmark?>(null) }
++            LazyColumn(Modifier.fillMaxWidth().height(480.dp)) {
++                itemsIndexed(marks) { _, b ->
++                    BookmarkRow(b, showBook = false, onOpen = {
++                        showBookmarks = false; menu = false
++                        if (b.chapterIndex == index) scope.launch { listState.scrollToItem(b.para.coerceAtMost(shown.size)) }
++                        else { go(b.chapterIndex); restoreScroll = b.para }
++                    }, onEdit = { editMark = b }, onDelete = { app.bookmarks.remove(b.id) })
++                }
++            }
++            editMark?.let { b -> NoteDialog(b.note, onDismiss = { editMark = null }) { app.bookmarks.updateNote(b.id, it); editMark = null } }
++        }
++    }
+     wordPara?.let { pi ->
+-        val original = (raw as? Load.Ok)?.value?.getOrNull(pi)
++        val original = srcParas.getOrNull(pi) ?: (raw as? Load.Ok)?.value?.getOrNull(pi)
+         if (original == null) wordPara = null else WordDialog(original, bookKey, onDismiss = { wordPara = null })
+     }
+ }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
+index ccfd93b..b12c785 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
+@@ -66,7 +66,9 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+         groups.clear(); info = ""
+         job = scope.launch {
+             running = true
+-            val key = q
++            val hasCjk = q.any { it.code in 0x3400..0x9fff }
++            val key = if (app.prefs.searchToChinese && !hasCjk) withContext(Dispatchers.IO) { tr.toChinese(q) } else q
++            if (key != q) info = "Tìm bằng từ khoá tiếng Trung: $key"
+             val targets = app.sources.sourcePlugins.filter { (pid.isEmpty() || it.id == pid) && it.hasScript("search") }
+             if (targets.isEmpty()) info = "Không có plugin nào hỗ trợ tìm kiếm."
+             val gate = Semaphore(4)
+@@ -98,6 +100,10 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+                 keyboardActions = KeyboardActions(onSearch = { search() }),
+                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+             )
++            androidx.compose.foundation.layout.Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
++                androidx.compose.material3.FilterChip(app.prefs.searchToChinese, { app.prefs.searchToChinese = !app.prefs.searchToChinese },
++                    label = { Text("Tự dịch từ khoá sang tiếng Trung") })
++            }
+             if (running) LinearProgressIndicator(Modifier.fillMaxWidth())
+             if (info.isNotEmpty()) Text(info, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp))
+             Box(Modifier.fillMaxSize()) {
+@@ -111,7 +117,7 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+                             )
+                         }
+                         items(g.books, key = { g.pid + "|" + it.url }) { b ->
+-                            BookRow(tr.text(b.name), tr.text(b.description), b.cover) { nav.navigate(Routes.detail(g.pid, b.url)) }
++                            BookRow(tr.bookTitle(b.name), tr.text(b.description), b.cover) { nav.navigate(Routes.detail(g.pid, b.url)) }
+                         }
+                     }
+                 }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+index 170ebc4..20444c5 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+@@ -278,6 +278,7 @@ private fun TranslateSettings() {
+     ChoiceRow("Cụm từ dài nhất", lens.map { it.toString() }, lens.indexOf(s.maxPhrase).coerceAtLeast(0)) { s.setMaxPhrase(lens[it]) }
+     ChoiceRow("Chia đoạn", listOf("Giữ nguyên", "Theo câu"), if (s.splitSentences) 1 else 0, "Theo câu: mỗi câu thành một đoạn, dễ đọc và nghe hơn") { s.setSplitSentences(it == 1) }
+     SwitchRow("Tự động chuyển sang giản thể", "Đổi chữ phồn thể sang giản thể trước khi convert, để từ điển khớp được", s.autoSimplified) { s.setAutoSimplified(it); tr.clearBookNameCache() }
++    SwitchRow("Dịch tên truyện tiếng Anh, tiếng Hàn", "Dùng AI nếu đã nhập key, không thì Google. Tên tiếng Trung luôn dùng từ điển", App.instance.prefs.translateForeignTitles) { App.instance.prefs.translateForeignTitles = it }
+     SwitchRow("In nghiêng câu thoại", "Chữ trong ngoặc kép hiện in nghiêng trong trình đọc", s.italicDialogue) { s.setItalicDialogue(it) }
+ }
+ 
+diff --git a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt b/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
+index 47287df..5657ebd 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
+@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.Close
+ import androidx.compose.material.icons.filled.Refresh
++import androidx.compose.material.icons.automirrored.filled.OpenInNew
++import androidx.compose.ui.unit.dp
+ import androidx.compose.material3.ExperimentalMaterial3Api
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.IconButton
+@@ -39,16 +41,35 @@ fun WebScreen(nav: NavHostController, url: String) {
+     var title by remember { mutableStateOf(url) }
+     var loading by remember { mutableStateOf(true) }
+     var web by remember { mutableStateOf<WebView?>(null) }
++    var current by remember { mutableStateOf(url) }
++    var canBack by remember { mutableStateOf(false) }
++    val ctx = androidx.compose.ui.platform.LocalContext.current
++    androidx.activity.compose.BackHandler(canBack) { web?.goBack() }
++    // A page that an installed source can open: offer to read it in the app.
++    val match = remember(current) { App.instance.sources.sourcePlugins.firstOrNull { it.matches(current) } }
+     DisposableEffect(Unit) { onDispose { runCatching { CookieManager.getInstance().flush() }; web?.destroy() } }
+     Scaffold(topBar = {
+         TopAppBar(
+             title = { Column { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis); Text("Qua bước kiểm tra xong thì bấm X để quay lại", style = androidx.compose.material3.MaterialTheme.typography.bodySmall) } },
+             navigationIcon = { IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.Default.Close, "Đóng") } },
+-            actions = { IconButton(onClick = { web?.reload() }) { Icon(Icons.Default.Refresh, "Tải lại") } },
++            actions = {
++                IconButton(onClick = { web?.reload() }) { Icon(Icons.Default.Refresh, "Tải lại") }
++                IconButton(onClick = { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(current))) } }) {
++                    Icon(Icons.AutoMirrored.Filled.OpenInNew, "Mở bằng trình duyệt ngoài")
++                }
++            },
+         )
+     }) { pad ->
+         Column(Modifier.padding(pad).fillMaxSize()) {
+             if (loading) LinearProgressIndicator(Modifier.fillMaxWidth())
++            match?.let { p ->
++                androidx.compose.material3.Surface(color = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer) {
++                    androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
++                        Text("Nguồn ${p.name} mở được trang này", Modifier.weight(1f), style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
++                        androidx.compose.material3.TextButton(onClick = { nav.navigate(Routes.detail(p.id, current)) }) { Text("Đọc trong app") }
++                    }
++                }
++            }
+             AndroidView(factory = { ctx ->
+                 WebView(ctx).apply {
+                     settings.javaScriptEnabled = true
+@@ -58,6 +79,7 @@ fun WebScreen(nav: NavHostController, url: String) {
+                     webViewClient = object : WebViewClient() {
+                         override fun onPageStarted(view: WebView?, u: String?, favicon: Bitmap?) { loading = true }
+                         override fun onPageFinished(view: WebView?, u: String?) { loading = false; title = view?.title ?: u ?: title }
++                        override fun doUpdateVisitedHistory(view: WebView?, u: String?, isReload: Boolean) { u?.let { current = it }; canBack = view?.canGoBack() == true }
+                     }
+                     loadUrl(url)
+                     web = this
