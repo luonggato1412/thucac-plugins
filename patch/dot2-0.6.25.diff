@@ -46,10 +46,10 @@ index f89a545..44ef980 100644
  
 diff --git a/app/src/main/java/vn/thucac/reader/data/Extras.kt b/app/src/main/java/vn/thucac/reader/data/Extras.kt
 new file mode 100644
-index 0000000..9afb716
+index 0000000..d7a169d
 --- /dev/null
 +++ b/app/src/main/java/vn/thucac/reader/data/Extras.kt
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,162 @@
 +package vn.thucac.reader.data
 +
 +import android.content.Context
@@ -82,6 +82,8 @@ index 0000000..9afb716
 +    var joinBrokenLines by Pref("joinBrokenLines", false)
 +    /** Translate a Vietnamese search keyword to Chinese before searching. */
 +    var searchToChinese by Pref("searchToChinese", false)
++    /** Translate English / Korean book names. */
++    var translateForeignTitles by Pref("translateForeignTitles", true)
 +}
 +
 +private val sentenceEnd = Regex("[.!?…。！？”」』\"'）)》:：~～*]$")
@@ -210,6 +212,100 @@ index 0000000..9afb716
 +        synchronized(cancelled) { cancelled.add("$pluginId|$bookUrl") }
 +    }
 +}
+diff --git a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+index 67e8f25..d738010 100644
+--- a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
++++ b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+@@ -123,6 +123,89 @@ class ImageOcr(private val ctx: Context) {
+         return res
+     }
+ 
++    /** An OCR failure that says which step broke, shown under the image. */
++    class StageException(val stage: String, message: String) : Exception("$stage: $message")
++
++    /**
++     * Like [ocr] but reports each step through [onStage] and throws [StageException] instead of returning null.
++     * [lang] ("en", "ko", "zh" or null for unknown) picks one recognizer, which is much faster than running all three.
++     */
++    fun ocrStaged(url: String, http: OkHttpClient, referer: String?, lang: String?, onStage: (String) -> Unit): OcrResult {
++        val key = sha1(url)
++        mem[key]?.let { return it }
++        for (name in listOf("o7-${lang ?: "all"}-$key.json", "o6-$key.json")) {
++            val f = File(dir, name)
++            if (f.exists()) OcrResult.fromJson(f.readText())?.let { mem[key] = it; return it }
++        }
++        onStage("Tải ảnh")
++        val req = Request.Builder().url(url).apply {
++            if (referer != null) header("Referer", referer)
++            header("User-Agent", vn.thucac.reader.App.instance.userAgent)
++        }.build()
++        val bytes = try {
++            http.newCall(req).execute().use { resp ->
++                if (!resp.isSuccessful) throw StageException("Tải ảnh", "máy chủ trả mã ${resp.code}")
++                resp.body?.bytes() ?: throw StageException("Tải ảnh", "ảnh rỗng")
++            }
++        } catch (e: StageException) { throw e } catch (e: Exception) {
++            throw StageException("Tải ảnh", e.message ?: e.javaClass.simpleName)
++        }
++        onStage("Nhận chữ" + when (lang) { "en" -> " (Anh)"; "ko" -> " (Hàn)"; "zh" -> " (Trung)"; else -> "" })
++        val res = runOcr(bytes, lang)
++        mem[key] = res
++        runCatching { File(dir, "o7-${lang ?: "all"}-$key.json").writeText(res.toJson()) }
++        return res
++    }
++
++    private fun runOcr(bytes: ByteArray, lang: String?): OcrResult {
++        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
++        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
++        val origW = bounds.outWidth
++        val origH = bounds.outHeight
++        if (origW <= 0 || origH <= 0) throw StageException("Đọc ảnh", "không giải mã được ảnh (${bytes.size} byte)")
++        var sample = 1
++        while (origW / sample > 1600) sample *= 2
++        val opts = BitmapFactory.Options().apply { inSampleSize = sample; inPreferredConfig = Bitmap.Config.ARGB_8888 }
++        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts) ?: throw StageException("Đọc ảnh", "không đủ bộ nhớ để mở ảnh")
++        val recognizers = when (lang) {
++            "en" -> listOf(latin)
++            "ko" -> listOf(korean)
++            "zh" -> listOf(chinese)
++            else -> listOf(latin, korean, chinese)
++        }
++        try {
++            val scaleX = origW.toFloat() / bmp.width
++            val scaleY = origH.toFloat() / bmp.height
++            val raw = mutableListOf<OcrBlock>()
++            var calls = 0
++            var fails = 0
++            var lastError = ""
++            var y0 = 0
++            while (y0 < bmp.height) {
++                val y1 = min(bmp.height, y0 + 1600)
++                val tile = Bitmap.createBitmap(bmp, 0, y0, bmp.width, y1 - y0)
++                try {
++                    val img = InputImage.fromBitmap(tile, 0)
++                    for (r in recognizers) {
++                        calls++
++                        val out = runCatching { Tasks.await(r.process(img), 20, TimeUnit.SECONDS) }
++                        out.exceptionOrNull()?.let { fails++; lastError = it.message ?: it.javaClass.simpleName }
++                        collectLines(out.getOrNull(), bmp, y0, scaleX, scaleY, raw)
++                    }
++                } finally {
++                    tile.recycle()
++                }
++                if (y1 >= bmp.height) break
++                y0 = y1 - 240
++            }
++            if (calls > 0 && fails == calls) throw StageException("Nhận chữ", "ML Kit lỗi ($lastError). Có thể mô hình nhận chữ chưa tải xong, thử lại sau ít phút")
++            val merged = mergeBlocks(OcrResult(origW, origH, dedupLines(raw)))
++            return OcrResult(origW, origH, merged)
++        } finally {
++            bmp.recycle()
++        }
++    }
++
+     private fun fetchBytes(
+         url: String,
+         http: OkHttpClient,
 diff --git a/app/src/main/java/vn/thucac/reader/data/Library.kt b/app/src/main/java/vn/thucac/reader/data/Library.kt
 index 5549128..210a8fd 100644
 --- a/app/src/main/java/vn/thucac/reader/data/Library.kt
@@ -249,8 +345,42 @@ index 5549128..210a8fd 100644
      fun last7Days(): List<Pair<String, Int>> {
          val cal = Calendar.getInstance()
          val keyFmt = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+diff --git a/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt b/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
+index 9f293c0..e54534a 100644
+--- a/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
++++ b/app/src/main/java/vn/thucac/reader/data/SourceRepo.kt
+@@ -336,7 +336,28 @@ class SourceRepo(private val app: App) {
+         return paras
+     }
+ 
+-    fun comicPages(pluginId: String, url: String): List<ComicPage> = api(pluginId).comicPages(url)
++    private val comicPageCache = java.util.concurrent.ConcurrentHashMap<String, List<ComicPage>>()
++
++    fun comicPages(pluginId: String, url: String, refresh: Boolean = false): List<ComicPage> =
++        comicPageCache["$pluginId|$url"]?.takeIf { !refresh } ?: api(pluginId).comicPages(url).also { comicPageCache["$pluginId|$url"] = it }
++
++    /** Loads one chapter ahead of time: text for novels, page list and images for comics (into the HTTP cache). */
++    fun prefetchChapter(pluginId: String, url: String) {
++        val p = get(pluginId) ?: return
++        when {
++            p.isVideo -> Unit
++            p.isComic -> comicPages(pluginId, url).take(12).forEach { pg ->
++                runCatching {
++                    val req = okhttp3.Request.Builder().url(pg.link).apply {
++                        if (!pg.referrerPolicy.equals("no-referrer", true)) header("Referer", url)
++                        header("User-Agent", app.userAgent)
++                    }.build()
++                    app.http.newCall(req).execute().use { it.body?.bytes() }
++                }
++            }
++            else -> chapter(pluginId, url)
++        }
++    }
+     fun videoServers(pluginId: String, url: String): List<vn.thucac.engine.VideoServer> = api(pluginId).videoServers(url)
+     fun videoTrack(pluginId: String, server: vn.thucac.engine.VideoServer): vn.thucac.engine.VideoTrack = api(pluginId).videoTrack(server)
+ 
 diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
-index 23e0362..68211be 100644
+index 23e0362..9bd005f 100644
 --- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
 +++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
 @@ -135,16 +135,18 @@ class TranslateService(private val app: App) {
@@ -274,7 +404,68 @@ index 23e0362..68211be 100644
          }
          out.trim()
      }
-@@ -416,7 +418,10 @@ class TranslateService(private val app: App) {
+@@ -375,6 +377,60 @@ class TranslateService(private val app: App) {
+         return converter().convert(prep(src), bookDict(bookKey))
+     }
+ 
++    // ---- Foreign (English / Korean) book titles: translated in the background, cached on disk. ----
++    private val titleFile by lazy { File(app.filesDir, "title_cache.json") }
++    private val titleCache: java.util.concurrent.ConcurrentHashMap<String, String> by lazy {
++        java.util.concurrent.ConcurrentHashMap<String, String>().also { m ->
++            runCatching { val o = org.json.JSONObject(titleFile.readText()); o.keys().forEach { k -> m[k] = o.getString(k) } }
++        }
++    }
++    private val titlePending = java.util.LinkedHashSet<String>()
++    private val titleFailed = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
++    private var titleWorker: Thread? = null
++    var titleTick by androidx.compose.runtime.mutableIntStateOf(0)
++        private set
++
++    /** Book name for display: Chinese goes through the dictionary, English/Korean is translated (AI if a key is set, else Google). */
++    fun bookTitle(src: String, bookKey: String? = null): String {
++        if (src.isBlank()) return src
++        if (src.any { Converter.isCjk(it) }) return text(src, TransMode.CONVERT, bookKey)
++        if (!app.prefs.translateForeignTitles || src.none { it.isLetter() }) return src
++        titleTick
++        titleCache[src]?.let { return it }
++        if (src !in titleFailed) synchronized(titlePending) {
++            titlePending.add(src)
++            if (titleWorker?.isAlive != true) titleWorker = Thread { drainTitles() }.apply { isDaemon = true; start() }
++        }
++        return src
++    }
++
++    private fun drainTitles() {
++        while (true) {
++            Thread.sleep(500)
++            val batch = synchronized(titlePending) { titlePending.take(40).also { titlePending.removeAll(it.toSet()) } }
++            if (batch.isEmpty()) return
++            for ((lang, group) in batch.groupBy { t -> if (t.any { ImageOcr.isHangul(it) }) "ko" else "en" }) {
++                val res: Map<Int, String> = runCatching {
++                    val provider = AiProvider.byId(app.settings.aiProvider)
++                    val key = app.settings.aiKey(provider.id).trim()
++                    if (key.isNotEmpty()) runCatching {
++                        ai.titles(group, key, app.settings.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
++                            app.settings.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang)
++                    }.getOrNull()?.takeIf { it.isNotEmpty() } ?: googleTitles(group, lang)
++                    else googleTitles(group, lang)
++                }.getOrDefault(emptyMap())
++                group.forEachIndexed { i, t -> val v = res[i]; if (v.isNullOrBlank()) titleFailed.add(t) else titleCache[t] = v }
++            }
++            runCatching { titleFile.writeText(org.json.JSONObject(titleCache as Map<*, *>).toString()) }
++            android.os.Handler(android.os.Looper.getMainLooper()).post { titleTick++ }
++        }
++    }
++
++    private fun googleTitles(group: List<String>, lang: String): Map<Int, String> {
++        val out = google.translate(group, from = lang, to = "vi")
++        return out.withIndex().filter { (i, v) -> v.isNotBlank() && v != group.getOrNull(i) }.associate { it.index to it.value }
++    }
++
+     fun text(src: String, mode: TransMode = TransMode.CONVERT, bookKey: String? = null): String {
+         if (src.isBlank() || mode == TransMode.ORIGINAL) return src
+         return when (mode) {
+@@ -416,7 +472,10 @@ class TranslateService(private val app: App) {
              return out
          }
          if (mode == TransMode.GOOGLE) {
@@ -286,7 +477,7 @@ index 23e0362..68211be 100644
          }
          if (mode == TransMode.EXT) {
              val ext = app.sources.extension(app.settings.activeExtension)
-@@ -462,6 +467,10 @@ class TranslateService(private val app: App) {
+@@ -462,6 +521,56 @@ class TranslateService(private val app: App) {
          )
      }
  
@@ -294,12 +485,58 @@ index 23e0362..68211be 100644
 +    fun toChinese(text: String): String =
 +        runCatching { google.translate(listOf(text), from = "vi", to = "zh-CN").firstOrNull() }.getOrNull()?.trim()?.ifEmpty { null } ?: text
 +
++    /**
++     * Comic bubbles: Chinese through the dictionary (unless the user picked AI), English / Korean through AI when a key
++     * is set, otherwise Google. Returns the texts and a short label of what was used. Throws with the step name on failure.
++     */
++    fun comicBubbles(blocks: List<OcrBlock>, mode: TransMode, bookKey: String?, context: List<String>): Pair<List<String>, String> {
++        val texts = blocks.map { it.text }
++        if (texts.isEmpty() || mode == TransMode.ORIGINAL) return texts to "Bản gốc"
++        val out = texts.toMutableList()
++        val used = LinkedHashSet<String>()
++        val byLang = texts.indices.groupBy { ImageOcr.detectLang(texts[it]) ?: "en" }
++        val s = app.settings
++        val provider = AiProvider.byId(s.aiProvider)
++        val key = s.aiKey(provider.id).trim()
++        for ((lang, idx) in byLang) {
++            val src = idx.map { texts[it] }
++            if (lang == "zh" && mode != TransMode.GEMINI) {
++                val conv = converter(); val bd = bookDict(bookKey)
++                idx.forEachIndexed { k, i -> out[i] = conv.convert(prep(src[k]), bd) }
++                used += "Từ điển"
++                continue
++            }
++            var aiError: String? = null
++            if (key.isNotEmpty() && mode != TransMode.GOOGLE) {
++                val r = runCatching {
++                    ai.bubbles(src, context, key, s.aiModel(provider.id).ifBlank { provider.defaultModel }, provider,
++                        s.aiBaseUrl(provider.id).ifBlank { provider.baseUrl }, lang, s.geminiPrompt)
++                }
++                val m = r.getOrNull()
++                if (!m.isNullOrEmpty()) {
++                    idx.forEachIndexed { k, i -> m[k]?.let { v -> out[i] = v } }
++                    used += "AI ${provider.name}"
++                    continue
++                }
++                aiError = r.exceptionOrNull()?.message ?: "AI không trả kết quả"
++            }
++            val g = runCatching { google.translate(src, from = if (lang == "zh") "zh-CN" else lang, to = "vi") }
++            val gv = g.getOrNull()
++            if (gv == null || gv.size != src.size) {
++                throw ImageOcr.StageException("Dịch", (aiError?.let { "AI lỗi ($it), " } ?: "") + "Google lỗi (" + (g.exceptionOrNull()?.message ?: "không trả kết quả") + ")")
++            }
++            idx.forEachIndexed { k, i -> out[i] = gv[k] }
++            used += if (aiError != null) "Google (AI lỗi: ${aiError.take(60)})" else if (key.isEmpty() && mode != TransMode.GOOGLE) "Google (chưa nhập key AI)" else "Google"
++        }
++        return out to used.joinToString(" + ")
++    }
++
      fun translateBubbles(bubbles: List<OcrBlock>, mode: TransMode, bookKey: String? = null): List<String> {
          if (bubbles.isEmpty()) return emptyList()
          val texts = bubbles.map { it.text }
 diff --git a/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
 new file mode 100644
-index 0000000..d66d067
+index 0000000..898945d
 --- /dev/null
 +++ b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
 @@ -0,0 +1,336 @@
@@ -418,7 +655,7 @@ index 0000000..d66d067
 +                    val d = active[b.key]
 +                    val t = batch[b.key]
 +                    Column(Modifier.fillMaxWidth().clickable { nav.navigate(Routes.detail(b.pluginId, b.url)) }.padding(horizontal = 16.dp, vertical = 10.dp)) {
-+                        Text(tr.title(b.name, b.key).ifEmpty { b.url }, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text(tr.bookTitle(b.name, b.key).ifEmpty { b.url }, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 +                        Text("Đã tải ${r.cached}/${r.total} chương · ${app.sources.get(b.pluginId)?.name ?: b.pluginId}",
 +                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
 +                        if (d?.running == true) {
@@ -508,7 +745,7 @@ index 0000000..d66d067
 +    val tr = App.instance.translator
 +    Row(Modifier.fillMaxWidth().clickable(onClick = onOpen).padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
 +        Column(Modifier.weight(1f)) {
-+            if (showBook) Text(tr.title(b.bookName, b.bookKey), style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            if (showBook) Text(tr.bookTitle(b.bookName, b.bookKey), style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
 +            Text("Chương ${b.chapterIndex + 1}: ${tr.text(b.chapterName, bookKey = b.bookKey)}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
 +            if (b.excerpt.isNotBlank()) Text(b.excerpt, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
 +            if (b.note.isNotBlank()) Text("Ghi chú: " + b.note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.tertiary)
@@ -639,10 +876,208 @@ index 0000000..d66d067
 +        )
 +    }
 +}
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+index 14eea86..48f714d 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+@@ -86,12 +86,16 @@ import vn.thucac.engine.ComicPage
+ import vn.thucac.reader.App
+ import vn.thucac.reader.data.BookEntry
+ import vn.thucac.reader.data.OcrBlock
++import vn.thucac.reader.data.ImageOcr
+ import vn.thucac.reader.data.OcrResult
+ import vn.thucac.reader.data.TransMode
+ 
+ /** Translated speech bubbles of one page, in the page's own pixel coordinates. */
+ private data class PageText(val res: OcrResult, val texts: List<String>)
+ 
++/** One small line under each page while translating: step, engine, or the step that failed. */
++private data class PageStatus(val text: String, val error: Boolean = false, val busy: Boolean = false)
++
+ private val comicModes = listOf(TransMode.CONVERT, TransMode.GOOGLE, TransMode.GEMINI)
+ 
+ @Volatile private var comicLoader: ImageLoader? = null
+@@ -132,6 +136,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+     }
+     val texts = remember { mutableStateMapOf<Int, PageText>() }
+     var ocrProgress by remember { mutableStateOf<String?>(null) }
++    val pageStatus = remember { mutableStateMapOf<Int, PageStatus>() }
+     val listState = rememberLazyListState()
+     val noRipple = remember { MutableInteractionSource() }
+ 
+@@ -155,7 +160,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+         pages = Load.Loading
+         texts.clear()
+         pages = withContext(Dispatchers.IO) {
+-            runCatching { app.sources.comicPages(pid, c.url) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) })
++            runCatching { app.sources.comicPages(pid, c.url, reload > 0) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) })
+         }
+         val p = (pages as? Load.Ok)?.value
+         if (p != null && restoreScroll > 0) { listState.scrollToItem(restoreScroll.coerceAtMost(p.size)); restoreScroll = 0 }
+@@ -166,21 +171,50 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+         val list = (pages as? Load.Ok)?.value ?: return@LaunchedEffect
+         val c = chapter ?: return@LaunchedEffect
+         texts.clear()
++        pageStatus.clear()
+         if (!translateOn) { ocrProgress = null; return@LaunchedEffect }
+         val start = (listState.firstVisibleItemIndex - 1).coerceIn(0, (list.size - 1).coerceAtLeast(0))
+         val order = (start until list.size) + (0 until start)
++        val loc = app.sources.get(pid)?.locale.orEmpty().lowercase()
++        var lang: String? = when {
++            loc.startsWith("en") -> "en"
++            loc.startsWith("ko") -> "ko"
++            loc.startsWith("zh") -> "zh"
++            else -> null
++        }
++        var context = emptyList<String>()
+         var done = 0
++        var errors = 0
+         for (i in order) {
+-            ocrProgress = "Đang dịch ảnh ${done + 1}/${list.size}"
++            ocrProgress = "Đang dịch ảnh ${done + 1}/${list.size}" + if (errors > 0) " · $errors ảnh lỗi" else ""
+             val page = list[i]
++            pageStatus[i] = PageStatus("Đang chờ…", busy = true)
+             val result = withContext(Dispatchers.IO) {
+                 runCatching {
+-                    val res = app.ocr.ocr(page.link, app.http, referer = refererFor(page, c.url)) ?: return@runCatching null
+-                    val out = if (res.blocks.isEmpty()) emptyList() else tr.translateBubbles(res.blocks, mode, bookKey)
+-                    PageText(res, out)
+-                }.getOrNull()
++                    val res = app.ocr.ocrStaged(page.link, app.http, refererFor(page, c.url), lang) { st ->
++                        pageStatus[i] = PageStatus("$st…", busy = true)
++                    }
++                    if (res.blocks.isEmpty()) return@runCatching Triple(PageText(res, emptyList()), "Không thấy chữ trong ảnh", emptyList<String>())
++                    if (lang == null) {
++                        lang = res.blocks.mapNotNull { ImageOcr.detectLang(it.text) }.groupingBy { it }.eachCount().maxByOrNull { it.value }?.key
++                    }
++                    pageStatus[i] = PageStatus("Dịch ${res.blocks.size} ô chữ…", busy = true)
++                    val (out, engine) = try {
++                        tr.comicBubbles(res.blocks, mode, bookKey, context)
++                    } catch (e: ImageOcr.StageException) { throw e } catch (e: Exception) {
++                        throw ImageOcr.StageException("Dịch", e.message ?: e.javaClass.simpleName)
++                    }
++                    Triple(PageText(res, out), "${res.blocks.size} ô chữ · dịch bằng $engine", res.blocks.map { it.text })
++                }
+             }
+-            if (result != null) texts[i] = result
++            result.fold({ (pt, label, src) ->
++                texts[i] = pt
++                pageStatus[i] = PageStatus(label)
++                if (src.isNotEmpty()) context = src.takeLast(8)
++            }, { e ->
++                errors++
++                pageStatus[i] = PageStatus("Lỗi ở bước " + (e.message ?: e.javaClass.simpleName), error = true)
++            })
+             done++
+         }
+         ocrProgress = null
+@@ -227,6 +261,13 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                     item { Spacer(Modifier.statusBarsPadding()) }
+                     itemsIndexed(list, key = { i, p -> "$i ${p.link}" }) { i, page ->
+                         ComicPageView(page, chapter?.url ?: bookUrl, loader, if (translateOn) texts[i] else null)
++                        if (translateOn) pageStatus[i]?.let { st ->
++                            Text(
++                                "Ảnh ${i + 1}: " + st.text, fontSize = 11.sp, maxLines = 3,
++                                color = if (st.error) Color(0xFFFF8A80) else Color.White.copy(alpha = 0.85f),
++                                modifier = Modifier.fillMaxWidth().background(Color.Black.copy(alpha = 0.75f)).padding(horizontal = 8.dp, vertical = 3.dp),
++                            )
++                        }
+                     }
+                     item {
+                         Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+@@ -257,7 +298,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                 Row(Modifier.fillMaxWidth().statusBarsPadding().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                     IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Quay lại") }
+                     Column(Modifier.weight(1f)) {
+-                        Text(tr.title(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
++                        Text(tr.bookTitle(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                         val pageCount = (pages as? Load.Ok)?.value?.size ?: 0
+                         Text("${index + 1}/${chapters.size} · " + tr.title(chapter?.name ?: "", bookKey) + if (pageCount > 0) " · $pageCount ảnh" else "", maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                     }
+@@ -311,13 +352,13 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
+                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                     comicModes.forEachIndexed { i, m ->
+                         SegmentedButton(selected = mode == m, onClick = { setTranslate(true, m) }, shape = SegmentedButtonDefaults.itemShape(i, comicModes.size), icon = {}) {
+-                            Text(m.label, maxLines = 1, softWrap = false)
++                            Text(if (m == TransMode.CONVERT) "Tự động" else m.label, maxLines = 1, softWrap = false)
+                         }
+                     }
+                 }
+                 Spacer(Modifier.height(8.dp))
+                 Text(
+-                    "Convert dùng từ điển cho chữ Trung (chữ Hàn, Anh dịch bằng Google). AI dùng dịch vụ chọn ở Cài đặt > Dịch bằng AI.",
++                    "Tự động: chữ Trung dịch bằng từ điển, chữ Anh và Hàn dịch bằng AI (nếu đã nhập key ở Cài đặt > Dịch bằng AI), lỗi thì dùng Google. Chọn Google để luôn dùng Google, chọn AI để dịch cả chữ Trung bằng AI. Dưới mỗi ảnh có dòng báo đang ở bước nào và lỗi ở đâu.",
+                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                 )
+             }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt b/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
+index b2d4435..b9c42aa 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/DetailScreen.kt
+@@ -71,6 +71,7 @@ import androidx.navigation.NavHostController
+ import coil.compose.AsyncImage
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
++import kotlinx.coroutines.launch
+ import vn.thucac.engine.BookDetail
+ import vn.thucac.engine.ChapterRef
+ import vn.thucac.engine.HtmlText
+@@ -105,6 +106,11 @@ fun DetailScreen(nav: NavHostController, pid: String, url: String) {
+     LaunchedEffect(reloadToc) {
+         toc = Load.Loading
+         toc = withContext(Dispatchers.IO) { runCatching { app.sources.loadToc(pid, url, reloadToc > 0) }.fold({ Load.Ok(it) }, { Load.Err(errorText(it)) }) }
++        // Fetch the chapter the user is about to read, so opening it is instant.
++        (toc as? Load.Ok)?.value?.let { list ->
++            val c = list.getOrNull(app.library.get(pid, url)?.chapterIndex ?: 0) ?: list.firstOrNull() ?: return@let
++            launch(Dispatchers.IO) { runCatching { app.sources.prefetchChapter(pid, c.url) } }
++        }
+     }
+     LaunchedEffect(toc, dl?.done) {
+         val t = (toc as? Load.Ok)?.value ?: return@LaunchedEffect
+@@ -178,7 +184,7 @@ fun DetailScreen(nav: NavHostController, pid: String, url: String) {
+                         Column(Modifier.weight(1f)) {
+                             val name = d?.name ?: entry?.name ?: ""
+                             SelectionContainer {
+-                                Text(tr.text(name, bookKey = bookKey), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold, maxLines = 4, overflow = TextOverflow.Ellipsis)
++                                Text(tr.bookTitle(name, bookKey), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold, maxLines = 4, overflow = TextOverflow.Ellipsis)
+                             }
+                             Spacer(Modifier.height(8.dp))
+                             val author = d?.author ?: entry?.author ?: ""
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
+index f59d0cb..47a009d 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ExploreScreen.kt
+@@ -268,7 +268,7 @@ fun BookListPane(nav: NavHostController, pid: String, script: String, input: Str
+             horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(14.dp),
+         ) {
+             gridItems(items, key = { it.url }) { b ->
+-                BookCard(tr.text(b.name), tr.text(authorOf(b.description)), b.cover) { nav.navigate(Routes.detail(pid, b.url)) }
++                BookCard(tr.bookTitle(b.name), tr.text(authorOf(b.description)), b.cover) { nav.navigate(Routes.detail(pid, b.url)) }
+             }
+             item(span = { GridItemSpan(maxLineSpan) }) {
+                 Box(Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
 diff --git a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
-index a19fe3c..3e393e0 100644
+index a19fe3c..fab38ce 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
 +++ b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
+@@ -100,7 +100,7 @@ internal fun HomeHeader(nav: NavHostController) {
+                 items(recent, key = { it.key }) { b ->
+                     Column(Modifier.width(104.dp).clickable { nav.navigate(Routes.reader(b.pluginId, b.url)) }) {
+                         Cover(b.cover, Modifier.width(104.dp).height(146.dp).clip(RoundedCornerShape(12.dp)))
+-                        Text(tr.text(b.name, bookKey = b.key), maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
++                        Text(tr.bookTitle(b.name, b.key), maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 4.dp))
+                     }
+                 }
+             }
+@@ -122,7 +122,7 @@ private fun ContinueCard(b: BookEntry, onClick: () -> Unit) {
+                     Icon(Icons.AutoMirrored.Filled.MenuBook, null, Modifier.size(16.dp), tint = cs.primary)
+                     Text("  Đang đọc", style = MaterialTheme.typography.labelLarge, color = cs.primary)
+                 }
+-                Text(tr.text(b.name, bookKey = b.key), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
++                Text(tr.bookTitle(b.name, b.key), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                 if (b.author.isNotEmpty()) Text(tr.text(b.author), style = MaterialTheme.typography.bodyMedium, color = cs.onSurfaceVariant, maxLines = 1)
+                 if (b.chapterName.isNotEmpty()) Text(tr.text(b.chapterName, bookKey = b.key), style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                 Spacer(Modifier.weight(1f))
 @@ -159,7 +159,7 @@ private fun StatsCard() {
                      Text("$today", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.SemiBold)
                      Text(" phút", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp))
@@ -653,7 +1088,7 @@ index a19fe3c..3e393e0 100644
              VerticalDivider(Modifier.padding(horizontal = 12.dp))
              Column(Modifier.weight(1f)) {
 diff --git a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
-index 30bdc6e..c0ccc09 100644
+index 30bdc6e..fe5fe01 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
 +++ b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
 @@ -94,6 +94,15 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
@@ -672,6 +1107,42 @@ index 30bdc6e..c0ccc09 100644
                      }
                  }
              }
+@@ -128,7 +137,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+                         val plugin = app.sources.get(b.pluginId)
+                         val progress = if (b.chapterCount > 0) "Đang đọc ${b.chapterIndex + 1}/${b.chapterCount}" else if (b.lastRead > 0) "Đang đọc chương ${b.chapterIndex + 1}" else "Chưa đọc"
+                         BookRow(
+-                            name = tr.text(b.name, bookKey = b.key),
++                            name = tr.bookTitle(b.name, b.key),
+                             sub = listOfNotNull(tr.text(b.author).ifEmpty { null }, plugin?.name ?: "Plugin đã gỡ").joinToString(" · "),
+                             cover = b.cover,
+                             extra = (if (b.newChapters > 0) "+${b.newChapters} chương mới · " else "") +
+@@ -173,7 +182,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+     menuBook?.let { b ->
+         AlertDialog(
+             onDismissRequest = { menuBook = null },
+-            title = { Text(tr.text(b.name, bookKey = b.key), maxLines = 2, overflow = TextOverflow.Ellipsis) },
++            title = { Text(tr.bookTitle(b.name, b.key), maxLines = 2, overflow = TextOverflow.Ellipsis) },
+             text = {
+                 Column {
+                     MenuLine("Chi tiết") { menuBook = null; nav.navigate(Routes.detail(b.pluginId, b.url)) }
+@@ -193,7 +202,7 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+     confirm?.let { b ->
+         AlertDialog(
+             onDismissRequest = { confirm = null },
+-            title = { Text(tr.text(b.name, bookKey = b.key)) },
++            title = { Text(tr.bookTitle(b.name, b.key)) },
+             text = { Text(if (tab == 0) "Bỏ truyện này khỏi kệ?" else "Xoá khỏi lịch sử?") },
+             confirmButton = {
+                 TextButton(onClick = {
+@@ -234,7 +243,7 @@ private fun HistoryRow(b: BookEntry, source: String, onLongClick: () -> Unit, on
+         Cover(b.cover, Modifier.width(56.dp).height(76.dp))
+         Spacer(Modifier.width(12.dp))
+         Column(Modifier.weight(1f)) {
+-            Text(tr.text(b.name, bookKey = b.key), style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            Text(tr.bookTitle(b.name, b.key), style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+             val chap = if (b.chapterName.isNotEmpty()) tr.text(b.chapterName, bookKey = b.key) else "Chương ${b.chapterIndex + 1}"
+             Text(chap, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
+             Spacer(Modifier.height(4.dp))
 diff --git a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt b/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
 index a09c250..0ad2f8a 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
@@ -728,7 +1199,7 @@ index b3bcdc0..c29c4ab 100644
                      }
                      HorizontalDivider()
 diff --git a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
-index ca0f66e..539c93c 100644
+index ca0f66e..0796f7a 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
 +++ b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
 @@ -97,6 +97,10 @@ import androidx.compose.runtime.remember
@@ -846,6 +1317,15 @@ index ca0f66e..539c93c 100644
                          IconButton(onClick = { go(index + 1) }, enabled = index < chapters.size - 1) { Icon(Icons.Default.ChevronRight, "Chương sau") }
                      }
                  }
+@@ -343,7 +377,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+     if (ttsHere && showPlayer) {
+         val e = app.library.get(pid, bookUrl) ?: initial
+         TtsPlayerScreen(
+-            title = tr.title(e?.name ?: "", bookKey),
++            title = tr.bookTitle(e?.name ?: "", bookKey),
+             author = tr.title(e?.author ?: "", bookKey),
+             cover = e?.cover ?: "",
+             chapterTitle = tr.text(chapter?.name ?: "", mode, bookKey),
 @@ -422,12 +456,60 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
                      Text("Chữ có chân (Serif)", Modifier.weight(1f))
                      Switch(s.readerFont == "serif", { s.setReaderFont(if (it) "serif" else "sans") })
@@ -909,7 +1389,7 @@ index ca0f66e..539c93c 100644
      }
  }
 diff --git a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
-index ccfd93b..7f036c3 100644
+index ccfd93b..b12c785 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
 +++ b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
 @@ -66,7 +66,9 @@ fun SearchScreen(nav: NavHostController, pid: String) {
@@ -934,6 +1414,27 @@ index ccfd93b..7f036c3 100644
              if (running) LinearProgressIndicator(Modifier.fillMaxWidth())
              if (info.isNotEmpty()) Text(info, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp))
              Box(Modifier.fillMaxSize()) {
+@@ -111,7 +117,7 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+                             )
+                         }
+                         items(g.books, key = { g.pid + "|" + it.url }) { b ->
+-                            BookRow(tr.text(b.name), tr.text(b.description), b.cover) { nav.navigate(Routes.detail(g.pid, b.url)) }
++                            BookRow(tr.bookTitle(b.name), tr.text(b.description), b.cover) { nav.navigate(Routes.detail(g.pid, b.url)) }
+                         }
+                     }
+                 }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+index 170ebc4..20444c5 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+@@ -278,6 +278,7 @@ private fun TranslateSettings() {
+     ChoiceRow("Cụm từ dài nhất", lens.map { it.toString() }, lens.indexOf(s.maxPhrase).coerceAtLeast(0)) { s.setMaxPhrase(lens[it]) }
+     ChoiceRow("Chia đoạn", listOf("Giữ nguyên", "Theo câu"), if (s.splitSentences) 1 else 0, "Theo câu: mỗi câu thành một đoạn, dễ đọc và nghe hơn") { s.setSplitSentences(it == 1) }
+     SwitchRow("Tự động chuyển sang giản thể", "Đổi chữ phồn thể sang giản thể trước khi convert, để từ điển khớp được", s.autoSimplified) { s.setAutoSimplified(it); tr.clearBookNameCache() }
++    SwitchRow("Dịch tên truyện tiếng Anh, tiếng Hàn", "Dùng AI nếu đã nhập key, không thì Google. Tên tiếng Trung luôn dùng từ điển", App.instance.prefs.translateForeignTitles) { App.instance.prefs.translateForeignTitles = it }
+     SwitchRow("In nghiêng câu thoại", "Chữ trong ngoặc kép hiện in nghiêng trong trình đọc", s.italicDialogue) { s.setItalicDialogue(it) }
+ }
+ 
 diff --git a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt b/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
 index 47287df..5657ebd 100644
 --- a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
