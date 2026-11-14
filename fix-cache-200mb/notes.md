@@ -4,3 +4,9 @@ Nền: thucac-0.6.27. Chép đè 2 file:
 - ComicReaderScreen.kt -> app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt (bản 0.6.27 + loader truyện tranh dùng chung cache ảnh)
 Cả hai cache tự xoá phần dùng lâu nhất (LRU) khi vượt. Không đụng chương/bản dịch/audio.
 Nhớ tăng versionCode/versionName khi build.
+
+## Trình bày kiểu sách (gom chung bản này)
+Nền 0.6.26 (0.6.27 không đổi 2 file này). Chép đè:
+- ReaderScreen.kt -> app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
+- Extras.kt -> app/src/main/java/vn/thucac/reader/data/Extras.kt (pref bookLayout, mặc định bật)
+Thụt đầu dòng 2em, căn đều, cách đoạn theo cỡ chữ, tiêu đề chương to, tên chương nhỏ trên cùng, chân trang chương x/y · trang x/y (ước lượng theo màn hình) · % cả truyện. Bật/tắt trong Giao diện.
