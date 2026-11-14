@@ -1,0 +1,27 @@
+name: Publish Thư Các TTS engine
+on:
+  push:
+    branches: ['claude/**']
+    paths: ['tts-engine/**']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create or update the engine release (never marked latest, so app updates ignore it)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          ZIP=$(ls tts-engine/tts-engine-arm64-*.zip | head -1)
+          VER=$(basename "$ZIP" .zip); VER=${VER#tts-engine-arm64-}
+          TAG="tts-engine-$VER"
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ZIP" --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$ZIP" --repo "$GITHUB_REPOSITORY" --target main --latest=false \
+              --title "Thư Các TTS engine $VER" \
+              --notes "Bộ máy đọc AI offline cho Thư Các (sherpa-onnx $VER, arm64). App tự tải gói này khi chọn giọng AI lần đầu. Apache-2.0 / MIT, kèm espeak-ng (GPL-3.0)."
+          fi
