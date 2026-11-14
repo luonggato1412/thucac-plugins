@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (256 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (257 plugin)"
  },
  "data": [
   {
@@ -2853,6 +2853,19 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/th03.zip"
+  },
+  {
+   "name": "HentaiZ",
+   "author": "luonggato",
+   "version": 1,
+   "source": "https://hentaiz2.com",
+   "regexp": "(www\\.)?hentaiz2?\\.com/(watch|browse)/.*",
+   "description": "Kho phim anime hentai 18+ Vietsub Full HD siêu mượt trên hentaiz2.com",
+   "type": "video",
+   "locale": "vi_VN",
+   "tag": "nsfw",
+   "path": "plugins/hentaiz-thu-cac.zip",
+   "icon": "icons/hentaiz-thu-cac.png"
   }
  ]
 }
