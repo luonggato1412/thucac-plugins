@@ -1,0 +1,116 @@
+diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+index 2d52e3b..8b1f718 100644
+--- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
++++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+@@ -407,7 +407,7 @@ class TranslateService(private val app: App) {
+     private fun drainTitles() {
+         while (true) {
+             Thread.sleep(500)
+-            val batch = synchronized(titlePending) { titlePending.take(40).also { titlePending.removeAll(it.toSet()) } }
++            val batch = synchronized(titlePending) { titlePending.take(20).also { titlePending.removeAll(it.toSet()) } }
+             if (batch.isEmpty()) return
+             for ((lang, group) in batch.groupBy { t -> if (t.any { ImageOcr.isHangul(it) }) "ko" else "en" }) {
+                 val res: Map<Int, String> = runCatching {
+@@ -426,6 +426,11 @@ class TranslateService(private val app: App) {
+         }
+     }
+ 
++    fun aiModels(providerId: String): List<String> {
++        val p = AiProvider.byId(providerId)
++        return ai.listModels(p, app.settings.aiKey(p.id), app.settings.aiBaseUrl(p.id).ifBlank { p.baseUrl })
++    }
++
+     private fun googleTitles(group: List<String>, lang: String): Map<Int, String> {
+         val out = google.translate(group, from = lang, to = "vi")
+         return out.withIndex().filter { (i, v) -> v.isNotBlank() && v != group.getOrNull(i) }.associate { it.index to it.value }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+index 20444c5..b15f680 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/SettingsScreen.kt
+@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.layout.heightIn
+ import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material3.Button
+ import kotlinx.coroutines.launch
+@@ -488,7 +489,7 @@ private fun GeminiSettings() {
+     Spacer(Modifier.height(8.dp))
+     androidx.compose.material3.OutlinedTextField(
+         model, { model = it; s.setAiModel(p.id, it) }, Modifier.fillMaxWidth(), label = { Text("Model") }, singleLine = true,
+-        trailingIcon = { if (p.models.isNotEmpty()) TextButton(onClick = { pickModel = true }) { Text("Chọn") } },
++        trailingIcon = { TextButton(onClick = { pickModel = true }) { Text("Chọn") } },
+         supportingText = { Text((if (p.defaultModel.isNotEmpty()) "Mặc định ${p.defaultModel}" else "Nhập tên model") + ". Có thể gõ tên model khác.") },
+     )
+     Spacer(Modifier.height(4.dp))
+@@ -501,8 +502,18 @@ private fun GeminiSettings() {
+     if (pickModel) AlertDialog(
+         onDismissRequest = { pickModel = false }, title = { Text("Chọn model") },
+         text = {
+-            Column {
+-                p.models.forEach { m ->
++            var online by remember(pid) { mutableStateOf<List<String>?>(null) }
++            var err by remember(pid) { mutableStateOf("") }
++            LaunchedEffect(pid) {
++                if (s.aiKey(pid).isBlank()) { err = "Nhập API key để lấy danh sách model mới nhất"; return@LaunchedEffect }
++                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
++                    runCatching { App.instance.translator.aiModels(pid) }
++                }.fold({ online = it }, { err = it.message ?: "Lỗi" })
++            }
++            Column(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState())) {
++                if (online == null && err.isEmpty()) Text("Đang lấy danh sách model…", style = MaterialTheme.typography.bodySmall)
++                if (err.isNotEmpty()) Text(err, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
++                ((online ?: emptyList()) + p.models).distinct().forEach { m ->
+                     Row(Modifier.fillMaxWidth().clickable { model = m; s.setAiModel(p.id, m); pickModel = false }.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                         RadioButton(selected = m == model, onClick = { model = m; s.setAiModel(p.id, m); pickModel = false })
+                         Text(m)
+diff --git a/engine/src/main/kotlin/vn/thucac/engine/Translate.kt b/engine/src/main/kotlin/vn/thucac/engine/Translate.kt
+index 4bb3d95..ed1b650 100644
+--- a/engine/src/main/kotlin/vn/thucac/engine/Translate.kt
++++ b/engine/src/main/kotlin/vn/thucac/engine/Translate.kt
+@@ -559,7 +559,7 @@ data class AiProvider(
+ ) {
+     companion object {
+         val ALL = listOf(
+-            AiProvider("gemini", "Google Gemini", AiApi.GEMINI, "https://generativelanguage.googleapis.com/v1beta", "gemini-3.5-flash-lite", "aistudio.google.com/apikey", listOf("gemini-3.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro")),
++            AiProvider("gemini", "Google Gemini", AiApi.GEMINI, "https://generativelanguage.googleapis.com/v1beta", "gemini-3.5-flash-lite", "aistudio.google.com/apikey", listOf("gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro")),
+             AiProvider("openai", "ChatGPT (OpenAI)", AiApi.OPENAI, "https://api.openai.com/v1", "gpt-4.1-mini", "platform.openai.com/api-keys", listOf("gpt-4.1-mini", "gpt-4.1", "gpt-4o-mini")),
+             AiProvider("claude", "Claude (Anthropic)", AiApi.CLAUDE, "https://api.anthropic.com/v1", "claude-haiku-5-5", "console.anthropic.com/settings/keys", listOf("claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5")),
+             AiProvider("deepseek", "DeepSeek", AiApi.OPENAI, "https://api.deepseek.com/v1", "deepseek-chat", "platform.deepseek.com/api_keys", listOf("deepseek-chat")),
+@@ -654,6 +654,35 @@ class AiTranslator(
+         return jsonAnswer(ask(prompt, key, model, provider, baseUrl.trim().trimEnd('/'), jsonMode = true, retry429 = true), texts.size, provider)
+     }
+ 
++    /** Models the key can use, newest first: Gemini models.list, or GET /models for OpenAI-style APIs. */
++    fun listModels(provider: AiProvider, key: String, baseUrl: String = provider.baseUrl): List<String> {
++        val base = baseUrl.trim().trimEnd('/')
++        val k = key.trim()
++        require(k.isNotEmpty()) { "Chưa nhập API key" }
++        val req = when (provider.api) {
++            AiApi.GEMINI -> HttpRequest("$base/models?pageSize=1000", "GET", mapOf("x-goog-api-key" to k), null)
++            AiApi.OPENAI -> HttpRequest("$base/models", "GET", mapOf("Authorization" to "Bearer $k"), null)
++            AiApi.CLAUDE -> HttpRequest("$base/models", "GET", mapOf("x-api-key" to k, "anthropic-version" to "2023-06-01"), null)
++        }
++        val r = fetcher.fetch(req)
++        if (!r.ok) throw ScriptException("Không lấy được danh sách model (HTTP ${r.status})")
++        val o = JSONObject(String(r.body, Charsets.UTF_8))
++        val out = ArrayList<String>()
++        o.optJSONArray("models")?.let { arr ->
++            for (i in 0 until arr.length()) {
++                val m = arr.optJSONObject(i) ?: continue
++                val methods = m.optJSONArray("supportedGenerationMethods")?.toString().orEmpty()
++                if (methods.isNotEmpty() && !methods.contains("generateContent")) continue
++                val name = m.optString("name").removePrefix("models/")
++                if (name.startsWith("gemini")) out.add(name)
++            }
++        }
++        o.optJSONArray("data")?.let { arr -> for (i in 0 until arr.length()) arr.optJSONObject(i)?.optString("id")?.takeIf { it.isNotEmpty() }?.let { out.add(it) } }
++        // Newest version first, then flash-lite / flash before pro, so the first entry is a sensible default.
++        fun ver(n: String) = Regex("(\\d+(?:\\.\\d+)?)").find(n)?.value?.toDoubleOrNull() ?: 0.0
++        return out.distinct().sortedWith(compareByDescending<String> { ver(it) }.thenBy { if (it.contains("flash")) 0 else 1 }.thenBy { it })
++    }
++
+     fun titles(
+         names: List<String>,
+         key: String,
