@@ -1,13 +1,7 @@
-<!-- versionCode: 66 -->
-## Thư Các 0.6.25
+<!-- versionCode: 67 -->
+## Thư Các 0.6.25b
 
-- Tải xuống & dịch sẵn.
-- Dấu trang và ghi chú.
-- Thử plugin.
-- Trình duyệt trong app (lùi trang, Đọc trong app).
-- Tìm kiếm tự dịch từ khoá sang tiếng Trung.
-- Trình đọc: tự sang chương sau, Tắt xuống dòng, Hiện mọi nghĩa VietPhrase.
-- Theo dõi tất cả, thống kê tháng.
-- Sửa dịch ảnh truyện tranh bị treo, dòng trạng thái và lỗi dưới mỗi ảnh, Anh/Hàn dịch bằng AI, Trung bằng từ điển.
-- Dịch tên truyện Anh/Hàn.
-- Mở truyện tải trước 1 chương.
+- Sửa khung chữ dịch ảnh: gom dòng đúng bong bóng, chỉ phủ chữ gốc, chữ tự co, bỏ "[1]", bỏ qua tiếng động tiếng Hàn.
+- Cài đặt AI: nút Chọn lấy danh sách model từ Google.
+- Tự chọn model Gemini flash mới nhất; model lỗi 404 tự đổi.
+- Dịch theo lô bằng AI: câu nào AI trả lỗi thì riêng câu đó dịch bằng Google.
