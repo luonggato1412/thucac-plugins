@@ -90,6 +90,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -255,6 +256,23 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
         scope.launch { listState.scrollToItem(0) }
     }
 
+    // Cuộn hết chương mà kéo tiếp thì sang chương sau; ở đầu chương kéo ngược thì về cuối chương trước.
+    val pullPx = with(androidx.compose.ui.platform.LocalDensity.current) { 120.dp.toPx() }
+    val pullToTurn = remember(index, chapters.size, ttsHere) {
+        object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
+            var pull = 0f
+            override fun onPostScroll(consumed: androidx.compose.ui.geometry.Offset, available: androidx.compose.ui.geometry.Offset, source: androidx.compose.ui.input.nestedscroll.NestedScrollSource): androidx.compose.ui.geometry.Offset {
+                if (source != androidx.compose.ui.input.nestedscroll.NestedScrollSource.UserInput || available.y == 0f || shown.isEmpty() || ttsHere) { pull = 0f; return androidx.compose.ui.geometry.Offset.Zero }
+                if (pull != 0f && kotlin.math.sign(pull) != kotlin.math.sign(available.y)) pull = 0f
+                pull += available.y
+                if (pull < -pullPx && index + 1 < chapters.size) { pull = 0f; go(index + 1) }
+                else if (pull > pullPx && index > 0) { pull = 0f; go(index - 1); restoreScroll = Int.MAX_VALUE }
+                return androidx.compose.ui.geometry.Offset.Zero
+            }
+            override suspend fun onPreFling(available: androidx.compose.ui.unit.Velocity): androidx.compose.ui.unit.Velocity { pull = 0f; return androidx.compose.ui.unit.Velocity.Zero }
+        }
+    }
+
     fun startTts(fromStart: Boolean = false) {
         val c = chapter ?: return
         if (shown.isEmpty()) return
@@ -319,6 +337,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
             raw is Load.Loading || shown.isEmpty() -> Loading()
             else -> LazyColumn(
                 Modifier.fillMaxSize().clickable(interactionSource = noRipple, indication = null) { menu = !menu }
+                    .nestedScroll(pullToTurn)
                     .then(if (book) Modifier.statusBarsPadding().navigationBarsPadding().padding(top = 22.dp, bottom = 22.dp) else Modifier),
                 state = listState,
             ) {

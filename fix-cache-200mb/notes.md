@@ -10,3 +10,6 @@ Nền 0.6.26 (0.6.27 không đổi 2 file này). Chép đè:
 - ReaderScreen.kt -> app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
 - Extras.kt -> app/src/main/java/vn/thucac/reader/data/Extras.kt (pref bookLayout, mặc định bật)
 Thụt đầu dòng 2em, căn đều, cách đoạn theo cỡ chữ, tiêu đề chương to, tên chương nhỏ trên cùng, chân trang chương x/y · trang x/y (ước lượng theo màn hình) · % cả truyện. Bật/tắt trong Giao diện.
+
+## Kéo qua chương (cùng ReaderScreen.kt)
+Ở cuối chương kéo tiếp ~120dp thì sang chương sau; ở đầu chương kéo ngược thì về cuối chương trước. Không chạy khi đang nghe TTS.
