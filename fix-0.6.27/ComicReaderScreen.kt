@@ -148,6 +148,9 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
     // "auto": every page is read by itself. "manual": the reader circles the parts to translate.
     var ocrMode by remember { mutableStateOf(prefs.getString("ocrmode_$bookKey", null) ?: "auto") }
     var selecting by remember { mutableStateOf(false) }
+    // Preloading nearby chapters can trip a site's rate limit (Kuaikan: HTTP 429). It can be turned off,
+    // runs slowly, and pauses for a while after the site says "too many requests".
+    var prefetch by remember { mutableStateOf(prefs.getBoolean("prefetch", true)) }
     // Regions translated by hand (key: chapter url|page index), kept while the reader is open.
     val manualCache = remember { java.util.concurrent.ConcurrentHashMap<String, PageText>() }
     val texts = remember { mutableStateMapOf<Int, PageText>() }
@@ -188,17 +191,26 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
         val window = (index - KEEP..index + KEEP).mapNotNull { chapters.getOrNull(it)?.url }.toSet()
         pageCache.keys.retainAll(window)
         transCache.keys.removeAll { k -> k.substringBeforeLast('|').substringBeforeLast('|') !in window }
-        launch(Dispatchers.IO) {
+        if (prefetch) launch(Dispatchers.IO) {
+            kotlinx.coroutines.delay(2000)
             val near = (1..KEEP).flatMap { listOf(index + it, index - it) }
             for (k in near) {
+                if (!prefetchAllowed()) break
                 val n = chapters.getOrNull(k) ?: continue
-                val np = pageCache[n.url] ?: runCatching { app.sources.comicPages(pid, n.url) }.getOrNull()?.also { pageCache[n.url] = it } ?: continue
+                val np = pageCache[n.url] ?: run {
+                    kotlinx.coroutines.delay(1500)
+                    runCatching { app.sources.comicPages(pid, n.url) }.onFailure { noteLimit(it) }.getOrNull()?.also { pageCache[n.url] = it }
+                } ?: continue
                 for (pg in np) {
+                    if (!prefetchAllowed()) break
                     val req = ImageRequest.Builder(ctx).data(pg.link).apply {
                         refererFor(pg, n.url)?.let { addHeader("Referer", it) }
                         addHeader("User-Agent", app.userAgent)
                     }.build()
-                    loader.enqueue(req)
+                    // One image at a time, with a short pause, instead of queuing whole chapters at once.
+                    val r = loader.execute(req)
+                    if (r is coil.request.ErrorResult) noteLimit(r.throwable)
+                    kotlinx.coroutines.delay(250)
                 }
             }
         }
@@ -284,13 +296,16 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
         if (failed > 0) { kotlinx.coroutines.delay(5000); ocrProgress = null }
         // Translate the next KEEP chapters ahead, so they open already translated.
         val hint = langHint
-        withContext(Dispatchers.IO) {
+        if (prefetch) withContext(Dispatchers.IO) {
             for (k in 1..KEEP) {
+                if (!prefetchAllowed()) break
                 val next = chapters.getOrNull(index + k) ?: break
-                val np = pageCache[next.url] ?: runCatching { app.sources.comicPages(pid, next.url) }.getOrNull()?.also { pageCache[next.url] = it } ?: continue
+                val np = pageCache[next.url] ?: runCatching { app.sources.comicPages(pid, next.url) }.onFailure { noteLimit(it) }.getOrNull()?.also { pageCache[next.url] = it } ?: continue
                 val nc = transCache.getOrPut("${next.url}|$eng|$ver") { java.util.concurrent.ConcurrentHashMap() }
                 for ((j, pg) in np.withIndex()) {
                     if (nc.containsKey(j)) continue
+                    if (!prefetchAllowed()) break
+                    kotlinx.coroutines.delay(400)
                     val label = "Ảnh ${j + 1}"
                     runCatching {
                         val res = app.ocr.ocrSteps(pg.link, app.http, emptyMap(), refererFor(pg, next.url), hint) {}
@@ -301,7 +316,7 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                                 (if (tx.warnings.isNotEmpty()) " · ⚠ " + tx.warnings.joinToString("; ") else "")
                             PageText(res, tx.texts) to PageStatus(info, error = tx.warnings.isNotEmpty())
                         }
-                    }
+                    }.onFailure { noteLimit(it) }
                 }
             }
         }
@@ -530,8 +545,35 @@ fun ComicReaderScreen(nav: NavHostController, pid: String, bookUrl: String, star
                         "Mỗi ảnh có một dòng nhỏ cho biết đang ở bước nào và dịch bằng gì; dòng đỏ là lỗi, chạm để sao chép gửi báo lỗi.",
                     style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                Spacer(Modifier.height(16.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text("Tải trước chương lân cận")
+                        Text(
+                            "Tải sẵn ảnh và dịch trước 3 chương quanh chương đang đọc. Tắt nếu trang nguồn báo \"Too many requests\". " +
+                                "Khi trang báo quá tải, app tự dừng tải trước 5 phút.",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    Switch(prefetch, { prefetch = it; prefs.edit().putBoolean("prefetch", it).apply() })
+                }
             }
         }
+    }
+}
+
+/** Until when preloading stays paused after a site answered "too many requests" (shared by all readers). */
+@Volatile private var limitedUntil = 0L
+
+private fun prefetchAllowed(): Boolean = System.currentTimeMillis() >= limitedUntil
+
+/** Pause preloading for 5 minutes when an error looks like a rate limit (HTTP 429 / "Too many requests"). */
+private fun noteLimit(e: Throwable?) {
+    var t = e
+    while (t != null) {
+        val m = (t.message ?: "") + " " + t.javaClass.simpleName
+        if ("429" in m || m.contains("too many", ignoreCase = true)) { limitedUntil = System.currentTimeMillis() + 5 * 60_000L; return }
+        t = t.cause
     }
 }
 
