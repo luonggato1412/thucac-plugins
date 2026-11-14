@@ -1,9 +1,21 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (255 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (256 plugin)"
  },
  "data": [
+  {
+   "name": "AnimeVietsub",
+   "author": "luonggato",
+   "version": 1,
+   "source": "https://animevietsub.best",
+   "regexp": "animevietsub\\.[a-z]+/phim/[^/]+-a\\d+/?.*",
+   "description": "Xem anime Vietsub trên AnimeVietsub (animevietsub.best). Server chính phát qua trình phát nhúng của trang, có server phụ dự phòng.",
+   "type": "video",
+   "locale": "vi_VN",
+   "path": "plugins/animevietsub-thu-cac.zip",
+   "icon": "icons/animevietsub-thu-cac.png"
+  },
   {
    "name": "Haitang htlvbooks",
    "author": "luonggato",
