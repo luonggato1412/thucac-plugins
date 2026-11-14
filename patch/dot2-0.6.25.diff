@@ -1,0 +1,994 @@
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+index c093628..6f7bceb 100644
+--- a/app/build.gradle.kts
++++ b/app/build.gradle.kts
+@@ -10,8 +10,8 @@ android {
+         applicationId = "vn.thucac.reader"
+         minSdk = 24
+         targetSdk = 35
+-        versionCode = 65
+-        versionName = "0.6.24"
++        versionCode = 66
++        versionName = "0.6.25"
+         ndk {
+             abiFilters += "arm64-v8a"
+         }
+diff --git a/app/src/main/java/vn/thucac/reader/App.kt b/app/src/main/java/vn/thucac/reader/App.kt
+index 4910e42..d607920 100644
+--- a/app/src/main/java/vn/thucac/reader/App.kt
++++ b/app/src/main/java/vn/thucac/reader/App.kt
+@@ -46,6 +46,9 @@ class App : Application() {
+     val ocr: ImageOcr by lazy { ImageOcr(this) }
+     val updater: UpdateChecker by lazy { UpdateChecker(this) }
+     val appUpdate: AppUpdate by lazy { AppUpdate(this) }
++    val prefs: vn.thucac.reader.data.ExtraPrefs by lazy { vn.thucac.reader.data.ExtraPrefs(this) }
++    val bookmarks: vn.thucac.reader.data.Bookmarks by lazy { vn.thucac.reader.data.Bookmarks(this) }
++    val batch: vn.thucac.reader.data.BatchTranslator by lazy { vn.thucac.reader.data.BatchTranslator(this) }
+ 
+     val userAgent: String by lazy {
+         runCatching { WebSettings.getDefaultUserAgent(this) }
+diff --git a/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt b/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
+index f89a545..44ef980 100644
+--- a/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
++++ b/app/src/main/java/vn/thucac/reader/data/ChapterCache.kt
+@@ -18,6 +18,12 @@ class ChapterCache(app: App) {
+ 
+     fun hasChapter(url: String): Boolean = key("raw", url).exists()
+ 
++    /** Deletes the raw text and every cached translation of one chapter. */
++    fun deleteChapter(url: String) {
++        val hex = MessageDigest.getInstance("MD5").digest(url.toByteArray()).joinToString("") { "%02x".format(it) }
++        dir.listFiles()?.filter { it.name.endsWith("_$hex.txt") }?.forEach { it.delete() }
++    }
++
+     fun get(url: String): List<String>? =
+         key("raw", url).takeIf { it.exists() }?.readLines()
+ 
+diff --git a/app/src/main/java/vn/thucac/reader/data/Extras.kt b/app/src/main/java/vn/thucac/reader/data/Extras.kt
+new file mode 100644
+index 0000000..9afb716
+--- /dev/null
++++ b/app/src/main/java/vn/thucac/reader/data/Extras.kt
+@@ -0,0 +1,160 @@
++package vn.thucac.reader.data
++
++import android.content.Context
++import androidx.compose.runtime.mutableStateListOf
++import androidx.compose.runtime.mutableStateMapOf
++import androidx.compose.runtime.mutableStateOf
++import org.json.JSONArray
++import org.json.JSONObject
++import vn.thucac.reader.App
++import java.io.File
++import kotlin.properties.ReadWriteProperty
++import kotlin.reflect.KProperty
++
++/** Small reader / shelf options added in batch 2. Kept apart from Settings to avoid JVM name clashes. */
++class ExtraPrefs(ctx: Context) {
++    private val sp = ctx.getSharedPreferences("thucac_settings", Context.MODE_PRIVATE)
++
++    private inner class Pref(private val key: String, def: Boolean) : ReadWriteProperty<Any?, Boolean> {
++        private val state = mutableStateOf(sp.getBoolean(key, def))
++        override fun getValue(thisRef: Any?, property: KProperty<*>): Boolean = state.value
++        override fun setValue(thisRef: Any?, property: KProperty<*>, value: Boolean) {
++            state.value = value
++            sp.edit().putBoolean(key, value).apply()
++        }
++    }
++
++    /** Move to the next chapter when the user scrolls past the end. */
++    var autoLoadNext by Pref("autoLoadNext", false)
++    /** "Tắt xuống dòng": join lines that the site broke in the middle of a sentence. */
++    var joinBrokenLines by Pref("joinBrokenLines", false)
++    /** Translate a Vietnamese search keyword to Chinese before searching. */
++    var searchToChinese by Pref("searchToChinese", false)
++}
++
++private val sentenceEnd = Regex("[.!?…。！？”」』\"'）)》:：~～*]$")
++
++/** Joins a line to the next one when it does not end a sentence. */
++fun joinBrokenLines(paras: List<String>): List<String> {
++    val out = ArrayList<String>()
++    val buf = StringBuilder()
++    for (p in paras) {
++        val t = p.trim()
++        if (t.isEmpty()) continue
++        if (buf.isNotEmpty()) {
++            val cjk = buf.last().code > 0x2e80 || t.first().code > 0x2e80
++            if (!cjk) buf.append(' ')
++        }
++        buf.append(t)
++        if (sentenceEnd.containsMatchIn(t)) { out.add(buf.toString()); buf.setLength(0) }
++    }
++    if (buf.isNotEmpty()) out.add(buf.toString())
++    return out
++}
++
++data class Bookmark(
++    val id: Long,
++    val pluginId: String,
++    val bookUrl: String,
++    val bookName: String,
++    val chapterIndex: Int,
++    val chapterName: String,
++    val para: Int,
++    val excerpt: String,
++    val note: String,
++    val time: Long,
++) {
++    val bookKey: String get() = "$pluginId|$bookUrl"
++    fun toJson(): JSONObject = JSONObject().apply {
++        put("id", id); put("pluginId", pluginId); put("bookUrl", bookUrl); put("bookName", bookName)
++        put("chapterIndex", chapterIndex); put("chapterName", chapterName); put("para", para)
++        put("excerpt", excerpt); put("note", note); put("time", time)
++    }
++
++    companion object {
++        fun fromJson(o: JSONObject) = Bookmark(
++            o.optLong("id"), o.optString("pluginId"), o.optString("bookUrl"), o.optString("bookName"),
++            o.optInt("chapterIndex"), o.optString("chapterName"), o.optInt("para"),
++            o.optString("excerpt"), o.optString("note"), o.optLong("time"),
++        )
++    }
++}
++
++/** Bookmarks and notes, stored in files/bookmarks.json. */
++class Bookmarks(app: App) {
++    private val file = File(app.filesDir, "bookmarks.json")
++    val all = mutableStateListOf<Bookmark>()
++
++    init {
++        runCatching {
++            if (file.exists()) {
++                val arr = JSONArray(file.readText())
++                for (i in 0 until arr.length()) all.add(Bookmark.fromJson(arr.getJSONObject(i)))
++            }
++        }
++    }
++
++    private fun save() {
++        val arr = JSONArray()
++        all.forEach { arr.put(it.toJson()) }
++        runCatching { file.writeText(arr.toString()) }
++    }
++
++    fun of(bookKey: String): List<Bookmark> =
++        all.filter { it.bookKey == bookKey }.sortedWith(compareBy({ it.chapterIndex }, { it.para }))
++
++    fun add(b: Bookmark) { all.add(0, b); save() }
++
++    fun updateNote(id: Long, note: String) {
++        val i = all.indexOfFirst { it.id == id }
++        if (i >= 0) { all[i] = all[i].copy(note = note); save() }
++    }
++
++    fun remove(id: Long) { all.removeAll { it.id == id }; save() }
++
++    fun exportJson(): JSONArray = JSONArray().apply { all.forEach { put(it.toJson()) } }
++
++    fun importJson(arr: JSONArray) {
++        val have = all.map { it.id }.toHashSet()
++        for (i in 0 until arr.length()) {
++            val b = runCatching { Bookmark.fromJson(arr.getJSONObject(i)) }.getOrNull() ?: continue
++            if (b.id !in have) all.add(b)
++        }
++        save()
++    }
++}
++
++/** Translates every downloaded chapter of a book ahead of time, so reading later needs no network. */
++class BatchTranslator(private val app: App) {
++    data class Progress(val done: Int, val total: Int, val failed: Int, val running: Boolean, val mode: TransMode)
++
++    val progress = mutableStateMapOf<String, Progress>()
++    private val cancelled = HashSet<String>()
++
++    fun start(pluginId: String, bookUrl: String, mode: TransMode) {
++        val key = "$pluginId|$bookUrl"
++        if (progress[key]?.running == true || mode == TransMode.ORIGINAL) return
++        synchronized(cancelled) { cancelled.remove(key) }
++        progress[key] = Progress(0, 0, 0, true, mode)
++        Thread {
++            val toc = app.sources.cachedToc(pluginId, bookUrl)
++                ?: runCatching { app.sources.loadToc(pluginId, bookUrl, false) }.getOrNull()
++                ?: emptyList()
++            val cached = toc.filter { app.chapters.hasChapter(it.url) }
++            var done = 0
++            var failed = 0
++            for (c in cached) {
++                if (synchronized(cancelled) { key in cancelled }) break
++                val raw = app.chapters.get(c.url)
++                if (raw == null || runCatching { app.translator.chapter(raw, mode, key, c.url) }.isFailure) failed++
++                done++
++                progress[key] = Progress(done, cached.size, failed, true, mode)
++            }
++            progress[key] = Progress(done, cached.size, failed, false, mode)
++        }.apply { isDaemon = true }.start()
++    }
++
++    fun cancel(pluginId: String, bookUrl: String) {
++        synchronized(cancelled) { cancelled.add("$pluginId|$bookUrl") }
++    }
++}
+diff --git a/app/src/main/java/vn/thucac/reader/data/Library.kt b/app/src/main/java/vn/thucac/reader/data/Library.kt
+index 5549128..210a8fd 100644
+--- a/app/src/main/java/vn/thucac/reader/data/Library.kt
++++ b/app/src/main/java/vn/thucac/reader/data/Library.kt
+@@ -194,6 +194,7 @@ class Library(private val app: App) {
+         root.put("books", JSONArray().apply { books.forEach { put(it.toJson()) } })
+         root.put("settings", app.settings.toCloudJson())
+         root.put("stats", app.stats.toJson())
++        root.put("bookmarks", app.bookmarks.exportJson())
+         val pluginsArr = JSONArray()
+         app.sources.plugins.forEach { p ->
+             val src = app.sources.sourceUrls[p.id]
+@@ -231,6 +232,7 @@ class Library(private val app: App) {
+             }
+             root.optJSONObject("settings")?.let { app.settings.applyCloudJson(it) }
+             root.optJSONObject("stats")?.let { app.stats.mergeJson(it) }
++            root.optJSONArray("bookmarks")?.let { runCatching { app.bookmarks.importJson(it) } }
+             root.optJSONArray("plugins")?.let { arr ->
+                 for (i in 0 until arr.length()) {
+                     val o = arr.optJSONObject(i) ?: continue
+@@ -323,6 +325,18 @@ class ReadingStats(ctx: Context) {
+         return streak
+     }
+ 
++    /** Minutes read in the last [days] days, today included. */
++    fun lastDaysMinutes(days: Int): Int {
++        val cal = Calendar.getInstance()
++        val keyFmt = SimpleDateFormat("yyyy-MM-dd", Locale.US)
++        var sec = 0L
++        repeat(days) {
++            sec += sp.getLong("day_${keyFmt.format(cal.time)}", 0L)
++            cal.add(Calendar.DAY_OF_YEAR, -1)
++        }
++        return (sec / 60L).toInt()
++    }
++
+     fun last7Days(): List<Pair<String, Int>> {
+         val cal = Calendar.getInstance()
+         val keyFmt = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+index 23e0362..68211be 100644
+--- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
++++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+@@ -135,16 +135,18 @@ class TranslateService(private val app: App) {
+     fun userFile(kind: DictKind): File = File(dictDir, "${kind.name.lowercase()}_user.txt")
+ 
+     private fun loadDictAssetOrFile(kind: DictKind, assetPath: String, out: PhraseDict) {
++        // "Hiện mọi nghĩa VietPhrase": keep "nghĩa 1/nghĩa 2" instead of cutting at the first one.
++        val all = kind == DictKind.VIETPHRASE && !app.settings.firstMeaningOnly
+         runCatching {
+             app.assets.open(assetPath).use { raw ->
+                 val stream: InputStream = if (assetPath.endsWith(".xz")) XZInputStream(raw) else raw
+                 BufferedReader(InputStreamReader(stream, Charsets.UTF_8)).use { br ->
+-                    out.load(br)
++                    out.load(br, all)
+                 }
+             }
+         }
+         for (f in listOf(dictFile(kind), userFile(kind))) {
+-            if (f.exists()) runCatching { f.bufferedReader(Charsets.UTF_8).use { br -> out.load(br) } }
++            if (f.exists()) runCatching { f.bufferedReader(Charsets.UTF_8).use { br -> out.load(br, all) } }
+         }
+         out.trim()
+     }
+@@ -416,7 +418,10 @@ class TranslateService(private val app: App) {
+             return out
+         }
+         if (mode == TransMode.GOOGLE) {
+-            return google.translate(paras)
++            chapterUrl?.let { url -> app.chapters.getTranslated(url)?.let { if (it.size == paras.size) return it } }
++            val out = google.translate(paras)
++            if (chapterUrl != null && out.size == paras.size && out != paras) app.chapters.putTranslated(chapterUrl, out)
++            return out
+         }
+         if (mode == TransMode.EXT) {
+             val ext = app.sources.extension(app.settings.activeExtension)
+@@ -462,6 +467,10 @@ class TranslateService(private val app: App) {
+         )
+     }
+ 
++    /** Vietnamese search keyword to Chinese, for sources that only understand Chinese. */
++    fun toChinese(text: String): String =
++        runCatching { google.translate(listOf(text), from = "vi", to = "zh-CN").firstOrNull() }.getOrNull()?.trim()?.ifEmpty { null } ?: text
++
+     fun translateBubbles(bubbles: List<OcrBlock>, mode: TransMode, bookKey: String? = null): List<String> {
+         if (bubbles.isEmpty()) return emptyList()
+         val texts = bubbles.map { it.text }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
+new file mode 100644
+index 0000000..d66d067
+--- /dev/null
++++ b/app/src/main/java/vn/thucac/reader/ui/Batch2Screens.kt
+@@ -0,0 +1,336 @@
++package vn.thucac.reader.ui
++
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.horizontalScroll
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.lazy.LazyColumn
++import androidx.compose.foundation.lazy.items
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.text.selection.SelectionContainer
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.icons.Icons
++import androidx.compose.material.icons.automirrored.filled.ArrowBack
++import androidx.compose.material.icons.filled.Delete
++import androidx.compose.material.icons.filled.Edit
++import androidx.compose.material3.AlertDialog
++import androidx.compose.material3.Button
++import androidx.compose.material3.DropdownMenu
++import androidx.compose.material3.DropdownMenuItem
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.FilterChip
++import androidx.compose.material3.HorizontalDivider
++import androidx.compose.material3.Icon
++import androidx.compose.material3.IconButton
++import androidx.compose.material3.LinearProgressIndicator
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.OutlinedButton
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.Scaffold
++import androidx.compose.material3.Tab
++import androidx.compose.material3.TabRow
++import androidx.compose.material3.Text
++import androidx.compose.material3.TextButton
++import androidx.compose.material3.TopAppBar
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.LaunchedEffect
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.rememberCoroutineScope
++import androidx.compose.runtime.setValue
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.text.font.FontFamily
++import androidx.compose.ui.text.style.TextOverflow
++import androidx.compose.ui.unit.dp
++import androidx.compose.ui.unit.sp
++import androidx.navigation.NavHostController
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
++import vn.thucac.engine.PluginStore
++import vn.thucac.reader.App
++import vn.thucac.reader.data.BookEntry
++import vn.thucac.reader.data.Bookmark
++import vn.thucac.reader.data.TransMode
++import java.io.File
++import java.text.SimpleDateFormat
++import java.util.Date
++import java.util.Locale
++
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++private fun SimpleTop(nav: NavHostController, title: String, actions: @Composable () -> Unit = {}) {
++    TopAppBar(
++        colors = appBarColors(), title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
++        navigationIcon = { IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Quay lại") } },
++        actions = { actions() },
++    )
++}
++
++private data class DlRow(val book: BookEntry, val cached: Int, val total: Int)
++
++/** "Tải xuống": downloaded books, running downloads, and batch translation of downloaded chapters. */
++@Composable
++fun DownloadsScreen(nav: NavHostController) {
++    val app = App.instance
++    val tr = app.translator
++    var rows by remember { mutableStateOf<List<DlRow>?>(null) }
++    var refresh by remember { mutableIntStateOf(0) }
++    var confirmDelete by remember { mutableStateOf<DlRow?>(null) }
++    var pickMode by remember { mutableStateOf<DlRow?>(null) }
++    val active = app.downloader.progress
++    val batch = app.batch.progress
++    val scope = rememberCoroutineScope()
++    LaunchedEffect(refresh, active.values.count { !it.running }, batch.values.count { !it.running }) {
++        rows = withContext(Dispatchers.IO) {
++            app.library.books.filter { it.inLibrary || it.inHistory }.mapNotNull { b ->
++                val toc = app.sources.cachedToc(b.pluginId, b.url) ?: return@mapNotNull null
++                val n = toc.count { app.chapters.hasChapter(it.url) }
++                if (n == 0 && active[b.key] == null) null else DlRow(b, n, toc.size)
++            }
++        }
++    }
++    Scaffold(topBar = { SimpleTop(nav, "Tải xuống & dịch sẵn") }) { pad ->
++        val list = rows
++        when {
++            list == null -> Loading(Modifier.padding(pad).fillMaxSize())
++            list.isEmpty() -> EmptyBox("Chưa có truyện nào được tải.\nMở trang truyện và bấm \"Tải xuống\" để đọc không cần mạng.", Modifier.padding(pad).fillMaxSize())
++            else -> LazyColumn(Modifier.padding(pad).fillMaxSize()) {
++                item {
++                    Text("Dịch sẵn sẽ dịch mọi chương đã tải theo chế độ bạn chọn và lưu lại, đọc sau không phải chờ dịch.",
++                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(16.dp))
++                }
++                items(list, key = { it.book.key }) { r ->
++                    val b = r.book
++                    val d = active[b.key]
++                    val t = batch[b.key]
++                    Column(Modifier.fillMaxWidth().clickable { nav.navigate(Routes.detail(b.pluginId, b.url)) }.padding(horizontal = 16.dp, vertical = 10.dp)) {
++                        Text(tr.title(b.name, b.key).ifEmpty { b.url }, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
++                        Text("Đã tải ${r.cached}/${r.total} chương · ${app.sources.get(b.pluginId)?.name ?: b.pluginId}",
++                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++                        if (d?.running == true) {
++                            Text("Đang tải ${d.done}/${d.total}" + if (d.failed > 0) " · lỗi ${d.failed}" else "", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
++                            LinearProgressIndicator(progress = { if (d.total > 0) d.done / d.total.toFloat() else 0f }, Modifier.fillMaxWidth().padding(vertical = 4.dp))
++                        }
++                        if (t != null) {
++                            Text((if (t.running) "Đang dịch sẵn (${t.mode.label}) " else "Đã dịch sẵn (${t.mode.label}) ") + "${t.done}/${t.total}" + if (t.failed > 0) " · lỗi ${t.failed}" else "",
++                                style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
++                            if (t.running) LinearProgressIndicator(progress = { if (t.total > 0) t.done / t.total.toFloat() else 0f }, Modifier.fillMaxWidth().padding(vertical = 4.dp))
++                        }
++                        Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                            if (d?.running == true) TextButton(onClick = { app.downloader.cancel(b.pluginId, b.url) }) { Text("Dừng tải") }
++                            else if (r.cached < r.total) TextButton(onClick = { app.downloader.start(b.pluginId, b.url) }) { Text("Tải tiếp") }
++                            if (t?.running == true) TextButton(onClick = { app.batch.cancel(b.pluginId, b.url) }) { Text("Dừng dịch") }
++                            else TextButton(onClick = { pickMode = r }, enabled = r.cached > 0) { Text("Dịch sẵn") }
++                            TextButton(onClick = { nav.navigate(Routes.reader(b.pluginId, b.url)) }) { Text("Đọc") }
++                            TextButton(onClick = { confirmDelete = r }, enabled = d?.running != true) { Text("Xoá đã tải") }
++                        }
++                    }
++                    HorizontalDivider()
++                }
++            }
++        }
++    }
++    pickMode?.let { r ->
++        AlertDialog(
++            onDismissRequest = { pickMode = null },
++            title = { Text("Dịch sẵn ${r.cached} chương") },
++            text = {
++                Column {
++                    Text("Chọn cách dịch. AI và Google cần mạng và có thể mất vài phút.", style = MaterialTheme.typography.bodySmall)
++                    TransMode.entries.filter { it != TransMode.ORIGINAL }.forEach { m ->
++                        TextButton(onClick = { app.batch.start(r.book.pluginId, r.book.url, m); pickMode = null }, modifier = Modifier.fillMaxWidth()) {
++                            Text(m.label + if (m == (r.book.mode ?: app.settings.transMode)) " (đang dùng cho truyện này)" else "")
++                        }
++                    }
++                }
++            },
++            confirmButton = { TextButton(onClick = { pickMode = null }) { Text("Đóng") } },
++        )
++    }
++    confirmDelete?.let { r ->
++        AlertDialog(
++            onDismissRequest = { confirmDelete = null },
++            title = { Text("Xoá nội dung đã tải?") },
++            text = { Text("Xoá ${r.cached} chương đã tải và bản dịch sẵn của truyện này. Truyện vẫn ở trên kệ.") },
++            confirmButton = {
++                TextButton(onClick = {
++                    confirmDelete = null
++                    scope.launch {
++                        withContext(Dispatchers.IO) { app.sources.cachedToc(r.book.pluginId, r.book.url)?.forEach { app.chapters.deleteChapter(it.url) } }
++                        app.batch.progress.remove(r.book.key)
++                        refresh++
++                    }
++                }) { Text("Xoá") }
++            },
++            dismissButton = { TextButton(onClick = { confirmDelete = null }) { Text("Huỷ") } },
++        )
++    }
++}
++
++private val bmTime = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
++
++/** All bookmarks and notes, or only those of one book when [bookKey] is set. */
++@Composable
++fun BookmarksScreen(nav: NavHostController, bookKey: String = "") {
++    val app = App.instance
++    val tr = app.translator
++    val list = (if (bookKey.isEmpty()) app.bookmarks.all.sortedByDescending { it.time } else app.bookmarks.of(bookKey))
++    var editing by remember { mutableStateOf<Bookmark?>(null) }
++    Scaffold(topBar = { SimpleTop(nav, "Dấu trang & ghi chú") }) { pad ->
++        if (list.isEmpty()) EmptyBox("Chưa có dấu trang.\nTrong trình đọc, bấm giữ một đoạn văn rồi chọn \"Thêm dấu trang\" hoặc \"Ghi chú\".", Modifier.padding(pad).fillMaxSize())
++        else LazyColumn(Modifier.padding(pad).fillMaxSize()) {
++            items(list, key = { it.id }) { b ->
++                BookmarkRow(b, showBook = bookKey.isEmpty(), onOpen = { nav.navigate(Routes.reader(b.pluginId, b.bookUrl, b.chapterIndex, b.para)) },
++                    onEdit = { editing = b }, onDelete = { app.bookmarks.remove(b.id) })
++                HorizontalDivider()
++            }
++        }
++    }
++    editing?.let { b -> NoteDialog(b.note, onDismiss = { editing = null }) { app.bookmarks.updateNote(b.id, it); editing = null } }
++}
++
++@Composable
++internal fun BookmarkRow(b: Bookmark, showBook: Boolean, onOpen: () -> Unit, onEdit: () -> Unit, onDelete: () -> Unit) {
++    val tr = App.instance.translator
++    Row(Modifier.fillMaxWidth().clickable(onClick = onOpen).padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
++        Column(Modifier.weight(1f)) {
++            if (showBook) Text(tr.title(b.bookName, b.bookKey), style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            Text("Chương ${b.chapterIndex + 1}: ${tr.text(b.chapterName, bookKey = b.bookKey)}", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, maxLines = 1, overflow = TextOverflow.Ellipsis)
++            if (b.excerpt.isNotBlank()) Text(b.excerpt, style = MaterialTheme.typography.bodySmall, maxLines = 3, overflow = TextOverflow.Ellipsis)
++            if (b.note.isNotBlank()) Text("Ghi chú: " + b.note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.tertiary)
++            Text(bmTime.format(Date(b.time)), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
++        }
++        IconButton(onClick = onEdit) { Icon(Icons.Default.Edit, "Sửa ghi chú") }
++        IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Xoá") }
++    }
++}
++
++@Composable
++internal fun NoteDialog(initial: String, onDismiss: () -> Unit, onSave: (String) -> Unit) {
++    var text by remember { mutableStateOf(initial) }
++    AlertDialog(
++        onDismissRequest = onDismiss,
++        title = { Text("Ghi chú") },
++        text = { OutlinedTextField(text, { text = it }, minLines = 3, modifier = Modifier.fillMaxWidth(), placeholder = { Text("Viết ghi chú cho đoạn này") }) },
++        confirmButton = { TextButton(onClick = { onSave(text.trim()) }) { Text("Lưu") } },
++        dismissButton = { TextButton(onClick = onDismiss) { Text("Huỷ") } },
++    )
++}
++
++private data class TestLine(val text: String, val link: String? = null)
++
++/** "Thử plugin": run each script of a source plugin and look at its files. */
++@OptIn(ExperimentalMaterial3Api::class)
++@Composable
++fun PluginTestScreen(nav: NavHostController, id: String) {
++    val app = App.instance
++    val plugin = app.sources.get(id)
++    if (plugin == null) { Scaffold { EmptyBox("Plugin đã bị gỡ.", Modifier.padding(it)) }; return }
++    var tab by remember { mutableIntStateOf(0) }
++    val funcs = listOf("home", "genre", "search", "detail", "toc", "chap").filter { plugin.hasScript(it) }
++    var func by remember { mutableStateOf(funcs.firstOrNull() ?: "home") }
++    var input by remember { mutableStateOf("") }
++    var running by remember { mutableStateOf(false) }
++    var result by remember { mutableStateOf<List<TestLine>>(emptyList()) }
++    var status by remember { mutableStateOf("") }
++    var openFile by remember { mutableStateOf<String?>(null) }
++    val scope = rememberCoroutineScope()
++
++    fun run() {
++        running = true; result = emptyList(); status = ""
++        val f = func; val inp = input.trim()
++        scope.launch {
++            val t0 = System.currentTimeMillis()
++            val r = withContext(Dispatchers.IO) {
++                runCatching {
++                    val api = app.sources.api(id)
++                    when (f) {
++                        "home", "genre" -> (if (f == "home") api.home() else api.genres()).map { TestLine("${it.title}\n  script: ${it.script} · input: ${it.input}") }
++                        "search" -> api.search(inp, null).let { p -> p.items.map { TestLine("${it.name}\n  ${it.url}", it.url) } + TestLine("next: ${p.next ?: "(hết)"}") }
++                        "detail" -> api.detail(inp).let { d ->
++                            listOf(TestLine("Tên: ${d.name}"), TestLine("Tác giả: ${d.author}"), TestLine("Bìa: ${d.cover}"),
++                                TestLine("Trạng thái: ${when (d.ongoing) { true -> "Đang ra"; false -> "Hoàn thành"; null -> "?" }}"),
++                                TestLine("Mô tả: ${d.description.take(600)}"), TestLine("Chi tiết: ${d.detail.take(600)}"),
++                                TestLine("Thể loại: ${d.genres.joinToString { it.title }}"), TestLine("Url: ${d.url}", d.url.ifEmpty { inp }))
++                        }
++                        "toc" -> api.toc(inp).let { l -> listOf(TestLine("${l.size} chương")) + l.take(200).map { TestLine("${it.name}${if (it.pay) " (VIP)" else ""}\n  ${it.url}", it.url) } }
++                        else -> when {
++                            plugin.isComic -> api.comicPages(inp).let { l -> listOf(TestLine("${l.size} ảnh")) + l.map { TestLine(it.link) } }
++                            plugin.isVideo -> api.videoServers(inp).map { TestLine("${it.title}\n  ${it.data.take(300)}") }
++                            else -> api.chapter(inp).let { c -> listOf(TestLine("${c.length} ký tự"), TestLine(c.take(8000))) }
++                        }
++                    }
++                }
++            }
++            val ms = System.currentTimeMillis() - t0
++            r.fold({ result = it; status = "Xong trong $ms ms · ${it.size} dòng" }, { status = "Lỗi sau $ms ms"; result = listOf(TestLine(it.stackTraceToString().take(4000))) })
++            running = false
++        }
++    }
++
++    Scaffold(topBar = { SimpleTop(nav, "Thử plugin: ${plugin.name}") }) { pad ->
++        Column(Modifier.padding(pad).fillMaxSize()) {
++            TabRow(tab) {
++                Tab(tab == 0, { tab = 0 }, text = { Text("Chạy thử") })
++                Tab(tab == 1, { tab = 1 }, text = { Text("Mã nguồn") })
++            }
++            if (tab == 0) {
++                Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
++                    funcs.forEach { f -> FilterChip(func == f, { func = f }, label = { Text(f) }) }
++                }
++                if (func !in listOf("home", "genre")) OutlinedTextField(
++                    input, { input = it }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
++                    label = { Text(if (func == "search") "Từ khoá" else "Url") },
++                )
++                Row(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
++                    Button(onClick = { run() }, enabled = !running) { Text("Chạy") }
++                    if (func != "search" && input.startsWith("http")) OutlinedButton(onClick = { nav.navigate(Routes.web(input.trim())) }) { Text("Mở trang web") }
++                }
++                if (running) LinearProgressIndicator(Modifier.fillMaxWidth())
++                if (status.isNotEmpty()) Text(status, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 12.dp))
++                val next = mapOf("search" to "detail", "detail" to "toc", "toc" to "chap")[func]
++                if (next != null && result.any { it.link != null }) Text("Chạm một kết quả để chạy tiếp \"$next\"", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 12.dp))
++                LazyColumn(Modifier.fillMaxSize()) {
++                    items(result) { l ->
++                        SelectionContainer {
++                            Text(l.text, fontFamily = FontFamily.Monospace, fontSize = 12.sp,
++                                modifier = Modifier.fillMaxWidth().then(if (l.link != null && next != null) Modifier.clickable { input = l.link; func = next; run() } else Modifier).padding(horizontal = 12.dp, vertical = 4.dp))
++                        }
++                        HorizontalDivider()
++                    }
++                }
++            } else {
++                val files = remember(id) { runCatching { PluginStore.files(plugin) }.getOrDefault(emptyList()) }
++                LazyColumn(Modifier.fillMaxSize()) {
++                    items(files) { f ->
++                        Text(f, fontFamily = FontFamily.Monospace, modifier = Modifier.fillMaxWidth().clickable { openFile = f }.padding(16.dp, 12.dp))
++                        HorizontalDivider()
++                    }
++                }
++            }
++        }
++    }
++    openFile?.let { f ->
++        val text = remember(f) { runCatching { File(plugin.dir, f).let { if (it.length() > 400_000) "(file quá lớn: ${it.length()} byte)" else it.readText() } }.getOrElse { it.message ?: "Lỗi đọc file" } }
++        AlertDialog(
++            onDismissRequest = { openFile = null },
++            title = { Text(f, maxLines = 1, overflow = TextOverflow.Ellipsis) },
++            text = {
++                SelectionContainer {
++                    Text(text, fontFamily = FontFamily.Monospace, fontSize = 11.sp,
++                        modifier = Modifier.height(480.dp).verticalScroll(rememberScrollState()).horizontalScroll(rememberScrollState()))
++                }
++            },
++            confirmButton = { TextButton(onClick = { openFile = null }) { Text("Đóng") } },
++        )
++    }
++}
+diff --git a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
+index a19fe3c..3e393e0 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/HomeUi.kt
+@@ -159,7 +159,7 @@ private fun StatsCard() {
+                     Text("$today", style = MaterialTheme.typography.displaySmall, fontWeight = FontWeight.SemiBold)
+                     Text(" phút", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 6.dp))
+                 }
+-                Text("7 ngày qua: ${week.sumOf { it.second }} phút", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
++                Text("Tuần: ${week.sumOf { it.second }} phút · Tháng: ${stats.lastDaysMinutes(30)} phút", style = MaterialTheme.typography.bodySmall, color = cs.onSurfaceVariant)
+             }
+             VerticalDivider(Modifier.padding(horizontal = 12.dp))
+             Column(Modifier.weight(1f)) {
+diff --git a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
+index 30bdc6e..c0ccc09 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/LibraryScreen.kt
+@@ -94,6 +94,15 @@ fun LibraryScreen(nav: NavHostController, modifier: Modifier) {
+                                 onClick = { shelfSort = k; app.settings.sp.edit().putInt("shelfSort", k).apply(); sortMenu = false },
+                             )
+                         }
++                        androidx.compose.material3.HorizontalDivider()
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Theo dõi tất cả") }, onClick = {
++                            app.library.books.filter { it.inLibrary && !it.follow }.forEach { app.library.setFollow(it.key, true) }; sortMenu = false
++                        })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Bỏ theo dõi tất cả") }, onClick = {
++                            app.library.books.filter { it.inLibrary && it.follow }.forEach { app.library.setFollow(it.key, false) }; sortMenu = false
++                        })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Tải xuống & dịch sẵn") }, onClick = { sortMenu = false; nav.navigate("downloads") })
++                        androidx.compose.material3.DropdownMenuItem(text = { Text("Dấu trang & ghi chú") }, onClick = { sortMenu = false; nav.navigate("bookmarks") })
+                     }
+                 }
+             }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt b/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
+index a09c250..0ad2f8a 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/MainActivity.kt
+@@ -37,7 +37,8 @@ object Routes {
+     fun source(pid: String) = "source/${e(pid)}"
+     fun list(pid: String, title: String, script: String, input: String) = "list/${e(pid)}?title=${e(title)}&script=${e(script)}&input=${e(input)}"
+     fun detail(pid: String, url: String) = "detail/${e(pid)}?url=${e(url)}"
+-    fun reader(pid: String, url: String, index: Int = -1) = "reader/${e(pid)}?url=${e(url)}&index=$index"
++    fun reader(pid: String, url: String, index: Int = -1, para: Int = -1) = "reader/${e(pid)}?url=${e(url)}&index=$index&para=$para"
++    fun pluginTest(id: String) = "ptest/${e(id)}"
+     fun search(pid: String = "") = "search?pid=${e(pid)}"
+     fun ext(id: String) = "ext/${e(id)}"
+     fun repo(url: String) = "repo?url=${e(url)}"
+@@ -90,14 +91,18 @@ fun AppNav() {
+             DetailScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "")
+         }
+         composable(
+-            "reader/{pid}?url={url}&index={index}",
++            "reader/{pid}?url={url}&index={index}&para={para}",
+             arguments = listOf(
+                 navArgument("url") { type = NavType.StringType; defaultValue = "" },
+                 navArgument("index") { type = NavType.IntType; defaultValue = -1 },
++                navArgument("para") { type = NavType.IntType; defaultValue = -1 },
+             ),
+         ) {
+-            ReaderScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "", it.arguments?.getInt("index") ?: -1)
++            ReaderScreen(nav, it.arguments?.getString("pid") ?: "", it.arguments?.getString("url") ?: "", it.arguments?.getInt("index") ?: -1, it.arguments?.getInt("para") ?: -1)
+         }
++        composable("downloads") { DownloadsScreen(nav) }
++        composable("bookmarks") { BookmarksScreen(nav) }
++        composable("ptest/{id}") { PluginTestScreen(nav, it.arguments?.getString("id") ?: "") }
+         composable("search?pid={pid}", arguments = listOf(navArgument("pid") { type = NavType.StringType; defaultValue = "" })) {
+             SearchScreen(nav, it.arguments?.getString("pid") ?: "")
+         }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt b/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
+index b3bcdc0..c29c4ab 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/PluginsScreen.kt
+@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.automirrored.filled.ArrowBack
+ import androidx.compose.material.icons.filled.Add
+ import androidx.compose.material.icons.filled.Delete
++import androidx.compose.material.icons.filled.BugReport
+ import androidx.compose.material.icons.filled.Description
+ import androidx.compose.material3.AlertDialog
+ import androidx.compose.material3.DropdownMenu
+@@ -159,6 +160,7 @@ fun PluginsScreen(nav: NavHostController, modifier: Modifier = Modifier, onBack:
+                                 Text("Hỗ trợ: $caps", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                             }
+                         }
++                        if (!isExt) IconButton(onClick = { nav.navigate(Routes.pluginTest(p.id)) }) { Icon(Icons.Default.BugReport, "Thử plugin") }
+                         IconButton(onClick = { removing = p }) { Icon(Icons.Default.Delete, "Gỡ") }
+                     }
+                     HorizontalDivider()
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
+index ca0f66e..539c93c 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ReaderScreen.kt
+@@ -97,6 +97,10 @@ import androidx.compose.runtime.remember
+ import androidx.compose.runtime.rememberCoroutineScope
+ import androidx.compose.runtime.setValue
+ import androidx.compose.runtime.snapshotFlow
++import kotlinx.coroutines.flow.first
++import androidx.compose.material.icons.filled.BookmarkAdd
++import androidx.compose.material.icons.filled.Bookmarks
++import vn.thucac.reader.data.joinBrokenLines
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.Color
+@@ -119,16 +123,16 @@ import vn.thucac.reader.data.BookEntry
+ import vn.thucac.reader.data.TransMode
+ 
+ @Composable
+-fun ReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int) {
++fun ReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int, startPara: Int = -1) {
+     val plugin = remember(pid) { App.instance.sources.get(pid) }
+     if (plugin?.isComic == true) ComicReaderScreen(nav, pid, bookUrl, startIndex)
+     else if (plugin?.isVideo == true) VideoScreen(nav, pid, bookUrl, startIndex)
+-    else NovelReaderScreen(nav, pid, bookUrl, startIndex)
++    else NovelReaderScreen(nav, pid, bookUrl, startIndex, startPara)
+ }
+ 
+ @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, FlowPreview::class)
+ @Composable
+-private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int) {
++private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: String, startIndex: Int, startPara: Int) {
+     val app = App.instance
+     val tr = app.translator
+     val s = app.settings
+@@ -139,7 +143,14 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+ 
+     val initial = remember { app.library.get(pid, bookUrl) }
+     var index by remember { mutableIntStateOf(if (startIndex >= 0) startIndex else initial?.chapterIndex ?: 0) }
+-    var restoreScroll by remember { mutableStateOf(if (startIndex < 0 || startIndex == initial?.chapterIndex) initial?.scrollIndex ?: 0 else 0) }
++    var restoreScroll by remember { mutableStateOf(if (startPara >= 0) startPara else if (startIndex < 0 || startIndex == initial?.chapterIndex) initial?.scrollIndex ?: 0 else 0) }
++    val prefs = app.prefs
++    var srcParas by remember { mutableStateOf<List<String>>(emptyList()) }
++    var paraAction by remember { mutableStateOf<Int?>(null) }
++    var noteFor by remember { mutableStateOf<Int?>(null) }
++    var showBookmarks by remember { mutableStateOf(false) }
++    val clipboard = androidx.compose.ui.platform.LocalClipboardManager.current
++    val toastCtx = androidx.compose.ui.platform.LocalContext.current
+     var toc by remember { mutableStateOf<Load<List<ChapterRef>>>(Load.Loading) }
+     var raw by remember { mutableStateOf<Load<List<String>>>(Load.Loading) }
+     var shown by remember { mutableStateOf<List<String>>(emptyList()) }
+@@ -194,12 +205,14 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+             launch(Dispatchers.IO) { for (k in 1..2) chapters.getOrNull(index + k)?.let { n -> runCatching { app.sources.chapter(pid, n.url) } } }
+         }
+     }
+-    LaunchedEffect(raw, mode, tr.version, s.namesFirst, s.bookNamesFirst, s.longestFirst, s.luatNhanMode, s.maxPhrase, s.splitSentences, s.autoSimplified, s.applyNumberRules) {
++    LaunchedEffect(raw, mode, tr.version, s.namesFirst, s.bookNamesFirst, s.longestFirst, s.luatNhanMode, s.maxPhrase, s.splitSentences, s.autoSimplified, s.applyNumberRules, prefs.joinBrokenLines) {
+         val r = raw as? Load.Ok ?: return@LaunchedEffect
+         val c = chapter ?: return@LaunchedEffect
+         notice = null
++        val input = if (prefs.joinBrokenLines) joinBrokenLines(r.value) else r.value
++        srcParas = input
+         val (out, err) = withContext(Dispatchers.Default) {
+-            runCatching { tr.chapter(r.value, mode, bookKey, c.url) }.fold({ it to tr.takeNotice() }, { r.value to errorText(it) })
++            runCatching { tr.chapter(input, mode, bookKey, c.url) }.fold({ it to tr.takeNotice() }, { input to errorText(it) })
+         }
+         shown = out
+         notice = err
+@@ -257,6 +270,25 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+         if (tts.active) startTts(fromStart = true)
+     }
+ 
++    // "Tự tải chương sau": move on once the reader has scrolled to the very end.
++    LaunchedEffect(shown, prefs.autoLoadNext) {
++        if (!prefs.autoLoadNext || shown.isEmpty()) return@LaunchedEffect
++        snapshotFlow { listState.firstVisibleItemIndex > 0 && !listState.canScrollForward }.first { it }
++        kotlinx.coroutines.delay(800)
++        if (!listState.canScrollForward && !ttsHere && index + 1 < chapters.size) go(index + 1)
++    }
++
++    fun addBookmark(item: Int, note: String = "") {
++        val c = chapter ?: return
++        val name = app.library.get(pid, bookUrl)?.name ?: initial?.name ?: ""
++        app.bookmarks.add(vn.thucac.reader.data.Bookmark(
++            id = System.currentTimeMillis(), pluginId = pid, bookUrl = bookUrl, bookName = name,
++            chapterIndex = index, chapterName = c.name, para = item,
++            excerpt = shown.getOrNull((item - 1).coerceAtLeast(0))?.take(200) ?: "", note = note, time = System.currentTimeMillis(),
++        ))
++        android.widget.Toast.makeText(toastCtx, if (note.isEmpty()) "Đã thêm dấu trang" else "Đã lưu ghi chú", android.widget.Toast.LENGTH_SHORT).show()
++    }
++
+     fun setMode(m: TransMode) {
+         mode = m
+         app.library.get(pid, bookUrl)?.let { app.library.upsert(it.copy(mode = m)) }
+@@ -291,7 +323,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         if (s.italicDialogue) italicDialogue(p) else androidx.compose.ui.text.AnnotatedString(p), color = fg,
+                         style = androidx.compose.ui.text.TextStyle(background = if (speaking) fg.copy(alpha = 0.12f) else Color.Unspecified), fontFamily = family, fontSize = s.fontSize.sp, lineHeight = (s.lineHeight / 100f).em,
+                         modifier = Modifier.fillMaxWidth()
+-                            .combinedClickable(interactionSource = noRipple, indication = null, onClick = { menu = !menu }, onLongClick = { if (mode == TransMode.CONVERT) wordPara = i })
++                            .combinedClickable(interactionSource = noRipple, indication = null, onClick = { menu = !menu }, onLongClick = { paraAction = i })
+                             .padding(horizontal = 20.dp, vertical = 6.dp),
+                     )
+                 }
+@@ -313,6 +345,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         Text(tr.text(initial?.name ?: app.library.get(pid, bookUrl)?.name ?: "", mode, bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                         Text("${index + 1}/${chapters.size} · " + tr.text(chapter?.name ?: "", mode, bookKey), maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
+                     }
++                    IconButton(onClick = { addBookmark(listState.firstVisibleItemIndex) }) { Icon(Icons.Default.BookmarkAdd, "Thêm dấu trang") }
+                     IconButton(onClick = { chapter?.let { nav.navigate(Routes.web(it.url)) } }) { Icon(Icons.Default.Public, "Mở trang gốc") }
+                     IconButton(onClick = { reload++ }) { Icon(Icons.Default.Refresh, "Tải lại chương") }
+                 }
+@@ -331,6 +364,7 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                         MenuAction(Icons.AutoMirrored.Filled.List, "Mục lục", Modifier.weight(1f)) { showToc = true }
+                         MenuAction(Icons.Default.TextFields, "Giao diện", Modifier.weight(1f)) { showStyle = true }
+                         MenuAction(Icons.Default.Headphones, "Nghe", Modifier.weight(1f)) { showTts = true }
++                        MenuAction(Icons.Default.Bookmarks, "Dấu trang", Modifier.weight(1f)) { showBookmarks = true }
+                         IconButton(onClick = { go(index + 1) }, enabled = index < chapters.size - 1) { Icon(Icons.Default.ChevronRight, "Chương sau") }
+                     }
+                 }
+@@ -422,12 +456,60 @@ private fun NovelReaderScreen(nav: NavHostController, pid: String, bookUrl: Stri
+                     Text("Chữ có chân (Serif)", Modifier.weight(1f))
+                     Switch(s.readerFont == "serif", { s.setReaderFont(if (it) "serif" else "sans") })
+                 }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Tự tải chương sau khi cuộn hết", Modifier.weight(1f))
++                    Switch(prefs.autoLoadNext, { prefs.autoLoadNext = it })
++                }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Tắt xuống dòng (nối câu bị ngắt)", Modifier.weight(1f))
++                    Switch(prefs.joinBrokenLines, { prefs.joinBrokenLines = it })
++                }
++                Row(verticalAlignment = Alignment.CenterVertically) {
++                    Text("Hiện mọi nghĩa VietPhrase", Modifier.weight(1f))
++                    Switch(!s.firstMeaningOnly, { s.setFirstMeaningOnly(!it); tr.reloadAsync() })
++                }
+             }
+         }
+     }
+ 
++    paraAction?.let { pi ->
++        val text = shown.getOrNull(pi) ?: ""
++        AlertDialog(
++            onDismissRequest = { paraAction = null },
++            title = { Text("Đoạn văn") },
++            text = {
++                Column {
++                    Text(text, maxLines = 4, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall)
++                    Spacer(Modifier.height(8.dp))
++                    if (mode == TransMode.CONVERT) TextButton(onClick = { paraAction = null; wordPara = pi }, modifier = Modifier.fillMaxWidth()) { Text("Sửa từ / thêm tên riêng") }
++                    TextButton(onClick = { paraAction = null; addBookmark(pi + 1) }, modifier = Modifier.fillMaxWidth()) { Text("Thêm dấu trang") }
++                    TextButton(onClick = { paraAction = null; noteFor = pi }, modifier = Modifier.fillMaxWidth()) { Text("Ghi chú") }
++                    TextButton(onClick = { paraAction = null; clipboard.setText(androidx.compose.ui.text.AnnotatedString(text)) }, modifier = Modifier.fillMaxWidth()) { Text("Sao chép") }
++                }
++            },
++            confirmButton = { TextButton(onClick = { paraAction = null }) { Text("Đóng") } },
++        )
++    }
++    noteFor?.let { pi -> NoteDialog("", onDismiss = { noteFor = null }) { n -> noteFor = null; addBookmark(pi + 1, n) } }
++    if (showBookmarks) {
++        ModalBottomSheet(onDismissRequest = { showBookmarks = false }) {
++            val marks = app.bookmarks.of(bookKey)
++            if (marks.isEmpty()) Text("Chưa có dấu trang. Bấm giữ một đoạn văn để thêm dấu trang hoặc ghi chú.", Modifier.padding(20.dp))
++            var editMark by remember { mutableStateOf<vn.thucac.reader.data.Bookmark?>(null) }
++            LazyColumn(Modifier.fillMaxWidth().height(480.dp)) {
++                itemsIndexed(marks) { _, b ->
++                    BookmarkRow(b, showBook = false, onOpen = {
++                        showBookmarks = false; menu = false
++                        if (b.chapterIndex == index) scope.launch { listState.scrollToItem(b.para.coerceAtMost(shown.size)) }
++                        else { go(b.chapterIndex); restoreScroll = b.para }
++                    }, onEdit = { editMark = b }, onDelete = { app.bookmarks.remove(b.id) })
++                }
++            }
++            editMark?.let { b -> NoteDialog(b.note, onDismiss = { editMark = null }) { app.bookmarks.updateNote(b.id, it); editMark = null } }
++        }
++    }
+     wordPara?.let { pi ->
+-        val original = (raw as? Load.Ok)?.value?.getOrNull(pi)
++        val original = srcParas.getOrNull(pi) ?: (raw as? Load.Ok)?.value?.getOrNull(pi)
+         if (original == null) wordPara = null else WordDialog(original, bookKey, onDismiss = { wordPara = null })
+     }
+ }
+diff --git a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
+index ccfd93b..7f036c3 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/SearchScreen.kt
+@@ -66,7 +66,9 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+         groups.clear(); info = ""
+         job = scope.launch {
+             running = true
+-            val key = q
++            val hasCjk = q.any { it.code in 0x3400..0x9fff }
++            val key = if (app.prefs.searchToChinese && !hasCjk) withContext(Dispatchers.IO) { tr.toChinese(q) } else q
++            if (key != q) info = "Tìm bằng từ khoá tiếng Trung: $key"
+             val targets = app.sources.sourcePlugins.filter { (pid.isEmpty() || it.id == pid) && it.hasScript("search") }
+             if (targets.isEmpty()) info = "Không có plugin nào hỗ trợ tìm kiếm."
+             val gate = Semaphore(4)
+@@ -98,6 +100,10 @@ fun SearchScreen(nav: NavHostController, pid: String) {
+                 keyboardActions = KeyboardActions(onSearch = { search() }),
+                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+             )
++            androidx.compose.foundation.layout.Row(Modifier.padding(horizontal = 16.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
++                androidx.compose.material3.FilterChip(app.prefs.searchToChinese, { app.prefs.searchToChinese = !app.prefs.searchToChinese },
++                    label = { Text("Tự dịch từ khoá sang tiếng Trung") })
++            }
+             if (running) LinearProgressIndicator(Modifier.fillMaxWidth())
+             if (info.isNotEmpty()) Text(info, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(horizontal = 16.dp))
+             Box(Modifier.fillMaxSize()) {
+diff --git a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt b/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
+index 47287df..5657ebd 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/WebScreen.kt
+@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.Close
+ import androidx.compose.material.icons.filled.Refresh
++import androidx.compose.material.icons.automirrored.filled.OpenInNew
++import androidx.compose.ui.unit.dp
+ import androidx.compose.material3.ExperimentalMaterial3Api
+ import androidx.compose.material3.Icon
+ import androidx.compose.material3.IconButton
+@@ -39,16 +41,35 @@ fun WebScreen(nav: NavHostController, url: String) {
+     var title by remember { mutableStateOf(url) }
+     var loading by remember { mutableStateOf(true) }
+     var web by remember { mutableStateOf<WebView?>(null) }
++    var current by remember { mutableStateOf(url) }
++    var canBack by remember { mutableStateOf(false) }
++    val ctx = androidx.compose.ui.platform.LocalContext.current
++    androidx.activity.compose.BackHandler(canBack) { web?.goBack() }
++    // A page that an installed source can open: offer to read it in the app.
++    val match = remember(current) { App.instance.sources.sourcePlugins.firstOrNull { it.matches(current) } }
+     DisposableEffect(Unit) { onDispose { runCatching { CookieManager.getInstance().flush() }; web?.destroy() } }
+     Scaffold(topBar = {
+         TopAppBar(
+             title = { Column { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis); Text("Qua bước kiểm tra xong thì bấm X để quay lại", style = androidx.compose.material3.MaterialTheme.typography.bodySmall) } },
+             navigationIcon = { IconButton(onClick = { nav.popBackStack() }) { Icon(Icons.Default.Close, "Đóng") } },
+-            actions = { IconButton(onClick = { web?.reload() }) { Icon(Icons.Default.Refresh, "Tải lại") } },
++            actions = {
++                IconButton(onClick = { web?.reload() }) { Icon(Icons.Default.Refresh, "Tải lại") }
++                IconButton(onClick = { runCatching { ctx.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(current))) } }) {
++                    Icon(Icons.AutoMirrored.Filled.OpenInNew, "Mở bằng trình duyệt ngoài")
++                }
++            },
+         )
+     }) { pad ->
+         Column(Modifier.padding(pad).fillMaxSize()) {
+             if (loading) LinearProgressIndicator(Modifier.fillMaxWidth())
++            match?.let { p ->
++                androidx.compose.material3.Surface(color = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer) {
++                    androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
++                        Text("Nguồn ${p.name} mở được trang này", Modifier.weight(1f), style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
++                        androidx.compose.material3.TextButton(onClick = { nav.navigate(Routes.detail(p.id, current)) }) { Text("Đọc trong app") }
++                    }
++                }
++            }
+             AndroidView(factory = { ctx ->
+                 WebView(ctx).apply {
+                     settings.javaScriptEnabled = true
+@@ -58,6 +79,7 @@ fun WebScreen(nav: NavHostController, url: String) {
+                     webViewClient = object : WebViewClient() {
+                         override fun onPageStarted(view: WebView?, u: String?, favicon: Bitmap?) { loading = true }
+                         override fun onPageFinished(view: WebView?, u: String?) { loading = false; title = view?.title ?: u ?: title }
++                        override fun doUpdateVisitedHistory(view: WebView?, u: String?, isReload: Boolean) { u?.let { current = it }; canBack = view?.canGoBack() == true }
+                     }
+                     loadUrl(url)
+                     web = this
