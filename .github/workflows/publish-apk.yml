@@ -1,0 +1,28 @@
+name: Publish Thư Các APK
+on:
+  push:
+    branches: ['claude/**']
+    paths: ['apk/**']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          APK=$(ls apk/ThuCac-*.apk | head -1)
+          VER=$(basename "$APK" .apk); VER=${VER#ThuCac-}
+          TAG="v$VER"
+          cp "$APK" apk/ThuCac.apk
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" apk/ThuCac.apk --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$TAG" --notes-file apk/notes.md --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$APK" apk/ThuCac.apk --repo "$GITHUB_REPOSITORY" \
+              --target main --title "Thư Các $VER" --notes-file apk/notes.md --latest
+          fi
