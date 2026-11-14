@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (269 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (255 plugin)"
  },
  "data": [
   {
@@ -320,17 +320,6 @@
    "tag": "nsfw"
   },
   {
-   "name": "[Fanqie] Cà Chua C2",
-   "author": "kychi",
-   "version": 5,
-   "source": "https://fanqienovel.com",
-   "description": "Nguồn truyện chữ từ Fanqie Novel (番茄小说). Dùng proxy mirror để đọc nội dung.",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/fanqie-ca-chua-c2-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/yae-miko-313/ext-vbook/main/extensions/chinese_novel/kychi-cachua-c2/icon.png"
-  },
-  {
    "name": "[QQ] html5",
    "author": "kychi",
    "version": 1,
@@ -473,17 +462,6 @@
    "locale": "vi_VN",
    "path": "plugins/bfaloo-nhocconsr.zip",
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/bfaloo/icon.png"
-  },
-  {
-   "name": "bFaloo (飞卢小说)",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://b.faloo.com",
-   "description": "BFaloo (飞卢小说)",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/bfaloo-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/chinese_novel/bfaloo_ok/icon.png"
   },
   {
    "name": "Biquge",
@@ -641,28 +619,6 @@
    "locale": "zh_CN",
    "path": "plugins/ca-chua-mizhm.zip",
    "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/cachua/icon.png"
-  },
-  {
-   "name": "Cà Chua Sói Xám",
-   "author": "kychi",
-   "version": 3,
-   "source": "https://fanqienovel.com",
-   "description": "Nguồn truyện chữ Trung Quốc từ Fanqie Novel (sói xám to version) - chỉ đọc không tải (Ngoại trừ VIP/SVIP).",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/ca-chua-soi-xam-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/kychi_cachua/icon.png"
-  },
-  {
-   "name": "Cơm Nguội Novel",
-   "author": "ivanzzz",
-   "version": 8,
-   "source": "https://comnguoinovel.com",
-   "description": "Cơm Nguội Novel (Truyện Dịch Miễn Phí)",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/com-nguoi-novel-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyendichmienphi_ok/icon.png"
   },
   {
    "name": "Cứu Truyện",
@@ -1235,17 +1191,6 @@
   },
   {
    "name": "Kho Truyện Chữ",
-   "author": "ivanzzz",
-   "version": 1,
-   "source": "https://khotruyenchu.me/",
-   "description": "Đọc truyện trên Kho Truyện Chữ",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/kho-truyen-chu-ivanzzz-2.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/khotruyenchu.me_ok/icon.png"
-  },
-  {
-   "name": "Kho Truyện Chữ",
    "author": "B",
    "version": 7,
    "source": "https://khotruyenchu.space/",
@@ -1631,17 +1576,6 @@
    "icon": "https://raw.githubusercontent.com/yae-miko-313/ext-vbook/main/extensions/video/nguonc/icon.png"
   },
   {
-   "name": "NguonC (Proxy)",
-   "author": "kychi",
-   "version": 1,
-   "source": "https://phim.nguonc.com",
-   "description": "Xem phim từ NguonC - dùng proxy",
-   "type": "video",
-   "locale": "vi_VN",
-   "path": "plugins/nguonc-proxy-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/yae-miko-313/ext-vbook/main/extensions/video/nguonc-proxy/icon.png"
-  },
-  {
    "name": "nhatruyen",
    "author": "B",
    "version": 8,
@@ -1685,17 +1619,6 @@
    "locale": "zh_TW",
    "path": "plugins/novel543-gold2k2k2k.zip",
    "icon": "https://raw.githubusercontent.com/Gold2k2k2k/HTri-Vbook-Ext/main/novel543/icon.png"
-  },
-  {
-   "name": "NovelCooks",
-   "author": "kychi",
-   "version": 1,
-   "source": "https://novel.cooks.tw",
-   "description": "nguồn truyện cà chua, search đểu cực kì + trạng thái hoàn thành điêu",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/novelcooks-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/chinese_novel/kychi_novelcooks/icon.png"
   },
   {
    "name": "NovelCooksTW",
@@ -1885,17 +1808,6 @@
    "locale": "vi_VN",
    "path": "plugins/qac-quocbao.zip",
    "icon": "https://raw.githubusercontent.com/BaoBao666888/ext-vbook-w/main/qadcte/icon.png"
-  },
-  {
-   "name": "qbtr",
-   "author": "Moleys",
-   "version": 1,
-   "source": "https://www.qbtr.cc",
-   "description": "Đọc truyện trên trang https://www.qbtr.cc",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/qbtr-moleys.zip",
-   "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/qbtr/icon.png"
   },
   {
    "name": "qidian",
@@ -2154,16 +2066,6 @@
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/storya/icon.png"
   },
   {
-   "name": "Sáng Tác Việt",
-   "author": "TH03",
-   "version": 4,
-   "source": "https://sangtacviet.app/",
-   "description": "Liên Hệ để mua HTTP SEVER",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/sang-tac-viet-th03.zip"
-  },
-  {
    "name": "Đam Mỹ dammyy",
    "author": "luonggato",
    "version": 1,
@@ -2221,17 +2123,6 @@
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/tienvuc/icon.png"
   },
   {
-   "name": "Tiên Vực",
-   "author": "Nhocconsr",
-   "version": 13,
-   "source": "https://tienvuc.me",
-   "description": "Đừng có sửa Author nếu bạn ko tự viết script nhé!",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/tien-vuc-nhocconsr-2.zip",
-   "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/tienvuc/icon.png"
-  },
-  {
    "name": "Top Truyện",
    "author": "Nahona",
    "version": 9,
@@ -2264,17 +2155,6 @@
    "locale": "vi_VN",
    "path": "plugins/trichtinhlau-meo.zip",
    "icon": "https://raw.githubusercontent.com/hienpro00123/vbook_MeoU/main/novel/trichtinhlau/icon.png"
-  },
-  {
-   "name": "Truyen Hoan",
-   "author": "ivanzzz",
-   "version": 3,
-   "source": "https://truyenhoan.com/",
-   "description": "Doc truyen tren trang Truyen Hoan",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/truyen-hoan-ivanzzz.zip",
-   "icon": "https://raw.githubusercontent.com/Ivan1hai/ext/main/novel/truyenhoan.com_ok/icon.png"
   },
   {
    "name": "Truyen Now",
@@ -2522,17 +2402,6 @@
    "locale": "zh_CN"
   },
   {
-   "name": "trxsme",
-   "author": "Moleys",
-   "version": 2,
-   "source": "https://m.tongrenshe.cc",
-   "description": "Đọc truyện trên trang https://m.tongrenshe.cc",
-   "type": "chinese_novel",
-   "locale": "zh_CN",
-   "path": "plugins/trxsme-moleys.zip",
-   "icon": "https://raw.githubusercontent.com/Moleys/vbook-ext/main/trxsme/icon.png"
-  },
-  {
    "name": "Trùm Truyện",
    "author": "B",
    "version": 5,
@@ -2685,17 +2554,6 @@
    "locale": "vi_VN",
    "path": "plugins/vivu-truyen-kychi.zip",
    "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/kychi_vivutruyen/icon.png"
-  },
-  {
-   "name": "Vozer",
-   "author": "mizhm",
-   "version": 6,
-   "source": "https://quykhu.com",
-   "description": "Vozer là web đọc truyện online miễn phí với với tổng hợp đầy đủ chuyện trên trời dưới đất, nhưng nổi bật nhất vẫn là là Truyện Voz. Nơi đây sản sinh ra những tác giả có những cuốn tự truyện có thể nói là huyền thoại một thời. Vozer có nhiều truyện mới nhất từ các tác giả với tất cả thể loại như Tâm linh, Tình yêu, Truyện ma,...",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/vozer-mizhm.zip",
-   "icon": "https://raw.githubusercontent.com/mizhm/vbook-extensions/main/vozer/icon.png"
   },
   {
    "name": "vvbiquge",
@@ -2916,17 +2774,6 @@
    "icon": "https://raw.githubusercontent.com/lethituyen/vbooks-extension/master/ztruyen/icon.png",
    "type": "novel",
    "locale": "vi_VN"
-  },
-  {
-   "name": "Zumi Novel",
-   "author": "kychi",
-   "version": 1,
-   "source": "https://zuminovel.com/",
-   "description": "Đọc tiểu thuyết từ zuminovel",
-   "type": "novel",
-   "locale": "vi_VN",
-   "path": "plugins/zumi-novel-kychi.zip",
-   "icon": "https://raw.githubusercontent.com/kychitoge/vbook-ext/main/extensions/novel/zuminovel/icon.png"
   },
   {
    "name": "ZumiNovel",
