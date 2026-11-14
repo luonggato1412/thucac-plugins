@@ -1,7 +1,7 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (255 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (256 plugin)"
  },
  "data": [
   {
@@ -2841,6 +2841,19 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/th03.zip"
+  },
+  {
+   "name": "Bilibili TV",
+   "author": "luonggato",
+   "version": 1,
+   "source": "https://www.bilibili.tv",
+   "regexp": "https?:\\/\\/(?:www\\.|m\\.)?bilibili\\.tv\\/(?:[a-z]{2}(?:-[a-z]+)?\\/)?(?:play|video)\\/\\d+.*",
+   "description": "Bilibili quốc tế (bilibili.tv): anime và video, phụ đề tiếng Việt. Không cần đăng nhập: anime phát tối đa 480P, video người dùng tối đa 720P. Cần Thư Các 0.6.20c trở lên (trình phát DASH).",
+   "type": "video",
+   "locale": "vi_VN",
+   "tag": "video",
+   "path": "plugins/bilibili-tv-luonggato.zip",
+   "icon": "icons/bilibili-tv-luonggato.png"
   }
  ]
 }
