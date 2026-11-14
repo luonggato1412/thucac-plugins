@@ -7,7 +7,7 @@
   {
    "name": "AnimeVietsub",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://animevietsub.best",
    "regexp": "animevietsub\\.[a-z]+/phim/[^/]+-a\\d+/?.*",
    "description": "Xem anime Vietsub trên AnimeVietsub (animevietsub.best). Server chính phát qua trình phát nhúng của trang, có server phụ dự phòng.",
