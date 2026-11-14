@@ -1,0 +1,153 @@
+diff --git a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+index d738010..98fac08 100644
+--- a/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
++++ b/app/src/main/java/vn/thucac/reader/data/ImageOcr.kt
+@@ -34,6 +34,8 @@ data class OcrBlock(
+     val bg: Int,
+     val lines: Int,
+     val light: Float,
++    /** Boxes of the original text lines (left, top, right, bottom), used to cover only the old text. */
++    val parts: List<IntArray> = emptyList(),
+ )
+ 
+ data class OcrResult(
+@@ -55,6 +57,7 @@ data class OcrResult(
+                     .put("c", b.bg)
+                     .put("n", b.lines)
+                     .put("g", b.light.toDouble())
++                    .put("p", JSONArray().apply { b.parts.forEach { r -> put(JSONArray().put(r[0]).put(r[1]).put(r[2]).put(r[3])) } })
+             )
+         }
+         return root.put("b", arr).toString()
+@@ -79,6 +82,9 @@ data class OcrResult(
+                         bg = b.optInt("c", Color.WHITE),
+                         lines = b.optInt("n", 1),
+                         light = b.optDouble("g", 1.0).toFloat(),
++                        parts = b.optJSONArray("p")?.let { pa ->
++                            (0 until pa.length()).mapNotNull { k -> pa.optJSONArray(k)?.let { r -> intArrayOf(r.getInt(0), r.getInt(1), r.getInt(2), r.getInt(3)) } }
++                        } ?: emptyList(),
+                     )
+                 )
+             }
+@@ -133,7 +139,7 @@ class ImageOcr(private val ctx: Context) {
+     fun ocrStaged(url: String, http: OkHttpClient, referer: String?, lang: String?, onStage: (String) -> Unit): OcrResult {
+         val key = sha1(url)
+         mem[key]?.let { return it }
+-        for (name in listOf("o7-${lang ?: "all"}-$key.json", "o6-$key.json")) {
++        for (name in listOf("o8-${lang ?: "all"}-$key.json")) {
+             val f = File(dir, name)
+             if (f.exists()) OcrResult.fromJson(f.readText())?.let { mem[key] = it; return it }
+         }
+@@ -153,7 +159,7 @@ class ImageOcr(private val ctx: Context) {
+         onStage("Nhận chữ" + when (lang) { "en" -> " (Anh)"; "ko" -> " (Hàn)"; "zh" -> " (Trung)"; else -> "" })
+         val res = runOcr(bytes, lang)
+         mem[key] = res
+-        runCatching { File(dir, "o7-${lang ?: "all"}-$key.json").writeText(res.toJson()) }
++        runCatching { File(dir, "o8-${lang ?: "all"}-$key.json").writeText(res.toJson()) }
+         return res
+     }
+ 
+@@ -380,8 +386,10 @@ class ImageOcr(private val ctx: Context) {
+                     val vGap = max(0, max(a.top, b.top) - min(a.bottom, b.bottom))
+                     val hOverlap = min(a.right, b.right) - max(a.left, b.left)
+                     val minW = min(max(1, a.right - a.left), max(1, b.right - b.left))
+-                    val closeVert = vGap <= lineH * 1.3f && hOverlap > -lineH && (hOverlap >= minW * 0.2f || abs((a.left + a.right) - (b.left + b.right)) <= lineH * 2)
+-                    val sameRow = abs((a.top + a.bottom) - (b.top + b.bottom)) <= lineH * 0.6f && max(0, max(a.left, b.left) - min(a.right, b.right)) <= lineH * 1.5f
++                    // Only join lines of the same bubble: close below each other, similar height, overlapping horizontally.
++                    val similarH = max(ha, hb) <= min(ha, hb) * 1.8f
++                    val closeVert = similarH && vGap <= lineH * 0.9f && (hOverlap >= minW * 0.3f || abs((a.left + a.right) - (b.left + b.right)) <= lineH)
++                    val sameRow = similarH && abs((a.top + a.bottom) - (b.top + b.bottom)) <= lineH * 0.5f && max(0, max(a.left, b.left) - min(a.right, b.right)) <= lineH * 0.8f
+                     if (closeVert || sameRow) {
+                         union(i, j)
+                     }
+@@ -410,6 +418,8 @@ class ImageOcr(private val ctx: Context) {
+                 val lang = detectLang(joined) ?: continue
+                 val clean = cleanOcrText(joined, lang)
+                 if (detectLang(clean) == null) continue
++                // Korean sound effects (두근, 주춤...): short, one line, drawn into the art. Leave them alone.
++                if (lang == "ko" && sorted.size == 1 && clean.count { isHangul(it) } in 1..3 && clean.count { it.isLetter() } <= 3) continue
+                 out.add(
+                     OcrBlock(
+                         text = clean,
+@@ -420,6 +430,7 @@ class ImageOcr(private val ctx: Context) {
+                         bg = sorted.first().bg,
+                         lines = sorted.size,
+                         light = sorted.map { it.light }.average().toFloat(),
++                        parts = sorted.map { intArrayOf(it.left, it.top, it.right, it.bottom) },
+                     )
+                 )
+             }
+diff --git a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+index 9bd005f..2d52e3b 100644
+--- a/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
++++ b/app/src/main/java/vn/thucac/reader/data/TranslateService.kt
+@@ -568,7 +568,8 @@ class TranslateService(private val app: App) {
+             idx.forEachIndexed { k, i -> out[i] = gv[k] }
+             used += if (aiError != null) "Google (AI lỗi: ${aiError.take(60)})" else if (key.isEmpty() && mode != TransMode.GOOGLE) "Google (chưa nhập key AI)" else "Google"
+         }
+-        return out to used.joinToString(" + ")
++        val marker = Regex("^\\s*[\\[(（【]\\s*\\d+\\s*[\\])）】]\\s*[:.]?\\s*")
++        return out.map { it.replace(marker, "").trim() } to used.joinToString(" + ")
+     }
+ 
+     fun translateBubbles(bubbles: List<OcrBlock>, mode: TransMode, bookKey: String? = null): List<String> {
+diff --git a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+index 48f714d..44efc82 100644
+--- a/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
++++ b/app/src/main/java/vn/thucac/reader/ui/ComicReaderScreen.kt
+@@ -406,28 +406,44 @@ private fun ComicPageView(page: ComicPage, chapterUrl: String, loader: ImageLoad
+ @Composable
+ private fun Bubble(b: OcrBlock, value: String, scale: Float, density: androidx.compose.ui.unit.Density) {
+     var showOriginal by remember(b) { mutableStateOf(false) }
+-    val wPx = ((b.right - b.left) * scale).coerceAtLeast(1f)
+-    val hPx = ((b.bottom - b.top) * scale).coerceAtLeast(1f)
+     val shown = if (showOriginal) b.text else value
+-    // Fit the text in the bubble: shrink the font with the amount of text.
+-    val area = wPx * hPx
+-    val chars = shown.length.coerceAtLeast(1)
+-    val fitPx = kotlin.math.sqrt(area / chars * 0.9f)
+-    val fontPx = fitPx.coerceIn(with(density) { 8.sp.toPx() }, with(density) { 20.sp.toPx() })
+     val bg = Color(b.bg)
+     val fg = if (b.light > 0.5f) Color.Black else Color.White
++    val parts = b.parts.ifEmpty { listOf(intArrayOf(b.left, b.top, b.right, b.bottom)) }
++    val unionArea = ((b.right - b.left) * (b.bottom - b.top)).toFloat().coerceAtLeast(1f)
++    val partArea = parts.sumOf { (it[2] - it[0]) * (it[3] - it[1]) }.toFloat()
++    // Lines packed tightly (a normal bubble): cover the whole box. Loose groups: cover only the old lines, keep the art.
++    val fillUnion = partArea / unionArea >= 0.5f
++    val pad = 3f
+     with(density) {
++        if (fillUnion) {
++            Box(Modifier.offset { IntOffset(((b.left - pad) * scale).toInt(), ((b.top - pad) * scale).toInt()) }
++                .size(((b.right - b.left + 2 * pad) * scale).toDp(), ((b.bottom - b.top + 2 * pad) * scale).toDp())
++                .background(bg, RoundedCornerShape(4.dp)))
++        } else parts.forEach { r ->
++            Box(Modifier.offset { IntOffset(((r[0] - pad) * scale).toInt(), ((r[1] - pad) * scale).toInt()) }
++                .size(((r[2] - r[0] + 2 * pad) * scale).toDp(), ((r[3] - r[1] + 2 * pad) * scale).toDp())
++                .background(bg))
++        }
++        // Text area: the block, a little wider so short Vietnamese lines are not cut; font shrinks until it fits.
++        val wPx = ((b.right - b.left) * scale * 1.15f).coerceAtLeast(24f)
++        val hPx = ((b.bottom - b.top) * scale * 1.1f).coerceAtLeast(14f)
++        val cx = (b.left + b.right) / 2f * scale
++        val cy = (b.top + b.bottom) / 2f * scale
++        val lineHPx = (b.bottom - b.top) * scale / b.lines.coerceAtLeast(1)
++        val maxPx = (lineHPx * 0.85f).coerceIn(9.sp.toPx(), 22.sp.toPx())
++        var fontPx by remember(shown, scale) { mutableStateOf(maxPx) }
+         Box(
+-            Modifier
+-                .offset { IntOffset((b.left * scale).toInt(), (b.top * scale).toInt()) }
++            Modifier.offset { IntOffset((cx - wPx / 2).toInt(), (cy - hPx / 2).toInt()) }
+                 .size(wPx.toDp(), hPx.toDp())
+-                .background(bg, RoundedCornerShape(6.dp))
+                 .clickable { showOriginal = !showOriginal },
+             contentAlignment = Alignment.Center,
+         ) {
+             Text(
+                 shown, color = fg, textAlign = TextAlign.Center, fontWeight = FontWeight.Medium,
+-                fontSize = fontPx.toSp(), lineHeight = (fontPx * 1.15f).toSp(), overflow = TextOverflow.Clip,
++                fontSize = fontPx.toSp(), lineHeight = (fontPx * 1.12f).toSp(),
++                style = androidx.compose.ui.text.TextStyle(shadow = androidx.compose.ui.graphics.Shadow(bg, blurRadius = 6f)),
++                onTextLayout = { if (it.hasVisualOverflow && fontPx > 7.sp.toPx()) fontPx *= 0.9f },
+             )
+         }
+     }
