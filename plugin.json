@@ -2857,7 +2857,7 @@
   {
    "name": "HentaiZ",
    "author": "luonggato",
-   "version": 2,
+   "version": 4,
    "source": "https://hentaiz2.com",
    "regexp": "(www\\.)?hentaiz2?\\.com/(watch|browse)/.*",
    "description": "Kho phim anime hentai 18+ Vietsub Full HD siêu mượt trên hentaiz2.com",
