@@ -1,13 +1,9 @@
-<!-- versionCode: 75 -->
-## Thư Các 0.6.31
-
-**Nghe truyện (TTS)**
-- Bảng chọn giọng mới, chia 3 nhóm: Giọng AI (Offline) | Google | Giọng của máy. Bảng mở toàn màn hình.
-- Hiện đủ mọi giọng AI đã tải (trước đây chỉ thấy một giọng).
-- Giọng AI 2 có 65 người đọc, mỗi người có tên riêng kèm giới tính và độ trầm/cao, ví dụ "Minh (nam, trầm)". Có thể lọc Nam/Nữ và đổi tên từng người đọc.
-- Giọng Google và giọng của máy có tên dễ đọc ("Giọng Google 1"…), ghi rõ Offline/Cần mạng và chất lượng. Có nút tải dữ liệu giọng, mở "Cài đặt giọng của máy", và cài Google TTS từ CH Play nếu máy chưa có.
-- Đổi tên được mọi giọng. Tốc độ và độ cao áp dụng cho tất cả các giọng.
-- Sửa lỗi "Giọng AI lỗi: no non-static method … invoke" khiến giọng AI luôn chuyển sang giọng hệ thống.
+<!-- versionCode: 76 -->
+## Thư Các 0.6.32
 
 **Sửa lỗi**
-- Sửa lỗi app tự thoát khi mở Cài đặt > Giọng đọc (TTS) / Trang chủ.
+- Trang chủ hiện lại tên truyện, tác giả và tên chương đã dịch ngay sau khi mở lại app (trước đây sau khi tắt app mở lại chỉ còn tên tiếng Trung).
+- Bộ nhớ tên truyện đã dịch (Anh/Hàn) được lưu an toàn hơn, không bị mất khi app bị tắt giữa chừng.
+
+**Nghe truyện (TTS)**
+- Nút tải trong trình đọc có thêm "Xuất WAV chương này": xuất audio chương đang nghe bằng giọng AI, người đọc và tốc độ đang chọn ra file WAV trong Download/ThuCac, có thanh tiến độ, nút huỷ và nút chia sẻ.
