@@ -1,9 +1,21 @@
 {
  "metadata": {
   "author": "Thư Các",
-  "description": "Kho plugin tổng hợp của Thư Các (256 plugin)"
+  "description": "Kho plugin tổng hợp của Thư Các (258 plugin)"
  },
  "data": [
+  {
+   "name": "AnimeVietsub",
+   "author": "luonggato",
+   "version": 3,
+   "source": "https://animevietsub.best",
+   "regexp": "animevietsub\\.[a-z]+/phim/[^/]+-a\\d+/?.*",
+   "description": "Xem anime Vietsub trên AnimeVietsub (animevietsub.best). Server chính phát qua trình phát nhúng của trang, có server phụ dự phòng.",
+   "type": "video",
+   "locale": "vi_VN",
+   "path": "plugins/animevietsub-thu-cac.zip",
+   "icon": "icons/animevietsub-thu-cac.png"
+  },
   {
    "name": "Haitang htlvbooks",
    "author": "luonggato",
@@ -32,7 +44,7 @@
   {
    "name": "Manhwa18",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://manhwa18.com",
    "regexp": "(www\\.)?manhwa18\\.com/manga/[^/?#]+/?$",
    "description": "Đọc manhwa 18+ tiếng Anh trên manhwa18.com",
@@ -433,7 +445,7 @@
   {
    "name": "bachashuku",
    "author": "luonggato",
-   "version": 4,
+   "version": 5,
    "source": "https://bachashuku.org",
    "regexp": "(www\\.)?(bachashuku|8xsk)\\.org/(book|read)/\\d+",
    "description": "Đọc truyện trên trang bachashuku.org (八叉书库) - 18+",
@@ -444,7 +456,7 @@
   {
    "name": "baozimh",
    "author": "Nahona",
-   "version": 1,
+   "version": 2,
    "source": "https://www.baozimh.com/",
    "description": "Đọc truyện trên trang baozimh",
    "type": "comic",
@@ -2841,6 +2853,19 @@
    "type": "chinese_novel",
    "locale": "zh_CN",
    "path": "plugins/th03.zip"
+  },
+  {
+   "name": "HentaiZ",
+   "author": "luonggato",
+   "version": 7,
+   "source": "https://hentaiz2.com",
+   "regexp": "(www\\.)?hentaiz2?\\.com/(watch|browse)/.*",
+   "description": "Kho phim anime hentai 18+ Vietsub Full HD siêu mượt trên hentaiz2.com",
+   "type": "video",
+   "locale": "vi_VN",
+   "tag": "nsfw",
+   "path": "plugins/hentaiz-thu-cac.zip",
+   "icon": "icons/hentaiz-thu-cac.png"
   },
   {
    "name": "Bilibili TV",
