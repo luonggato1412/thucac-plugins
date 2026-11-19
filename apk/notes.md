@@ -1,7 +1,8 @@
-<!-- versionCode: 78 -->
-## Thư Các 0.6.34
+<!-- versionCode: 79 -->
+## Thư Các 0.6.35
 
-**Dịch AI**
-- Nhập được tới 3 API key cho mỗi dịch vụ AI (ô key chính và 2 ô dự phòng trong Cài đặt dịch AI).
-- Khi key đang dùng hết lượt (429), hỏng (401/403) hoặc lỗi mạng, app tự đổi sang key kế tiếp. Key hết lượt được bỏ qua 5 phút, key hỏng bỏ qua 30 phút.
-- Hết cả 3 key mới chuyển sang Google dịch như trước. Áp dụng cho dịch chương, dịch tên và dịch ảnh truyện tranh.
+**Đồng bộ tài khoản**
+- Bấm "Đồng bộ ngay" giờ đồng bộ cả toàn bộ cài đặt: API key AI (gồm 3 key mỗi dịch vụ), cài đặt dịch, giọng đọc, giao diện, trình đọc, truyện tranh, danh mục kệ sách.
+- Đồng bộ thêm từ điển (mục tự thêm được gộp giữa các máy; từ điển nhập dưới 3 MB lấy bản mới nhất) và dấu trang.
+- Cài đặt lấy theo máy đổi gần nhất. Máy lần đầu đồng bộ sẽ nhận cài đặt từ tài khoản; key đang có không bị xoá bởi key trống.
+- Khi nhận cài đặt từ máy khác, app tự khởi động lại để áp dụng.
