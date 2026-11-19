@@ -44,7 +44,7 @@
   {
    "name": "Manhwa18",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://manhwa18.com",
    "regexp": "(www\\.)?manhwa18\\.com/manga/[^/?#]+/?$",
    "description": "Đọc manhwa 18+ tiếng Anh trên manhwa18.com",
