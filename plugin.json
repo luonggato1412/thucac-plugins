@@ -445,12 +445,13 @@
   {
    "name": "bachashuku",
    "author": "luonggato",
-   "version": 5,
+   "version": 6,
    "source": "https://bachashuku.org",
    "regexp": "(www\\.)?(bachashuku|8xsk)\\.org/(book|read)/\\d+",
    "description": "Đọc truyện trên trang bachashuku.org (八叉书库) - 18+",
    "type": "chinese_novel",
    "locale": "zh_CN",
+   "tag": "nsfw",
    "path": "plugins/bachashuku-vbook.zip"
   },
   {
