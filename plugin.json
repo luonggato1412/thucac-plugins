@@ -101,7 +101,7 @@
   {
    "name": "17k",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://www.17k.com",
    "regexp": "(www|h5)\\.17k\\.com/(book|list|chapter)/\\d+",
    "description": "Đọc truyện trên trang 17k.com (17K小说网) - chỉ chương miễn phí",
@@ -1736,7 +1736,7 @@
   {
    "name": "piaotia",
    "author": "luonggato",
-   "version": 1,
+   "version": 2,
    "source": "https://www.piaotia.com",
    "regexp": "(www\\.)?(piaotia|ptwxz|ptwwxz)\\.(com|net)/(bookinfo|html)/\\d+/\\d+",
    "description": "Đọc truyện trên trang piaotia.com (飘天文学)",
